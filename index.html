@@ -236,6 +236,7 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="content.js"></script>
 </head>
 <body>
 
@@ -279,33 +280,8 @@
             </a>
         </div>
 
-        <div class="grid-3">
-            <article class="card reveal">
-                <div>
-                    <span class="card-tag" style="color: var(--accent-vegas);">Video Tutorial</span>
-                    <h3 class="card-title">Build a Semantic Q&A App in Minutes</h3>
-                    <p class="card-desc">Learn how to quickly build intelligent Q&A applications using semantic search and AI.</p>
-                </div>
-                <a href="https://www.youtube.com/watch?v=LT-BtP84mdQ" class="card-link" target="_blank"><i class="fab fa-youtube"></i> &nbsp; Watch Video</a>
-            </article>
-
-            <article class="card reveal">
-                <div>
-                    <span class="card-tag" style="color: var(--accent-vegas);">Video Tutorial</span>
-                    <h3 class="card-title">Migrate your Data from Planetscale to TiDB</h3>
-                    <p class="card-desc">Complete walkthrough for migrating your database from Planetscale to TiDB Cloud.</p>
-                </div>
-                <a href="https://www.youtube.com/watch?v=c1qEuQ8876g" class="card-link" target="_blank"><i class="fab fa-youtube"></i> &nbsp; Watch Video</a>
-            </article>
-
-            <article class="card reveal">
-                <div>
-                    <span class="card-tag" style="color: var(--accent-vegas);">Video Tutorial</span>
-                    <h3 class="card-title">Introduction to TiDB Cloud</h3>
-                    <p class="card-desc">Your first look at TiDB Cloud - a fully-managed database-as-a-service for modern applications.</p>
-                </div>
-                <a href="https://www.youtube.com/watch?v=YU6jdrRc2cc" class="card-link" target="_blank"><i class="fab fa-youtube"></i> &nbsp; Watch Video</a>
-            </article>
+        <div class="grid-3" id="latestContentGrid">
+            <!-- Latest content will be dynamically loaded here -->
         </div>
     </section>
 
@@ -384,6 +360,35 @@
     </footer>
 
     <script>
+        // --- LOAD LATEST CONTENT FROM content.js ---
+        const latestContent = getLatestContent(3);
+        const latestGrid = document.getElementById('latestContentGrid');
+
+        // Get label and color for each content type
+        function getContentTypeInfo(type) {
+            const typeMap = {
+                'video': { label: 'Video Tutorial', color: 'var(--accent-vegas)', icon: 'fab fa-youtube', linkText: 'Watch Video' },
+                'blog': { label: 'Technical Blog', color: 'var(--accent-primary)', icon: 'fas fa-book-open', linkText: 'Read Article' },
+                'talk': { label: 'Conference Talk', color: '#10b981', icon: 'fas fa-microphone-alt', linkText: 'View Talk' }
+            };
+            return typeMap[type] || typeMap['video'];
+        }
+
+        // Render latest content cards
+        latestGrid.innerHTML = latestContent.map(item => {
+            const typeInfo = getContentTypeInfo(item.type);
+            return `
+                <article class="card reveal">
+                    <div>
+                        <span class="card-tag" style="color: ${typeInfo.color};">${typeInfo.label}</span>
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-desc">${item.description}</p>
+                    </div>
+                    <a href="${item.link}" class="card-link" target="_blank"><i class="${typeInfo.icon}"></i> &nbsp; ${typeInfo.linkText}</a>
+                </article>
+            `;
+        }).join('');
+
         // --- 1. TYPING EFFECT ---
         const textToType = "Developer Advocate. Content Creator. Speaker.";
         const typeWriterElement = document.getElementById('typewriter');

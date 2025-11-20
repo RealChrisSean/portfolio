@@ -297,6 +297,7 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="content.js"></script>
 </head>
 <body>
 
@@ -347,128 +348,9 @@
     </footer>
 
     <script>
-        // --- CONTENT DATA ---
-        const allContent = [
-            {
-                type: 'talk',
-                title: 'Demystifying Data Replication with PostgreSQL',
-                description: 'Conference talk at Percona Live exploring PostgreSQL replication strategies and best practices.',
-                date: 'Jun 26, 2024',
-                icon: 'fas fa-microphone-alt',
-                thumbnail: 'https://img.youtube.com/vi/vlzuyVwZUao/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=vlzuyVwZUao&t=1021s'
-            },
-            {
-                type: 'video',
-                title: 'Build a Semantic Q&A App in Minutes',
-                description: 'Learn how to quickly build intelligent Q&A applications using semantic search and AI.',
-                date: 'Jun 19, 2024',
-                icon: 'fab fa-youtube',
-                thumbnail: 'https://img.youtube.com/vi/LT-BtP84mdQ/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=LT-BtP84mdQ'
-            },
-            {
-                type: 'talk',
-                title: 'SF Awesome AI Dev Tools',
-                description: 'Showcasing the latest AI development tools and frameworks at San Francisco meetup.',
-                date: 'Jun 2024',
-                icon: 'fas fa-microphone-alt',
-                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=SF+AI+Dev+Tools',
-                link: 'https://luma.com/y2mjhnfw'
-            },
-            {
-                type: 'talk',
-                title: 'From Vectors to Agentic Memory: Architecting for Supercharged AI Development',
-                description: 'Deep dive into AI architecture patterns and memory systems for modern AI applications.',
-                date: 'Jun 2024',
-                icon: 'fas fa-microphone-alt',
-                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=Agentic+Memory',
-                link: 'https://luma.com/pquy8jlb'
-            },
-            {
-                type: 'video',
-                title: 'How to deploy a TiDB Cluster using TiUP',
-                description: 'Step-by-step guide to deploying your TiDB cluster with TiUP deployment tool.',
-                date: 'May 2024',
-                icon: 'fab fa-youtube',
-                thumbnail: 'https://img.youtube.com/vi/nyJm5udXpVQ/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=nyJm5udXpVQ'
-            },
-            {
-                type: 'video',
-                title: 'Migrate your Data from Planetscale to TiDB',
-                description: 'Complete walkthrough for migrating your database from Planetscale to TiDB Cloud.',
-                date: 'Apr 2024',
-                icon: 'fab fa-youtube',
-                thumbnail: 'https://img.youtube.com/vi/c1qEuQ8876g/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=c1qEuQ8876g'
-            },
-            {
-                type: 'video',
-                title: 'Build Your First Cluster with TiDB',
-                description: 'Get started with TiDB by building your first database cluster from scratch.',
-                date: 'Mar 2024',
-                icon: 'fab fa-youtube',
-                thumbnail: 'https://img.youtube.com/vi/3jfxsGZExRw/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=3jfxsGZExRw'
-            },
-            {
-                type: 'video',
-                title: 'Introduction to TiDB Cloud',
-                description: 'Your first look at TiDB Cloud - a fully-managed database-as-a-service for modern applications.',
-                date: 'Feb 2024',
-                icon: 'fab fa-youtube',
-                thumbnail: 'https://img.youtube.com/vi/YU6jdrRc2cc/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=YU6jdrRc2cc'
-            },
-            {
-                type: 'video',
-                title: 'Introduction to TiDB OSS',
-                description: 'Getting started with TiDB Open Source - exploring the distributed SQL database architecture.',
-                date: 'Jan 2024',
-                icon: 'fab fa-youtube',
-                thumbnail: 'https://img.youtube.com/vi/MQmn8GzZMRY/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=MQmn8GzZMRY'
-            },
-            {
-                type: 'talk',
-                title: 'Open Source ELT For Everyone – Level Up With Custom Connectors',
-                description: 'Conference talk at Big Data LDN covering open-source ELT pipelines and building custom data connectors.',
-                date: 'Oct 18, 2022',
-                icon: 'fas fa-microphone-alt',
-                thumbnail: 'https://img.youtube.com/vi/Jn9N1kljCZw/maxresdefault.jpg',
-                link: 'https://www.youtube.com/watch?v=Jn9N1kljCZw&t=1s'
-            }
-        ];
-
-        // --- PARSE AND SORT BY DATE ---
-        function parseDate(dateString) {
-            // Handle formats like "Jun 26, 2024", "Jun 2024", "Oct 18, 2022"
-            const months = {
-                'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
-                'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
-            };
-
-            const parts = dateString.toLowerCase().split(/[\s,]+/).filter(p => p);
-
-            if (parts.length === 3) {
-                // Format: "Jun 26, 2024" or "Oct 18, 2022"
-                const month = months[parts[0]];
-                const day = parseInt(parts[1]);
-                const year = parseInt(parts[2]);
-                return new Date(year, month, day);
-            } else if (parts.length === 2) {
-                // Format: "Jun 2024"
-                const month = months[parts[0]];
-                const year = parseInt(parts[1]);
-                return new Date(year, month, 1); // Use 1st day of month
-            }
-
-            return new Date(0); // Fallback for unparseable dates
-        }
-
-        // Sort allContent by date (newest first)
-        allContent.sort((a, b) => parseDate(b.date) - parseDate(a.date));
+        // --- LOAD CONTENT FROM content.js ---
+        // Content is now managed in content.js - much easier to update!
+        const allContent = getAllContent();
 
         let currentFilter = 'all';
         let displayedCount = 9; // Start with 9 items
