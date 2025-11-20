@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chris Dabatos | Developer Advocate</title>
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #101010;
+            --accent-primary: #0ea5e9; /* Cyan */
+            --accent-secondary: #6366f1; /* Indigo */
+            --accent-vegas: #c026d3; /* Magenta */
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.05), transparent 25%);
+            filter: blur(40px);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; }
+        h2 { font-size: clamp(2rem, 3vw, 3rem); margin-bottom: 0; position: relative; display: inline-block; }
+        h2::after {
+            content: ''; position: absolute; bottom: -10px; left: 0;
+            width: 60px; height: 4px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-vegas));
+            border-radius: 2px;
+        }
+        .highlight { color: var(--accent-primary); }
+        .code-font { font-family: var(--font-code); color: var(--accent-vegas); }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section { padding: 100px 0; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 60vh;
+            padding: 120px 0 80px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-code);
+            color: var(--accent-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .typewriter::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .hero-btn {
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: var(--glass-border);
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-vegas));
+            opacity: 0.1; z-index: -1; transition: opacity 0.3s;
+        }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .hero-btn:hover::before { opacity: 0.3; }
+
+        /* --- GRID LAYOUTS --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- CARDS (Glassmorphism) --- */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.15);
+        }
+
+        .card-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-muted);
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.04);
+        }
+
+        .card-title { font-size: 1.5rem; margin-bottom: 1rem; }
+        .card-desc { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .card-link { color: var(--accent-primary); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px;}
+        .card-link:hover { color: var(--accent-vegas); }
+
+        /* --- SPEAKING SECTION (Timeline) --- */
+        .talk-card {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, rgba(249,250,251,0.6), rgba(243,244,246,0.6));
+            border: var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .date-badge {
+            background: rgba(0,0,0,0.04);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 80px;
+        }
+        .date-badge span { display: block; }
+        .date-badge .month { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+        .date-badge .year { font-weight: 700; font-size: 1.2rem; color: var(--accent-secondary); }
+
+        .talk-content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .talk-meta { font-size: 0.9rem; color: var(--text-muted); display: flex; gap: 1rem; align-items: center; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .status-recorded { background-color: #10b981; box-shadow: 0 0 8px #10b981; }
+        .status-offline { background-color: #f59e0b; }
+
+        /* --- SECTION HEADER --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .view-all-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: var(--glass-border);
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .view-all-btn:hover {
+            background: rgba(0,0,0,0.04);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        /* --- ANIMATION UTILITIES --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--text-muted);
+            border-top: var(--glass-border);
+            margin-top: 4rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .talk-card { flex-direction: column; gap: 1rem; }
+            .date-badge { width: 100%; display: flex; justify-content: space-between; align-items: baseline; }
+            .section-header { flex-direction: column; align-items: flex-start; }
+            .view-all-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav style="position: fixed; top: 0; width: 100%; padding: 20px; backdrop-filter: blur(10px); z-index: 100; border-bottom: var(--glass-border);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; font-size: 1.2rem;">Chris Dabatos</div>
+            <div style="display: flex; gap: 20px;">
+                <a href="all-content.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem;">View All Content</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="container hero">
+        <p class="hero-subtitle reveal">Las Vegas, NV</p>
+        <h1 class="reveal">Hi, I'm <span class="highlight">Chris Dabatos</span>.</h1>
+        <h1 class="code-font reveal" style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-top: 10px;">
+            <span id="typewriter"></span>
+        </h1>
+        <p class="reveal" style="max-width: 600px; margin-top: 2rem; color: var(--text-muted); font-size: 1.1rem;">
+            I bridge the gap between complex code and human connection. Building communities, creating content, and advocating for the developer experience.
+        </p>
+        <div class="reveal">
+            <button class="hero-btn" onclick="window.location.href='all-content.html'">Explore My Work</button>
+        </div>
+
+        <div class="reveal" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.5rem;">
+            <a href="https://x.com/RealChrisSean" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-twitter"></i></a>
+            <a href="https://github.com/realchrissean" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-youtube"></i></a>
+        </div>
+    </header>
+
+    <section id="content" class="container">
+        <div class="section-header reveal">
+            <h2>Latest <span class="highlight">Creations</span></h2>
+            <a href="all-content.html" class="view-all-btn">
+                View All Content <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="grid-3">
+            <article class="card reveal">
+                <div>
+                    <span class="card-tag" style="color: var(--accent-vegas);">Video Tutorial</span>
+                    <h3 class="card-title">Build a Semantic Q&A App in Minutes</h3>
+                    <p class="card-desc">Learn how to quickly build intelligent Q&A applications using semantic search and AI.</p>
+                </div>
+                <a href="https://www.youtube.com/watch?v=LT-BtP84mdQ" class="card-link" target="_blank"><i class="fab fa-youtube"></i> &nbsp; Watch Video</a>
+            </article>
+
+            <article class="card reveal">
+                <div>
+                    <span class="card-tag" style="color: var(--accent-vegas);">Video Tutorial</span>
+                    <h3 class="card-title">Migrate your Data from Planetscale to TiDB</h3>
+                    <p class="card-desc">Complete walkthrough for migrating your database from Planetscale to TiDB Cloud.</p>
+                </div>
+                <a href="https://www.youtube.com/watch?v=c1qEuQ8876g" class="card-link" target="_blank"><i class="fab fa-youtube"></i> &nbsp; Watch Video</a>
+            </article>
+
+            <article class="card reveal">
+                <div>
+                    <span class="card-tag" style="color: var(--accent-vegas);">Video Tutorial</span>
+                    <h3 class="card-title">Introduction to TiDB Cloud</h3>
+                    <p class="card-desc">Your first look at TiDB Cloud - a fully-managed database-as-a-service for modern applications.</p>
+                </div>
+                <a href="https://www.youtube.com/watch?v=YU6jdrRc2cc" class="card-link" target="_blank"><i class="fab fa-youtube"></i> &nbsp; Watch Video</a>
+            </article>
+        </div>
+    </section>
+
+
+
+    <section id="speaking" class="container">
+        <h2 class="reveal">Public <span class="highlight">Speaking</span></h2>
+        <p class="reveal" style="margin-top: 2rem; margin-bottom: 2rem; color: var(--text-muted);">
+            I travel globally (and locally here in Vegas) to share knowledge. Here is where I've been and where I'm going.
+        </p>
+
+        <div class="talk-card reveal">
+            <div class="date-badge">
+                <span class="month">JUN</span>
+                <span class="year">2024</span>
+            </div>
+            <div class="talk-content">
+                <h3>Demystifying Data Replication with PostgreSQL</h3>
+                <div class="talk-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> Percona Live</span>
+                    <span style="color: #10b981; font-weight: 600;"><span class="status-dot status-recorded"></span> Recording Available</span>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    Conference talk exploring PostgreSQL replication strategies and best practices.
+                </p>
+                <a href="https://www.youtube.com/watch?v=vlzuyVwZUao&t=1021s" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">View Recording &rarr;</a>
+            </div>
+        </div>
+
+        <div class="talk-card reveal">
+            <div class="date-badge">
+                <span class="month">JUN</span>
+                <span class="year">2024</span>
+            </div>
+            <div class="talk-content">
+                <h3>From Vectors to Agentic Memory</h3>
+                <div class="talk-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> SF Meetup</span>
+                    <span><span class="status-dot status-offline"></span> In-Person Only</span>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    Architecting for supercharged AI development with modern memory systems.
+                </p>
+                <a href="https://luma.com/pquy8jlb" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">Event Details &rarr;</a>
+            </div>
+        </div>
+
+        <div class="talk-card reveal">
+            <div class="date-badge">
+                <span class="month">OCT</span>
+                <span class="year">2022</span>
+            </div>
+            <div class="talk-content">
+                <h3>Open Source ELT For Everyone</h3>
+                <div class="talk-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> Big Data LDN</span>
+                    <span style="color: #10b981; font-weight: 600;"><span class="status-dot status-recorded"></span> Recording Available</span>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    Level up with custom connectors for open-source ELT pipelines.
+                </p>
+                <a href="https://www.youtube.com/watch?v=Jn9N1kljCZw&t=1s" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">View Recording &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="reveal">
+        <div class="container">
+            <h2>Let's build something <span class="highlight">awesome.</span></h2>
+            <p>Open for speaking engagements and collaborations.</p>
+            <br>
+            <a href="mailto:chris@example.com" class="hero-btn" style="background: var(--text-main); color: var(--bg-color);">Get in Touch</a>
+            <br><br><br>
+            <p style="font-size: 0.8rem;">&copy; 2024 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. TYPING EFFECT ---
+        const textToType = "Developer Advocate. Content Creator. Speaker.";
+        const typeWriterElement = document.getElementById('typewriter');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < textToType.length) {
+                typeWriterElement.innerHTML += textToType.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100); // Speed of typing
+            }
+        }
+
+        // Start typing after a slight delay
+        setTimeout(typeWriter, 1000);
+
+        // --- 2. SCROLL REVEAL ANIMATION ---
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- 3. 3D TILT EFFECT FOR CARDS ---
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const midX = rect.width / 2;
+                const midY = rect.height / 2;
+
+                const rotateX = ((y - midY) / midY) * -5; // Max rotation deg
+                const rotateY = ((x - midX) / midX) * 5;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+            });
+        });
+    </script>
+</body>
+</html>

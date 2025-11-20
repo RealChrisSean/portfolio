@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Content | Chris Dabatos</title>
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #101010;
+            --accent-primary: #0ea5e9; /* Cyan */
+            --accent-secondary: #6366f1; /* Indigo */
+            --accent-vegas: #c026d3; /* Magenta */
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.05), transparent 25%);
+            filter: blur(40px);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; }
+        h2 { font-size: clamp(2rem, 3vw, 3rem); margin-bottom: 2rem; position: relative; display: inline-block; }
+        h2::after {
+            content: ''; position: absolute; bottom: -10px; left: 0;
+            width: 60px; height: 4px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-vegas));
+            border-radius: 2px;
+        }
+        .highlight { color: var(--accent-primary); }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section { padding: 80px 0; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: var(--glass-border);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--accent-primary);
+        }
+
+        /* --- PAGE HEADER --- */
+        .page-header {
+            padding-top: 120px;
+            padding-bottom: 40px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-top: 1rem;
+        }
+
+        /* --- FILTER TABS --- */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: var(--glass-border);
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: rgba(0,0,0,0.04);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* --- CONTENT GRID --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .content-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.15);
+        }
+
+        .content-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(192, 38, 211, 0.08));
+        }
+
+        .content-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Auto-fits image to container */
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .content-box:hover .content-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .content-info {
+            padding: 1.5rem;
+        }
+
+        .content-type-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag-video {
+            color: var(--accent-vegas);
+            background: rgba(217, 70, 239, 0.1);
+            border: 1px solid var(--accent-vegas);
+        }
+        .tag-blog {
+            color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent-primary);
+        }
+        .tag-talk {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+        }
+
+        .content-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .content-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* --- LOADING SPINNER --- */
+        .loading {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- ANIMATION UTILITIES --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--text-muted);
+            border-top: var(--glass-border);
+            margin-top: 4rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-tabs { gap: 0.5rem; }
+            .filter-tab { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Chris Dabatos</a>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header reveal">
+            <h1>All <span class="highlight">Content</span></h1>
+            <p>A comprehensive collection of my videos, articles, and conference talks. Explore everything I've created to help developers build better software.</p>
+        </header>
+
+        <section>
+            <div class="filter-tabs reveal">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="video">Videos</button>
+                <button class="filter-tab" data-filter="blog">Blogs</button>
+                <button class="filter-tab" data-filter="talk">Talks</button>
+            </div>
+
+            <div class="content-grid" id="contentGrid">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Loading more content...</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="reveal">
+        <div class="container">
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Want to stay updated? <a href="#" style="color: var(--accent-primary); text-decoration: none;">Subscribe to my newsletter</a>
+            </p>
+            <br>
+            <p style="font-size: 0.8rem;">&copy; 2024 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- CONTENT DATA ---
+        const allContent = [
+            {
+                type: 'talk',
+                title: 'Demystifying Data Replication with PostgreSQL',
+                description: 'Conference talk at Percona Live exploring PostgreSQL replication strategies and best practices.',
+                date: 'Jun 26, 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://img.youtube.com/vi/vlzuyVwZUao/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=vlzuyVwZUao&t=1021s'
+            },
+            {
+                type: 'video',
+                title: 'Build a Semantic Q&A App in Minutes',
+                description: 'Learn how to quickly build intelligent Q&A applications using semantic search and AI.',
+                date: 'Jun 19, 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://img.youtube.com/vi/LT-BtP84mdQ/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=LT-BtP84mdQ'
+            },
+            {
+                type: 'talk',
+                title: 'SF Awesome AI Dev Tools',
+                description: 'Showcasing the latest AI development tools and frameworks at San Francisco meetup.',
+                date: 'Jun 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=SF+AI+Dev+Tools',
+                link: 'https://luma.com/y2mjhnfw'
+            },
+            {
+                type: 'talk',
+                title: 'From Vectors to Agentic Memory: Architecting for Supercharged AI Development',
+                description: 'Deep dive into AI architecture patterns and memory systems for modern AI applications.',
+                date: 'Jun 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=Agentic+Memory',
+                link: 'https://luma.com/pquy8jlb'
+            },
+            {
+                type: 'video',
+                title: 'How to deploy a TiDB Cluster using TiUP',
+                description: 'Step-by-step guide to deploying your TiDB cluster with TiUP deployment tool.',
+                date: 'May 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://img.youtube.com/vi/nyJm5udXpVQ/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=nyJm5udXpVQ'
+            },
+            {
+                type: 'video',
+                title: 'Migrate your Data from Planetscale to TiDB',
+                description: 'Complete walkthrough for migrating your database from Planetscale to TiDB Cloud.',
+                date: 'Apr 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://img.youtube.com/vi/c1qEuQ8876g/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=c1qEuQ8876g'
+            },
+            {
+                type: 'video',
+                title: 'Build Your First Cluster with TiDB',
+                description: 'Get started with TiDB by building your first database cluster from scratch.',
+                date: 'Mar 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://img.youtube.com/vi/3jfxsGZExRw/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=3jfxsGZExRw'
+            },
+            {
+                type: 'video',
+                title: 'Introduction to TiDB Cloud',
+                description: 'Your first look at TiDB Cloud - a fully-managed database-as-a-service for modern applications.',
+                date: 'Feb 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://img.youtube.com/vi/YU6jdrRc2cc/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=YU6jdrRc2cc'
+            },
+            {
+                type: 'video',
+                title: 'Introduction to TiDB OSS',
+                description: 'Getting started with TiDB Open Source - exploring the distributed SQL database architecture.',
+                date: 'Jan 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://img.youtube.com/vi/MQmn8GzZMRY/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=MQmn8GzZMRY'
+            },
+            {
+                type: 'blog',
+                title: 'The Future of Developer Relations',
+                description: 'Why empathy is the new coding skill required for modern DevRel roles in enterprise environments.',
+                date: 'Nov 2024',
+                icon: 'fas fa-book-open',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/38bdf8?text=Blog+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'talk',
+                title: 'Scaling DevRel Teams',
+                description: 'A 45-minute keynote on the ROI of community building at TechSummit Las Vegas.',
+                date: 'Oct 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=Talk+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'video',
+                title: 'TypeScript 5.3: What\'s New and Why It Matters',
+                description: 'Breaking down the latest TypeScript release with practical examples and real-world use cases.',
+                date: 'Oct 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/d946ef?text=Video+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'blog',
+                title: 'Building Scalable APIs with tRPC',
+                description: 'A comprehensive guide to building type-safe APIs that scale across your entire stack.',
+                date: 'Sep 2024',
+                icon: 'fas fa-book-open',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/38bdf8?text=Blog+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'talk',
+                title: 'Workshop: API Design First',
+                description: 'A hands-on workshop teaching Open API Spec 3.0 at API World conference.',
+                date: 'Sep 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=Talk+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'video',
+                title: 'React Server Components Explained',
+                description: 'Finally, a clear explanation of RSCs that makes sense with real-world examples.',
+                date: 'Aug 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/d946ef?text=Video+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'blog',
+                title: 'Performance Optimization Patterns for React',
+                description: 'Stop premature optimization. Learn which patterns actually matter backed by real metrics.',
+                date: 'Aug 2024',
+                icon: 'fas fa-book-open',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/38bdf8?text=Blog+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'video',
+                title: 'Docker for JavaScript Developers',
+                description: 'A practical guide for JS developers who want to containerize their apps without complexity.',
+                date: 'Jul 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/d946ef?text=Video+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'talk',
+                title: 'The Future of Web Development',
+                description: 'Keynote presentation exploring emerging trends in modern web development at ReactConf.',
+                date: 'Jul 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=Talk+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'blog',
+                title: 'Understanding React Hooks in Depth',
+                description: 'A complete guide to React Hooks with patterns and best practices for production apps.',
+                date: 'Jun 2024',
+                icon: 'fas fa-book-open',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/38bdf8?text=Blog+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'video',
+                title: 'Next.js 14: App Router Deep Dive',
+                description: 'Comprehensive tutorial on Next.js 14 App Router with real-world project examples.',
+                date: 'Jun 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/d946ef?text=Video+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'video',
+                title: 'GraphQL vs REST in 2024',
+                description: 'An honest comparison of GraphQL and REST APIs with production insights and benchmarks.',
+                date: 'May 2024',
+                icon: 'fab fa-youtube',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/d946ef?text=Video+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'blog',
+                title: 'Microservices Architecture Patterns',
+                description: 'Essential patterns for building resilient microservices with Node.js and TypeScript.',
+                date: 'May 2024',
+                icon: 'fas fa-book-open',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/38bdf8?text=Blog+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'talk',
+                title: 'Building Developer Communities',
+                description: 'Panel discussion on strategies for growing engaged developer communities at DevRelCon.',
+                date: 'Apr 2024',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://placehold.co/1920x1080/0f172a/10b981?text=Talk+Thumbnail',
+                link: '#'
+            },
+            {
+                type: 'talk',
+                title: 'Open Source ELT For Everyone – Level Up With Custom Connectors',
+                description: 'Conference talk at Big Data LDN covering open-source ELT pipelines and building custom data connectors.',
+                date: 'Oct 18, 2022',
+                icon: 'fas fa-microphone-alt',
+                thumbnail: 'https://img.youtube.com/vi/Jn9N1kljCZw/maxresdefault.jpg',
+                link: 'https://www.youtube.com/watch?v=Jn9N1kljCZw&t=1s'
+            }
+        ];
+
+        // --- PARSE AND SORT BY DATE ---
+        function parseDate(dateString) {
+            // Handle formats like "Jun 26, 2024", "Jun 2024", "Oct 18, 2022"
+            const months = {
+                'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+                'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
+            };
+
+            const parts = dateString.toLowerCase().split(/[\s,]+/).filter(p => p);
+
+            if (parts.length === 3) {
+                // Format: "Jun 26, 2024" or "Oct 18, 2022"
+                const month = months[parts[0]];
+                const day = parseInt(parts[1]);
+                const year = parseInt(parts[2]);
+                return new Date(year, month, day);
+            } else if (parts.length === 2) {
+                // Format: "Jun 2024"
+                const month = months[parts[0]];
+                const year = parseInt(parts[1]);
+                return new Date(year, month, 1); // Use 1st day of month
+            }
+
+            return new Date(0); // Fallback for unparseable dates
+        }
+
+        // Sort allContent by date (newest first)
+        allContent.sort((a, b) => parseDate(b.date) - parseDate(a.date));
+
+        let currentFilter = 'all';
+        let displayedCount = 9; // Start with 9 items
+        let isLoading = false;
+
+        // --- RENDER CONTENT ---
+        function renderContent() {
+            const grid = document.getElementById('contentGrid');
+            const filtered = currentFilter === 'all'
+                ? allContent
+                : allContent.filter(item => item.type === currentFilter);
+
+            const itemsToShow = filtered.slice(0, displayedCount);
+
+            grid.innerHTML = itemsToShow.map(item => `
+                <div class="content-box reveal" data-type="${item.type}" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
+                    <div class="content-thumbnail">
+                        <img src="${item.thumbnail}" alt="${item.title}">
+                    </div>
+                    <div class="content-info">
+                        <span class="content-type-tag tag-${item.type}">
+                            <i class="${item.icon}"></i> ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+                        </span>
+                        <h3>${item.title}</h3>
+                        <div class="content-date">
+                            <i class="far fa-calendar"></i> ${item.date}
+                        </div>
+                        <p class="content-desc">${item.description}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Re-observe reveal elements
+            setTimeout(() => {
+                document.querySelectorAll('.content-box.reveal').forEach(el => {
+                    revealObserver.observe(el);
+                });
+            }, 100);
+        }
+
+        // --- FILTER FUNCTIONALITY ---
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.filter;
+                displayedCount = 9; // Reset count
+                renderContent();
+            });
+        });
+
+        // --- INFINITE SCROLL ---
+        function checkScroll() {
+            if (isLoading) return;
+
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const pageHeight = document.documentElement.scrollHeight;
+
+            // Load more when user is 300px from bottom
+            if (scrollPosition > pageHeight - 300) {
+                loadMore();
+            }
+        }
+
+        function loadMore() {
+            const filtered = currentFilter === 'all'
+                ? allContent
+                : allContent.filter(item => item.type === currentFilter);
+
+            if (displayedCount >= filtered.length) return; // No more to load
+
+            isLoading = true;
+            document.getElementById('loading').style.display = 'block';
+
+            // Simulate loading delay
+            setTimeout(() => {
+                displayedCount += 6; // Load 6 more items
+                renderContent();
+                isLoading = false;
+                document.getElementById('loading').style.display = 'none';
+            }, 800);
+        }
+
+        window.addEventListener('scroll', checkScroll);
+
+        // --- SCROLL REVEAL ANIMATION ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Initial reveal for header
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- INITIAL RENDER ---
+        renderContent();
+    </script>
+</body>
+</html>
