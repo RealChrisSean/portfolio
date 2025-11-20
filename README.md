@@ -1,18 +1,100 @@
+
 # Portfolio Site
 
-Simple one-page portfolio with glassmorphism cards. No frameworks, just vanilla HTML/CSS/JS.
+Simple portfolio site with glassmorphism cards and Vegas-inspired neon accents. No frameworks, just vanilla HTML/CSS/JS.
 
-## Quick Start
+## Project Structure
 
-1. Update your info in the hero section (name, location, typing text)
-2. Replace the `#` social links with your actual URLs
-3. Add your content to the cards (blogs, videos, talks)
-4. Deploy it
+```
+├── index.html           # Main landing page
+├── all-content.html     # Full content archive with filtering
+├── content.js           # All your content data (videos, talks, blogs)
+└── app.js              # Currently empty
+```
 
-## Customizing Content
+## Adding New Content
 
-### Social Links
-Find these around line 234 and replace with your links:
+Everything lives in `content.js` - just edit that file to add videos, talks, or blogs.
+
+### Adding Videos
+
+```javascript
+videos: [
+    {
+        title: 'Your Video Title',
+        description: 'What the video is about.',
+        date: 'Jun 19, 2024',
+        youtubeId: 'YOUR_VIDEO_ID'  // Just the ID, not the full URL
+    }
+]
+```
+
+Thumbnails are auto-generated from YouTube. If you don't like the default thumbnail Add `customThumbnail: 'your-image-url.jpg'`
+
+### Adding Talks
+
+**With recording:**
+```javascript
+{
+    title: 'Talk Title',
+    description: 'What you talked about.',
+    date: 'Jun 26, 2024',
+    conference: 'Conference Name',
+    youtubeId: 'YOUR_VIDEO_ID',
+    hasRecording: true
+}
+```
+
+**Without recording:**
+```javascript
+{
+    title: 'Talk Title',
+    description: 'What you talked about.',
+    date: 'Jun 2024',
+    conference: 'Conference Name',
+    hasRecording: false,
+    externalLink: 'https://link-to-event.com',
+    customThumbnail: 'https://your-image.jpg'
+}
+```
+
+### Adding Blogs
+
+```javascript
+blogs: [
+    {
+        title: 'Blog Post Title',
+        description: 'What it's about.',
+        date: 'Dec 2024',
+        link: 'https://your-blog-url.com',
+        customThumbnail: 'https://optional-image.jpg'  // Optional
+    }
+]
+```
+
+## Customizing Personal Info
+
+### Homepage (`index.html`)
+
+**Your name and location:**
+Around line 218:
+```html
+<p class="hero-subtitle reveal">Your City, State</p>
+<h1 class="reveal">Hi, I'm <span class="highlight">Your Name</span>.</h1>
+```
+
+**Typing animation text:**
+Around line 222, edit the phrases:
+```javascript
+const phrases = [
+    "your first phrase",
+    "your second phrase",
+    "your third phrase"
+];
+```
+
+**Social links:**
+Around line 234:
 ```html
 <a href="https://twitter.com/yourusername">
 <a href="https://github.com/yourusername">
@@ -20,59 +102,34 @@ Find these around line 234 and replace with your links:
 <a href="https://youtube.com/@yourchannel">
 ```
 
-### Content Cards
-Each card follows this structure:
+**Email:**
+Around line 355:
 ```html
-<article class="card reveal">
-    <div>
-        <span class="card-tag">Video Tutorial</span>
-        <h3 class="card-title">Your Title</h3>
-        <p class="card-desc">Description here.</p>
-    </div>
-    <a href="YOUR_LINK" class="card-link">
-        <i class="fab fa-youtube"></i> &nbsp; Watch Video
-    </a>
-</article>
+<a href="mailto:your.email@example.com" class="hero-btn">Get in Touch</a>
 ```
 
-### Speaking Timeline
-For recorded talks:
-```html
-<div class="talk-card reveal">
-    <div class="date-badge">
-        <span class="month">OCT</span>
-        <span class="year">2024</span>
-    </div>
-    <div class="talk-content">
-        <h3>Talk Title</h3>
-        <div class="talk-meta">
-            <span><i class="fas fa-map-marker-alt"></i> Conference Name</span>
-            <span style="color: #10b981;">
-                <span class="status-dot status-recorded"></span> Recording Available
-            </span>
-        </div>
-        <a href="VIDEO_LINK">View Recording &rarr;</a>
-    </div>
-</div>
-```
+### Content Page (`all-content.html`)
 
-For in-person only, swap the recording status with:
+Update the page header around line 198:
 ```html
-<span><span class="status-dot status-offline"></span> In-Person Only</span>
+<h1>All <span class="highlight">Content</span></h1>
+<p>Your description here.</p>
 ```
 
 ### Colors
-Want different colors? Edit the CSS variables at the top:
+
+Both files use the same color scheme. Edit the CSS variables at the top:
+
 ```css
 :root {
-    --accent-primary: #38bdf8;   /* Cyan */
-    --accent-vegas: #d946ef;      /* Magenta */
+    --accent-primary: #0ea5e9;   /* Cyan */
+    --accent-vegas: #c026d3;      /* Magenta */
 }
 ```
 
 ## Deploying
 
-**GitHub Pages** (easiest):
+**GitHub Pages:**
 ```bash
 git init
 git add .
@@ -81,6 +138,24 @@ git branch -M main
 git remote add origin https://github.com/yourusername/portfolio.git
 git push -u origin main
 ```
-Then enable GitHub Pages in your repo settings.
 
-**Vercel/Netlify**: Just connect your repo and it'll auto-deploy.
+Then go to Settings → Pages → Deploy from main branch.
+
+**Vercel/Netlify:** Just connect your repo and deploy.
+
+## How It Works
+
+- `content.js` manages all your videos/talks/blogs
+- Homepage shows the 3 most recent items
+- All content page shows everything with filters
+- YouTube thumbnails are auto-fetched
+- Infinite scroll loads more content as you scroll
+
+## Notes
+
+- `app.js` is currently empty - feel free to use it if you need custom JS
+- Images are lazy-loaded for performance
+- Works on mobile, tablet, desktop
+- No build process needed
+
+That's it. Just edit `content.js` for new content and push.
