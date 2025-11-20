@@ -12,25 +12,25 @@ const portfolioContent = {
         {
             title: 'Build a Semantic Q&A App in Minutes',
             description: 'Learn how to quickly build intelligent Q&A applications using semantic search and AI.',
-            date: 'Jun 19, 2024',
+            date: 'Jun 19, 2025',
             youtubeId: 'LT-BtP84mdQ'
         },
         {
             title: 'How to deploy a TiDB Cluster using TiUP',
             description: 'Step-by-step guide to deploying your TiDB cluster with TiUP deployment tool.',
-            date: 'May 2024',
+            date: 'Mar 19, 2025',
             youtubeId: 'nyJm5udXpVQ'
         },
         {
             title: 'Migrate your Data from Planetscale to TiDB',
             description: 'Complete walkthrough for migrating your database from Planetscale to TiDB Cloud.',
-            date: 'Apr 2024',
+            date: 'Jan 29, 2025',
             youtubeId: 'c1qEuQ8876g'
         },
         {
             title: 'Build Your First Cluster with TiDB',
             description: 'Get started with TiDB by building your first database cluster from scratch.',
-            date: 'Mar 2024',
+            date: 'Nov 18, 2024',
             youtubeId: '3jfxsGZExRw'
         },
         {
@@ -42,7 +42,7 @@ const portfolioContent = {
         {
             title: 'Introduction to TiDB OSS',
             description: 'Getting started with TiDB Open Source - exploring the distributed SQL database architecture.',
-            date: 'Jan 2024',
+            date: 'Nov 12, 2025',
             youtubeId: 'MQmn8GzZMRY'
         }
     ],
@@ -66,7 +66,7 @@ const portfolioContent = {
         {
             title: 'SF Awesome AI Dev Tools',
             description: 'Showcasing the latest AI development tools and frameworks at San Francisco meetup.',
-            date: 'Jun 2024',
+            date: 'Jun 16, 2025',
             conference: 'SF Meetup',
             hasRecording: false,
             externalLink: 'https://luma.com/y2mjhnfw',
@@ -75,7 +75,7 @@ const portfolioContent = {
         {
             title: 'From Vectors to Agentic Memory: Architecting for Supercharged AI Development',
             description: 'Deep dive into AI architecture patterns and memory systems for modern AI applications.',
-            date: 'Jun 2024',
+            date: 'Sep 23, 2025',
             conference: 'SF Meetup',
             hasRecording: false,
             externalLink: 'https://luma.com/pquy8jlb',
