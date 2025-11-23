@@ -138,6 +138,24 @@ Then Settings → Pages → Deploy from main.
 
 **Vercel/Netlify:** Connect repo, deploy.
 
+## Security & API Keys
+
+**IMPORTANT:** Never commit API keys to git!
+
+1. `config.js` contains your YouTube API key and is in `.gitignore`
+2. `config.example.js` shows the format - copy it to `config.js` and add your real key
+3. `placeholder-checker.js` auto-detects placeholder data and fetches from YouTube API (local only)
+
+**For GitHub Pages deployment:**
+- All content in `content.js` must have real data (not placeholders)
+- The site works without `config.js` when all data is pre-filled
+- Never push `config.js` with real API keys to a public repo
+
+**Local development with API:**
+- Copy `config.example.js` to `config.js`
+- Add your YouTube API key
+- The placeholder-checker will auto-update any placeholder data
+
 ## How It Works
 
 - `content.js` has all your stuff
@@ -145,6 +163,6 @@ Then Settings → Pages → Deploy from main.
 - All content page shows everything with filters
 - YouTube thumbnails auto-load
 - Infinite scroll as you go down
-- `app.js` is empty
+- Placeholder detection & auto-update (local only)
 - Works on mobile/tablet/desktop
 - No build process
