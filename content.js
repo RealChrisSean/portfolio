@@ -37,12 +37,6 @@ const portfolioContent = {
             youtubeId: 'MQmn8GzZMRY'
         },
         {
-            title: 'Google Actually Built the Best AI',
-            description: 'Google just quietly dropped Gemini 3 and even Sam Altman and Elon Musk are blown away by them.',
-            date: 'Nov 19, 2025',
-            youtubeId: 'e4ll2lVuj9w'
-        },
-        {
             title: 'Real-Time Change Data Capture with PostgreSQL',
             description: "In this tutorial, you'll learn how to set up PostgreSQL Change Data Capture in minutes using Airbyte, leveraging a powerful tool like Debezium to build real-time data pipelines.",
             date: 'Jun 27, 2022',
