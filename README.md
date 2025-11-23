@@ -153,9 +153,7 @@ Then go to Settings → Pages → Deploy from main branch.
 
 ## Notes
 
-- `app.js` is currently empty - feel free to use it if you need custom JS
+- `app.js` is currently empty
 - Images are lazy-loaded for performance
 - Works on mobile, tablet, desktop
 - No build process needed
-
-That's it. Just edit `content.js` for new content and push.

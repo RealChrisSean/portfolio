@@ -64,7 +64,7 @@
         /* --- HERO SECTION --- */
         .hero {
             min-height: 60vh;
-            padding: 120px 0 80px 0;
+            padding: 40px 0 80px 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -124,12 +124,45 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            cursor: pointer;
         }
 
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             border-color: rgba(0,0,0,0.15);
+        }
+
+        a {
+            cursor: pointer;
+        }
+
+        .hero a[href*="x.com"],
+        .hero a[href*="github.com"],
+        .hero a[href*="linkedin.com"],
+        .hero a[href*="youtube.com"],
+        footer a[href*="x.com"],
+        footer a[href*="github.com"],
+        footer a[href*="linkedin.com"],
+        footer a[href*="youtube.com"] {
+            display: inline-block;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: transparent;
+        }
+
+        .hero a[href*="x.com"]:hover,
+        .hero a[href*="github.com"]:hover,
+        .hero a[href*="linkedin.com"]:hover,
+        .hero a[href*="youtube.com"]:hover,
+        footer a[href*="x.com"]:hover,
+        footer a[href*="github.com"]:hover,
+        footer a[href*="linkedin.com"]:hover,
+        footer a[href*="youtube.com"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            color: var(--accent-primary);
+            background: rgba(14, 165, 233, 0.1);
         }
 
         .card-tag {
@@ -210,6 +243,166 @@
             transform: translateX(5px);
         }
 
+        /* --- CAROUSEL --- */
+        .carousel-container {
+            position: relative;
+            margin-top: 2rem;
+            overflow: hidden;
+            padding: 0 50px;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .short-card {
+            flex: 0 0 280px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .short-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.15);
+        }
+
+        .short-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-top: 177.78%; /* 9:16 Aspect Ratio for shorts */
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(192, 38, 211, 0.08));
+        }
+
+        .short-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .short-card:hover .short-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .short-info {
+            padding: 1rem;
+        }
+
+        .short-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .short-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .short-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .short-views {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .short-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .short-card:hover .short-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--accent-vegas);
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+            color: var(--text-main);
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255,255,255,1);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .carousel-btn-prev {
+            left: 0;
+        }
+
+        .carousel-btn-next {
+            right: 0;
+        }
+
         /* --- ANIMATION UTILITIES --- */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -224,9 +417,20 @@
         }
 
         /* --- RESPONSIVE --- */
+        /* Portrait orientation (9:16 monitors) - reduce vertical spacing */
+        @media (orientation: portrait) {
+            .hero {
+                min-height: 20vh;
+                padding: 20px 0 20px 0;
+            }
+            section {
+                padding: 30px 0;
+            }
+        }
+
         @media (max-width: 768px) {
             .container { padding: 0 24px; }
-            .hero { padding-top: 100px; padding-bottom: 60px; }
+            .hero { padding-top: 40px; padding-bottom: 60px; }
             section { padding: 60px 0; }
             .grid-3 { grid-template-columns: 1fr; }
             .talk-card { flex-direction: column; gap: 1rem; }
@@ -235,18 +439,20 @@
             .view-all-btn { width: 100%; justify-content: center; }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="content.js"></script>
+    <script src="config.js"></script>
+    <script src="youtube-api.js"></script>
 </head>
 <body>
 
     <div class="bg-glow"></div>
 
-    <nav style="position: fixed; top: 0; width: 100%; padding: 20px; backdrop-filter: blur(10px); z-index: 100; border-bottom: var(--glass-border);">
+    <nav style="width: 100%; padding: 8px 20px; border-bottom: var(--glass-border);">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-weight: 700; font-size: 1.2rem;">Chris Dabatos</div>
+            <img src="imgs/cd_logo.png" alt="Chris Dabatos Logo" style="height: 40px; display: block; margin: 0; padding: 0;">
             <div style="display: flex; gap: 20px;">
-                <a href="all-content.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem;">View All Content</a>
+                <a href="all-content.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
             </div>
         </div>
     </nav>
@@ -258,25 +464,46 @@
             <span id="typewriter"></span>
         </h1>
         <p class="reveal" style="max-width: 600px; margin-top: 2rem; color: var(--text-muted); font-size: 1.1rem;">
-            I bridge the gap between complex code and human connection. Building communities, creating content, and advocating for the developer experience.
+            I break down AI tools and databases for developers who actually ship code.
         </p>
         <div class="reveal">
             <button class="hero-btn" onclick="window.location.href='all-content.html'">Explore My Work</button>
         </div>
 
         <div class="reveal" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.5rem;">
-            <a href="https://x.com/RealChrisSean" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-twitter"></i></a>
-            <a href="https://github.com/realchrissean" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-linkedin"></i></a>
-            <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" style="color: var(--text-muted); transition: color 0.3s;"><i class="fab fa-youtube"></i></a>
+            <a href="https://x.com/RealChrisSean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://github.com/realchrissean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
         </div>
     </header>
+
+    <section id="shorts" class="container" style="padding: 60px 0;">
+        <div class="section-header reveal">
+            <h2>Quick <span class="highlight">Tips</span></h2>
+            <a href="all-content.html?filter=shorts" class="view-all-btn">
+                View All Shorts <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="carousel-container reveal">
+            <button class="carousel-btn carousel-btn-prev" id="prevBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Shorts will be dynamically loaded here -->
+            </div>
+            <button class="carousel-btn carousel-btn-next" id="nextBtn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
 
     <section id="content" class="container">
         <div class="section-header reveal">
             <h2>Latest <span class="highlight">Creations</span></h2>
             <a href="all-content.html" class="view-all-btn">
-                View All Content <i class="fas fa-arrow-right"></i>
+                Explore My Work <i class="fas fa-arrow-right"></i>
             </a>
         </div>
 
@@ -285,66 +512,19 @@
         </div>
     </section>
 
-
-
-    <section id="speaking" class="container">
-        <h2 class="reveal">Public <span class="highlight">Speaking</span></h2>
-        <p class="reveal" style="margin-top: 2rem; margin-bottom: 2rem; color: var(--text-muted);">
+    <section id="speaking" class="container" style="margin-top: 60px;">
+        <div class="section-header reveal">
+            <h2>Public <span class="highlight">Speaking</span></h2>
+            <a href="all-content.html?filter=talk" class="view-all-btn">
+                View All Talks <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <p class="reveal" style="margin-top: 1rem; margin-bottom: 2rem; color: var(--text-muted);">
             I travel globally (and locally here in Vegas) to share knowledge. Here is where I've been and where I'm going.
         </p>
 
-        <div class="talk-card reveal">
-            <div class="date-badge">
-                <span class="month">JUN</span>
-                <span class="year">2024</span>
-            </div>
-            <div class="talk-content">
-                <h3>Demystifying Data Replication with PostgreSQL</h3>
-                <div class="talk-meta">
-                    <span><i class="fas fa-map-marker-alt"></i> Percona Live</span>
-                    <span style="color: #10b981; font-weight: 600;"><span class="status-dot status-recorded"></span> Recording Available</span>
-                </div>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                    Conference talk exploring PostgreSQL replication strategies and best practices.
-                </p>
-                <a href="https://www.youtube.com/watch?v=vlzuyVwZUao&t=1021s" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">View Recording &rarr;</a>
-            </div>
-        </div>
-
-        <div class="talk-card reveal">
-            <div class="date-badge">
-                <span class="month">JUN</span>
-                <span class="year">2024</span>
-            </div>
-            <div class="talk-content">
-                <h3>From Vectors to Agentic Memory</h3>
-                <div class="talk-meta">
-                    <span><i class="fas fa-map-marker-alt"></i> SF Meetup</span>
-                    <span><span class="status-dot status-offline"></span> In-Person Only</span>
-                </div>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                    Architecting for supercharged AI development with modern memory systems.
-                </p>
-                <a href="https://luma.com/pquy8jlb" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">Event Details &rarr;</a>
-            </div>
-        </div>
-
-        <div class="talk-card reveal">
-            <div class="date-badge">
-                <span class="month">OCT</span>
-                <span class="year">2022</span>
-            </div>
-            <div class="talk-content">
-                <h3>Open Source ELT For Everyone</h3>
-                <div class="talk-meta">
-                    <span><i class="fas fa-map-marker-alt"></i> Big Data LDN</span>
-                    <span style="color: #10b981; font-weight: 600;"><span class="status-dot status-recorded"></span> Recording Available</span>
-                </div>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                    Level up with custom connectors for open-source ELT pipelines.
-                </p>
-                <a href="https://www.youtube.com/watch?v=Jn9N1kljCZw&t=1s" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">View Recording &rarr;</a>
-            </div>
+        <div id="talksContainer">
+            <!-- Talks will be dynamically loaded here -->
         </div>
     </section>
 
@@ -353,15 +533,159 @@
             <h2>Let's build something <span class="highlight">awesome.</span></h2>
             <p>Open for speaking engagements and collaborations.</p>
             <br>
-            <a href="mailto:chris@example.com" class="hero-btn" style="background: var(--text-main); color: var(--bg-color);">Get in Touch</a>
-            <br><br><br>
-            <p style="font-size: 0.8rem;">&copy; 2024 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+            <a href="mailto:realchrissean@gmail.com" class="hero-btn" style="background: var(--text-main); color: var(--bg-color);">Get in Touch</a>
+            <br><br>
+            <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 2rem;">
+                <a href="https://x.com/RealChrisSean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem;">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
         </div>
     </footer>
 
     <script>
-        // --- LOAD LATEST CONTENT FROM content.js ---
-        const latestContent = getLatestContent(3);
+        // --- LOAD SHORTS CAROUSEL ---
+        const shorts = portfolioContent.shorts;
+        const carouselTrack = document.getElementById('carouselTrack');
+
+        // --- YOUTUBE API CACHE ---
+        const CACHE_KEY = 'youtube_api_cache_v2';
+        const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+        function getCachedData(videoId) {
+            try {
+                const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+                const cached = cache[videoId];
+                if (cached && (Date.now() - cached.timestamp < CACHE_DURATION)) {
+                    return cached.data;
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function setCachedData(videoId, data) {
+            try {
+                const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+                cache[videoId] = {
+                    data: data,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+            } catch (e) {
+                console.warn('Failed to cache data:', e);
+            }
+        }
+
+        async function fetchYouTubeVideoWithCache(videoId) {
+            const cached = getCachedData(videoId);
+            if (cached) {
+                return cached;
+            }
+            const data = await fetchYouTubeVideo(videoId);
+            if (data) {
+                setCachedData(videoId, data);
+            }
+            return data;
+        }
+
+        // Initial render with placeholders
+        function renderShorts(shortsData) {
+            carouselTrack.innerHTML = shortsData.map((short, index) => `
+                <div class="short-card" onclick="playShort(${index}, '${short.youtubeId}')">
+                    <div class="short-thumbnail" id="short-${index}">
+                        <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}">
+                        <div class="short-overlay">
+                            <div class="play-icon">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="short-info">
+                        <div class="short-title">${short.title || 'Loading...'}</div>
+                        <div class="short-meta">
+                            ${short.viewCount ? `<span class="short-views"><i class="fas fa-eye"></i> ${short.viewCount}</span>` : ''}
+                            ${short.date ? `<span class="short-date">${short.date}</span>` : '<span class="short-date">Loading...</span>'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Play short in iframe when clicked
+        function playShort(index, videoId) {
+            const thumbnail = document.getElementById(`short-${index}`);
+            thumbnail.innerHTML = `
+                <iframe
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&showinfo=0&rel=0&controls=1"
+                    title="YouTube Short"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px 12px 0 0;">
+                </iframe>
+            `;
+        }
+
+        // Render initial shorts with placeholder data
+        renderShorts(shorts);
+
+        // Fetch video data from YouTube API (with caching)
+        async function loadShortDetails() {
+            const videoIds = shorts.map(s => s.youtubeId);
+            const videoData = await Promise.all(videoIds.map(id => fetchYouTubeVideoWithCache(id)));
+
+            // Merge API data with existing shorts data, filter out failed loads
+            const enrichedShorts = shorts.map((short, index) => {
+                const apiData = videoData[index];
+                if (apiData) {
+                    return {
+                        ...short,
+                        title: truncateText(apiData.title, 60),
+                        date: formatYouTubeDate(apiData.publishedAt),
+                        publishedAt: apiData.publishedAt,
+                        thumbnail: apiData.thumbnail,
+                        viewCount: formatViewCount(apiData.viewCount)
+                    };
+                }
+                return null; // Mark failed loads for filtering
+            }).filter(short => short !== null); // Remove failed loads
+
+            // Sort by date (newest first)
+            enrichedShorts.sort((a, b) => {
+                return new Date(b.publishedAt) - new Date(a.publishedAt);
+            });
+
+            // Re-render with actual data
+            renderShorts(enrichedShorts);
+        }
+
+        // Load video details from YouTube API
+        loadShortDetails();
+
+        // Carousel navigation
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        prevBtn.addEventListener('click', () => {
+            carouselTrack.scrollBy({
+                left: -300,
+                behavior: 'smooth'
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            carouselTrack.scrollBy({
+                left: 300,
+                behavior: 'smooth'
+            });
+        });
+
+        // --- LOAD LATEST VIDEOS FROM content.js ---
+        const latestContent = getLatestVideos(3);
         const latestGrid = document.getElementById('latestContentGrid');
 
         // Get label and color for each content type
@@ -378,19 +702,63 @@
         latestGrid.innerHTML = latestContent.map(item => {
             const typeInfo = getContentTypeInfo(item.type);
             return `
-                <article class="card reveal">
+                <article class="card reveal" onclick="window.open('${item.link}', '_blank')">
                     <div>
                         <span class="card-tag" style="color: ${typeInfo.color};">${typeInfo.label}</span>
                         <h3 class="card-title">${item.title}</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                            <i class="far fa-calendar"></i> ${item.date}
+                        </p>
                         <p class="card-desc">${item.description}</p>
                     </div>
-                    <a href="${item.link}" class="card-link" target="_blank"><i class="${typeInfo.icon}"></i> &nbsp; ${typeInfo.linkText}</a>
+                    <a href="${item.link}" class="card-link" target="_blank" onclick="event.stopPropagation()"><i class="${typeInfo.icon}"></i> &nbsp; ${typeInfo.linkText}</a>
                 </article>
             `;
         }).join('');
 
+        // --- LOAD LATEST TALKS FROM content.js ---
+        const latestTalks = getLatestTalks(3);
+        const talksContainer = document.getElementById('talksContainer');
+
+        talksContainer.innerHTML = latestTalks.map(talk => {
+            // Parse date for display
+            const dateParts = talk.date.split(' ');
+            const month = dateParts[0].substring(0, 3).toUpperCase();
+            const year = dateParts[2];
+
+            // Determine status and link
+            const hasRecording = talk.link && (talk.link.includes('youtube.com') || talk.link.includes('youtu.be'));
+            const statusHTML = hasRecording
+                ? '<span style="color: #10b981; font-weight: 600;"><span class="status-dot status-recorded"></span> Recording Available</span>'
+                : '<span><span class="status-dot status-offline"></span> In-Person Only</span>';
+
+            const linkHTML = hasRecording
+                ? `<a href="${talk.link}" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">View Recording &rarr;</a>`
+                : `<a href="${talk.link}" target="_blank" style="margin-top: 0.5rem; display: inline-block; font-size: 0.85rem; color: var(--accent-primary);">Event Details &rarr;</a>`;
+
+            return `
+                <div class="talk-card reveal">
+                    <div class="date-badge">
+                        <span class="month">${month}</span>
+                        <span class="year">${year}</span>
+                    </div>
+                    <div class="talk-content">
+                        <h3>${talk.title}</h3>
+                        <div class="talk-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> ${talk.conference || 'Conference'}</span>
+                            ${statusHTML}
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                            ${talk.description}
+                        </p>
+                        ${linkHTML}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
         // --- 1. TYPING EFFECT ---
-        const textToType = "Developer Advocate. Content Creator. Speaker.";
+        const textToType = "Developer Advocate. Engineer. Speaker.";
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
 
