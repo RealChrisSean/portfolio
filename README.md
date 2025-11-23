@@ -1,43 +1,42 @@
-
 # Portfolio Site
 
-Simple portfolio site with glassmorphism cards and Vegas-inspired neon accents. No frameworks, just vanilla HTML/CSS/JS.
+Portfolio site with some glassmorphism cards and Vegas neon colors. No frameworks - just HTML, CSS, and JS.
 
-## Project Structure
+## What's What
 
 ```
-├── index.html           # Main landing page
-├── all-content.html     # Full content archive with filtering
-├── content.js           # All your content data (videos, talks, blogs)
-└── app.js              # Currently empty
+├── index.html           # Landing page
+├── all-content.html     # Everything I've made, with filters
+├── content.js           # All my videos, talks, blogs
+└── app.js              # Empty right now
 ```
 
-## Adding New Content
+## Adding Content
 
-Everything lives in `content.js` - just edit that file to add videos, talks, or blogs.
+Edit `content.js` - that's it.
 
-### Adding Videos
+### Videos
 
 ```javascript
 videos: [
     {
         title: 'Your Video Title',
-        description: 'What the video is about.',
+        description: 'What it's about',
         date: 'Jun 19, 2024',
-        youtubeId: 'YOUR_VIDEO_ID'  // Just the ID, not the full URL
+        youtubeId: 'YOUR_VIDEO_ID'  // just the ID
     }
 ]
 ```
 
-Thumbnails are auto-generated from YouTube. If you don't like the default thumbnail Add `customThumbnail: 'your-image-url.jpg'`
+YouTube thumbnails load automatically. If you want a custom one, add `customThumbnail: 'your-image.jpg'`
 
-### Adding Talks
+### Talks
 
 **With recording:**
 ```javascript
 {
     title: 'Talk Title',
-    description: 'What you talked about.',
+    description: 'What you talked about',
     date: 'Jun 26, 2024',
     conference: 'Conference Name',
     youtubeId: 'YOUR_VIDEO_ID',
@@ -45,46 +44,44 @@ Thumbnails are auto-generated from YouTube. If you don't like the default thumbn
 }
 ```
 
-**Without recording:**
+**No recording:**
 ```javascript
 {
     title: 'Talk Title',
-    description: 'What you talked about.',
+    description: 'What you talked about',
     date: 'Jun 2024',
     conference: 'Conference Name',
     hasRecording: false,
-    externalLink: 'https://link-to-event.com',
+    externalLink: 'https://event-link.com',
     customThumbnail: 'https://your-image.jpg'
 }
 ```
 
-### Adding Blogs
+### Blogs
 
 ```javascript
 blogs: [
     {
-        title: 'Blog Post Title',
-        description: 'What it's about.',
+        title: 'Post Title',
+        description: 'What it's about',
         date: 'Dec 2024',
-        link: 'https://your-blog-url.com',
-        customThumbnail: 'https://optional-image.jpg'  // Optional
+        link: 'https://your-blog.com',
+        customThumbnail: 'https://image.jpg'  // optional
     }
 ]
 ```
 
-## Customizing Personal Info
+## Changing Your Info
 
 ### Homepage (`index.html`)
 
-**Your name and location:**
-Around line 218:
+**Name/location** (line ~218):
 ```html
 <p class="hero-subtitle reveal">Your City, State</p>
 <h1 class="reveal">Hi, I'm <span class="highlight">Your Name</span>.</h1>
 ```
 
-**Typing animation text:**
-Around line 222, edit the phrases:
+**Typing animation** (line ~222):
 ```javascript
 const phrases = [
     "your first phrase",
@@ -93,8 +90,7 @@ const phrases = [
 ];
 ```
 
-**Social links:**
-Around line 234:
+**Social links** (line ~234):
 ```html
 <a href="https://twitter.com/yourusername">
 <a href="https://github.com/yourusername">
@@ -102,15 +98,14 @@ Around line 234:
 <a href="https://youtube.com/@yourchannel">
 ```
 
-**Email:**
-Around line 355:
+**Email** (line ~355):
 ```html
 <a href="mailto:your.email@example.com" class="hero-btn">Get in Touch</a>
 ```
 
 ### Content Page (`all-content.html`)
 
-Update the page header around line 198:
+Update header around line 198:
 ```html
 <h1>All <span class="highlight">Content</span></h1>
 <p>Your description here.</p>
@@ -118,12 +113,12 @@ Update the page header around line 198:
 
 ### Colors
 
-Both files use the same color scheme. Edit the CSS variables at the top:
+Same variables in both files:
 
 ```css
 :root {
-    --accent-primary: #0ea5e9;   /* Cyan */
-    --accent-vegas: #c026d3;      /* Magenta */
+    --accent-primary: #0ea5e9;   /* cyan */
+    --accent-vegas: #c026d3;      /* magenta */
 }
 ```
 
@@ -139,21 +134,17 @@ git remote add origin https://github.com/yourusername/portfolio.git
 git push -u origin main
 ```
 
-Then go to Settings → Pages → Deploy from main branch.
+Then Settings → Pages → Deploy from main.
 
-**Vercel/Netlify:** Just connect your repo and deploy.
+**Vercel/Netlify:** Connect repo, deploy.
 
 ## How It Works
 
-- `content.js` manages all your videos/talks/blogs
-- Homepage shows the 3 most recent items
+- `content.js` has all your stuff
+- Homepage shows 3 most recent items
 - All content page shows everything with filters
-- YouTube thumbnails are auto-fetched
-- Infinite scroll loads more content as you scroll
-
-## Notes
-
-- `app.js` is currently empty
-- Images are lazy-loaded for performance
-- Works on mobile, tablet, desktop
-- No build process needed
+- YouTube thumbnails auto-load
+- Infinite scroll as you go down
+- `app.js` is empty
+- Works on mobile/tablet/desktop
+- No build process
