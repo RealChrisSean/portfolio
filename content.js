@@ -88,12 +88,6 @@ const portfolioContent = {
 
     shorts: [
         {
-            youtubeId: 'AaiAaaQvEaE',
-            title: "Why I'm No Longer Worried About AI",
-            date: 'Nov 11, 2025',
-            viewCount: '2.3K'
-        },
-        {
             youtubeId: 'txSodJuesO0',
             title: 'Are We In An AI Bubble?',
             date: 'Nov 12, 2025',
