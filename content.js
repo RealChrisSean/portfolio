@@ -40,274 +40,271 @@ const portfolioContent = {
             title: 'Google Actually Built the Best AI',
             description: 'Google just quietly dropped Gemini 3 and even Sam Altman and Elon Musk are blown away by them.',
             date: 'Nov 19, 2025',
-            youtubeId: 'fEmQsxFIoLc'
+            youtubeId: 'e4ll2lVuj9w'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'Real-Time Change Data Capture with PostgreSQL',
+            description: "In this tutorial, you'll learn how to set up PostgreSQL Change Data Capture in minutes using Airbyte, leveraging a powerful tool like Debezium to build real-time data pipelines.",
+            date: 'Jun 27, 2022',
             youtubeId: 'CQ7JKwKIIg8'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'What Is Docker And Why Is It Important?',
+            description: 'What is Docker and why should you care? Docker is an open-source project that allows you to create isolated virtual development environments for your applications.',
+            date: 'Jul 18, 2022',
             youtubeId: 'qev6hcY9NoI'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'How to create an ELT pipeline from Postgres to BigQuery with Airbyte',
+            description: "In this video, we'll show you how to quickly and easily set up an ELT pipeline from Postgres to BigQuery using Airbyte. You'll see how easy it is to get started with data integration.",
+            date: 'Aug 17, 2022',
             youtubeId: 'w1VkzQQlZzs'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: "What You Don't Know About Postgres 2022",
+            description: 'PostgreSQL is a powerful open-source database that has been around for more than 30 years! But what is it? And where did it come from? Watch this video to learn more.',
+            date: 'Aug 19, 2022',
             youtubeId: 'tGVqc1m19tU'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'Synchronize Data from MongoDB to PostgreSQL in Minutes!',
+            description: "Learn how to quickly migrate data from MongoDB to PostgreSQL using Airbyte's powerful data integration platform. This step-by-step guide makes it easy to sync your data.",
+            date: 'Feb 28, 2023',
             youtubeId: 'Ls-qQsYY9qs'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'Are Custom ETL Pipelines Outdated? 2023',
+            description: 'In this video, we dive deep into ETL pipelines and explore the pros and cons of both custom ETL pipelines and modern ETL tools for data engineering.',
+            date: 'Apr 27, 2023',
             youtubeId: '_2xMTssTK9c'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'How To Become a Data Engineer',
+            description: 'In this video we explore different paths (BootCamps, degrees, or self-teaching) and essential technical competencies like Python, SQL, and cloud computing for becoming a data engineer.',
+            date: 'Jun 1, 2023',
             youtubeId: 'r6y5YEplFcY'
         },
         {
-            title: 'Video Tutorial',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
+            title: 'PostgreSQL vs MySQL',
+            description: 'Step into the world of MySQL and Postgres with our comprehensive comparison video. We dive deep into their individual strengths and weaknesses, guiding you to make the best choice.',
+            date: 'Jun 12, 2023',
             youtubeId: 'vAv5lks4gzA'
-        },
-        {
-            title: 'Google Actually Built the Best AI',
-            description: 'Educational video content for developers.',
-            date: 'Recent',
-            youtubeId: 'e4ll2lVuj9w'
         }
     ],
 
     shorts: [
         {
             youtubeId: 'AaiAaaQvEaE',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: "Why I'm No Longer Worried About AI",
+            date: 'Nov 11, 2025',
+            viewCount: '2.3K'
         },
         {
             youtubeId: 'txSodJuesO0',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Are We In An AI Bubble?',
+            date: 'Nov 12, 2025',
+            viewCount: '1.5K'
         },
         {
             youtubeId: 'miKJSp10zio',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: "No One's Talking About This Part of AI",
+            date: 'Nov 14, 2025',
+            viewCount: '1.5K'
         },
         {
             youtubeId: 'yrHFCB7NOlI',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Claude AI Was Used to Hack Real Companies 👀😬',
+            date: 'Nov 15, 2025',
+            viewCount: '2.5K'
         },
         {
             youtubeId: 'KVkPXkM-vuI',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: "This Isn't How We Thought AI Would Attack Us",
+            date: 'Nov 15, 2025',
+            viewCount: '2.2K'
         },
         {
             youtubeId: 'LDZ7o1-7_T8',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: "AI Is Making You Lazy & There's Proof",
+            date: 'Nov 16, 2025',
+            viewCount: '2.7K'
         },
         {
             youtubeId: 'FKx9kcDbpGw',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'ChatGPT can NOW control your BROWSER 👀',
+            date: 'Oct 22, 2025',
+            viewCount: '844'
         },
         {
             youtubeId: 'eZwmu92xz3k',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: "DeepSeek Just Solved AI's Biggest Problem 👀🤯",
+            date: 'Oct 27, 2025',
+            viewCount: '974'
         },
         {
             youtubeId: 'Hjt2YOkZ6eU',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'The Problem With MySQL 😬',
+            date: 'Oct 27, 2025',
+            viewCount: '912'
         },
         {
             youtubeId: '5Ydcsz8idF4',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'The AI Race No One Talks About',
+            date: 'Oct 29, 2025',
+            viewCount: '864'
         },
         {
             youtubeId: 'Hgsbl3S9cFQ',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'MySQL is great until…',
+            date: 'Nov 3, 2025',
+            viewCount: '757'
         },
         {
             youtubeId: 'KzeZ8BCxpkw',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Does AI Have A Conscious Now?! 👀',
+            date: 'Nov 5, 2025',
+            viewCount: '177'
         },
         {
             youtubeId: 'C3O5_xnXFXQ',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'The $150B AI Mistake 🤯',
+            date: 'Nov 12, 2025',
+            viewCount: '958'
         },
         {
             youtubeId: '4M31pkFsBsA',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Is AI Cooked? 😬',
+            date: 'Nov 12, 2025',
+            viewCount: '1.3K'
         },
         {
             youtubeId: 'L6PMqph3BFc',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Kimi K2 Just Beat GPT-5 👀🤯',
+            date: 'Nov 13, 2025',
+            viewCount: '411'
         },
         {
             youtubeId: 'HQl6o-fexdY',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'GPT 5.1 Is Here 🔥',
+            date: 'Nov 17, 2025',
+            viewCount: '778'
         },
         {
             youtubeId: 'm83meleWmfY',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Why AI Agents Need a Real Database (Not Just Vectors)',
+            date: 'Nov 17, 2025',
+            viewCount: '820'
         },
         {
             youtubeId: 'J-CDu4lVkX8',
-            title: 'Quick Tip',
-            date: 'Recent'
-        },
-        {
-            youtubeId: 'j4jk3h8rFNg',
-            title: 'Quick Tip',
-            date: 'Recent'
-        },
-        {
-            youtubeId: 'umNuX0-XpD4',
-            title: 'Quick Tip',
-            date: 'Recent'
-        },
-        {
-            youtubeId: '7wBjeN7yNWo',
-            title: 'Quick Tip',
-            date: 'Recent'
+            title: 'Google Just Proved Everyone Wrong About AI 🤯',
+            date: 'Nov 21, 2025',
+            viewCount: '7'
         }
     ],
 
     interviews: [
         {
             youtubeId: 'hAR_dOXhS2U',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "From Immigrant to Sr Software Engineer & Instructor: Yihua Zhang",
+            description: "Yihua Zhang shares his journey from immigrant to senior software engineer and instructor, discussing his experience teaching and mentoring developers.",
+            date: 'Jun 5, 2023'
         },
         {
             youtubeId: 'p7byWAdjY4M',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "What YouTubers Don't Tell You About Learning How To Code | Jeremiah Peoples",
+            description: "Jeremiah Peoples reveals the truth about learning to code that most YouTubers won't share, offering honest advice for aspiring developers.",
+            date: 'May 24, 2023'
         },
         {
             youtubeId: 'zWP6izpG014',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Why Developers Are Leaving Tech 2023",
+            description: "An in-depth discussion about why developers are leaving the tech industry in 2023, exploring burnout, job market changes, and career transitions.",
+            date: 'May 10, 2023'
         },
         {
             youtubeId: 'cTh2lwZ1bLA',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "How To Become A Software Engineer in 2023 | Self Taught Developer",
+            description: "A comprehensive guide for self-taught developers looking to break into software engineering in 2023, covering essential skills and strategies.",
+            date: 'Apr 26, 2023'
         },
         {
             youtubeId: 'wKI8-bJX9_s',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "2023 Software Engineering Tech Interview Prep | Grokking the Coding Interview",
+            description: "Expert advice on preparing for software engineering technical interviews in 2023, featuring insights on the Grokking the Coding Interview course.",
+            date: 'Apr 21, 2023'
         },
         {
             youtubeId: 'zF3dYQGGLkM',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "How Developers Landed FAANG & MANGA Tech Jobs 2023",
+            description: "Success stories from developers who landed jobs at FAANG and MANGA companies in 2023, sharing their strategies and experiences.",
+            date: 'Apr 14, 2023'
         },
         {
             youtubeId: 'bwDy42p2oNk',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "How Developers Are Learning To Code in 2023",
+            description: "Exploring modern approaches to learning programming in 2023, including bootcamps, self-study, and emerging educational platforms.",
+            date: 'Apr 7, 2023'
         },
         {
             youtubeId: 'LEIwocQ5HB8',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Should You Become A Developer in 2023?",
+            description: "An honest discussion about whether pursuing a career in software development is the right choice in 2023, considering current market conditions.",
+            date: 'Mar 31, 2023'
         },
         {
             youtubeId: 'pBf2cVoH4IA',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Career and Coding Advice for Developers & Engineers",
+            description: "Practical career and coding advice for developers and engineers at all levels, covering professional growth and technical skills.",
+            date: 'Mar 24, 2023'
         },
         {
             youtubeId: '2xdBsBwr4Hk',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Transitioning Careers into Tech + Overcoming Challenges",
+            description: "Stories and advice about making a successful career transition into tech, addressing common challenges and obstacles.",
+            date: 'Feb 28, 2023'
         },
         {
             youtubeId: 'cUpKGfA-Ooo',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Software Engineer Career Advice Q&A",
+            description: "Q&A session covering various aspects of software engineering careers, answering common questions from aspiring and current developers.",
+            date: 'Feb 24, 2023'
         },
         {
             youtubeId: 'dNASkBuhPy0',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Haseeb Qureshi, a16z Managing Partner - Transitioning from Poker Pro to Tech Investor",
+            description: "Haseeb Qureshi shares his unique journey from professional poker player to managing partner at a16z, offering insights on career pivots.",
+            date: 'Aug 31, 2022'
         },
         {
             youtubeId: 'ONAI7vLRgCA',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "How I Learned to Code | @ThePrimeagen",
+            description: "ThePrimeagen shares his personal story of learning to code, including the challenges and breakthroughs along the way.",
+            date: 'Aug 23, 2022'
         },
         {
             youtubeId: '8t5w4fVmDFw',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Joma Tech, Comedian/Youtuber & Ex-Software Engineer - Why developers are quitting tech",
+            description: "Joma Tech discusses why developers are leaving the tech industry, combining humor with serious insights about industry challenges.",
+            date: 'Aug 17, 2022'
         },
         {
             youtubeId: 'xd_2oVGAmII',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "How To Become A Software Developer",
+            description: "A comprehensive overview of the path to becoming a software developer, covering education, skills, and career planning.",
+            date: 'Aug 10, 2022'
         },
         {
             youtubeId: 'MooA-8eXnMo',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Ask Me Anything (AMA) About Software Engineering & Tech Interviews",
+            description: "Open AMA session covering software engineering topics and tech interview preparation, answering community questions.",
+            date: 'Aug 5, 2022'
         },
         {
             youtubeId: 'yD2dYgXIyGc',
-            title: 'Developer Interview',
-            description: 'Insightful conversation with industry experts.',
-            date: 'Recent'
+            title: "Code and Coding Careers Q&A",
+            description: "Q&A focused on coding practices and career development in software engineering, addressing viewer questions.",
+            date: 'Jul 27, 2022'
         }
     ],
 
