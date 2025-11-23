@@ -437,7 +437,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             animation: fadeIn 0.3s ease;
         }
@@ -450,9 +450,7 @@
         }
 
         .modal-content {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: var(--glass-border);
+            background: #ffffff;
             border-radius: 16px;
             padding: 2.5rem;
             max-width: 700px;
@@ -461,6 +459,7 @@
             overflow-y: auto;
             position: relative;
             animation: slideUp 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
         }
 
         .modal-close {
@@ -468,7 +467,7 @@
             top: 1.5rem;
             right: 1.5rem;
             font-size: 1.5rem;
-            color: var(--text-muted);
+            color: #6b7280;
             cursor: pointer;
             transition: color 0.3s;
             background: none;
@@ -477,7 +476,7 @@
         }
 
         .modal-close:hover {
-            color: var(--text-main);
+            color: #111827;
         }
 
         .modal-header {
@@ -489,34 +488,65 @@
 
         .modal-header h3 {
             font-size: 1.75rem;
-            color: var(--text-main);
+            color: #111827;
             margin: 0;
         }
 
         .modal-subtitle {
-            color: var(--text-muted);
+            color: #4b5563;
             font-size: 1rem;
             margin-bottom: 2rem;
             line-height: 1.6;
         }
 
-        .modal-section {
+        .modal-sections-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
             margin-bottom: 2rem;
+        }
+
+        .modal-section {
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .modal-section.full-width {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(192, 38, 211, 0.08) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.2);
         }
 
         .modal-section h4 {
             color: var(--accent-primary);
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
         .modal-section p {
-            color: var(--text-muted);
-            line-height: 1.7;
+            color: #4b5563;
+            line-height: 1.8;
             margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-badge {
+            background: transparent;
+            color: var(--accent-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1.5px solid var(--accent-primary);
         }
 
         .modal-github-btn {
@@ -570,6 +600,10 @@
             .modal-close {
                 top: 1rem;
                 right: 1rem;
+            }
+            .modal-sections-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
         }
     </style>
@@ -1014,7 +1048,7 @@
                 subtitle: 'AI memory system with branching and rollbacks - like Git for AI context.',
                 github: 'https://github.com/RealChrisSean/atlasMemory',
                 problem: 'AI forgets everything between sessions. Existing vector stores don\'t handle branching conversations or let you undo bad context.',
-                tech: 'TiDB Vector (384-dim embeddings), SQLAlchemy ORM, Python + TypeScript clients.',
+                tech: 'TiDB Vector storage, Git-style branching logic, SQLAlchemy ORM, Python',
                 why: 'This solves the "AI poisoning" problem - when an agent picks up wrong info, you can roll back to before it went sideways. It also lets you explore different conversation branches without losing the main thread. Most devs building AI apps hit this wall eventually - their agent gets confused and they have to restart from scratch. This gives you version control for AI context, which means you can build more reliable agents that recover from mistakes instead of spiraling.'
             },
             'semantic-qna': {
@@ -1040,6 +1074,17 @@
             const modalBody = document.getElementById('modalBody');
             const project = projectData[projectId];
 
+            // Parse tech stack into badges
+            const techItems = project.tech.split(',').map(item => {
+                // Extract just the tech name from strings like "TiDB Vector (384-dim embeddings)"
+                const match = item.trim().match(/^([^(]+)/);
+                return match ? match[1].trim() : item.trim();
+            });
+
+            const techBadgesHTML = techItems.map(tech =>
+                `<span class="tech-badge">${tech}</span>`
+            ).join('');
+
             modalBody.innerHTML = `
                 <div class="modal-header">
                     <i class="fab fa-github" style="font-size: 2rem; color: var(--accent-primary);"></i>
@@ -1047,19 +1092,23 @@
                 </div>
                 <p class="modal-subtitle">${project.subtitle}</p>
 
-                <div class="modal-section">
-                    <h4>Problem</h4>
-                    <p>${project.problem}</p>
-                </div>
+                <div class="modal-sections-row">
+                    <div class="modal-section">
+                        <h4>Problem</h4>
+                        <p>${project.problem}</p>
+                    </div>
 
-                <div class="modal-section">
-                    <h4>Stack</h4>
-                    <p>${project.tech}</p>
-                </div>
+                    <div class="modal-section">
+                        <h4>Stack</h4>
+                        <div class="tech-badges">
+                            ${techBadgesHTML}
+                        </div>
+                    </div>
 
-                <div class="modal-section">
-                    <h4>Why it matters</h4>
-                    <p>${project.why}</p>
+                    <div class="modal-section full-width">
+                        <h4>Why it matters</h4>
+                        <p>${project.why}</p>
+                    </div>
                 </div>
 
                 <a href="${project.github}" target="_blank" class="modal-github-btn">
