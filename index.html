@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chris Dabatos | Developer Advocate</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Developer Advocate from Las Vegas sharing insights on AI, databases, and software engineering through videos, talks, and technical content.">
+    <meta name="author" content="Chris Dabatos">
+    <meta name="keywords" content="developer advocate, AI, databases, TiDB, PostgreSQL, software engineering, tech talks">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Chris Dabatos - Developer Advocate">
+    <meta property="og:description" content="Discover my latest videos, conference talks, and insights on AI, databases, and developer tools.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" content="https://realchrissean.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Chris Dabatos Portfolio">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:creator" content="@RealChrisSean">
+    <meta name="twitter:title" content="Chris Dabatos - Developer Advocate">
+    <meta name="twitter:description" content="Developer Advocate sharing insights on AI, databases, and software engineering.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#0ea5e9">
+    <link rel="canonical" href="https://realchrissean.com">
     <style>
         /* --- VARIABLES & RESET --- */
         :root {
@@ -640,10 +665,10 @@
         </div>
 
         <div class="reveal" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.5rem;">
-            <a href="https://x.com/RealChrisSean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
-            <a href="https://github.com/realchrissean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
-            <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+            <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+            <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github" aria-hidden="true"></i></a>
+            <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+            <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube" aria-hidden="true"></i></a>
         </div>
     </header>
 
@@ -759,10 +784,10 @@
             <a href="mailto:realchrissean@gmail.com" class="hero-btn" style="background: var(--text-main); color: var(--bg-color);">Get in Touch</a>
             <br><br>
             <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 2rem;">
-                <a href="https://x.com/RealChrisSean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
-                <a href="https://github.com/realchrissean" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github" aria-hidden="true"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube" aria-hidden="true"></i></a>
             </div>
             <p style="font-size: 0.8rem;">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
         </div>
@@ -820,7 +845,7 @@
             carouselTrack.innerHTML = shortsData.map((short, index) => `
                 <div class="short-card" onclick="playShort(${index}, '${short.youtubeId}')">
                     <div class="short-thumbnail" id="short-${index}">
-                        <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}">
+                        <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}" loading="lazy">
                         <div class="short-overlay">
                             <div class="play-icon">
                                 <i class="fab fa-youtube"></i>

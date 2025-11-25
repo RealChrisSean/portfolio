@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Content | Chris Dabatos</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore all my videos, conference talks, interviews, and technical content on AI, databases, and software engineering.">
+    <meta name="author" content="Chris Dabatos">
+    <meta name="keywords" content="developer advocate, AI, databases, TiDB, PostgreSQL, software engineering, tech talks, tutorials">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="All Content - Chris Dabatos">
+    <meta property="og:description" content="Explore all my videos, conference talks, interviews, and technical content on AI, databases, and software engineering.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" content="https://realchrissean.com/all-content.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Chris Dabatos Portfolio">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:creator" content="@RealChrisSean">
+    <meta name="twitter:title" content="All Content - Chris Dabatos">
+    <meta name="twitter:description" content="Explore all my videos, conference talks, interviews, and technical content.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#0ea5e9">
+    <link rel="canonical" href="https://realchrissean.com/all-content.html">
     <style>
         /* --- VARIABLES & RESET --- */
         :root {
@@ -31,6 +56,19 @@
             font-family: var(--font-main);
             line-height: 1.6;
             overflow-x: hidden;
+        }
+
+        /* Screen reader only - visually hidden but accessible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
         }
 
         /* Background Animation Effect */
@@ -683,7 +721,7 @@
             .filter-tab { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="content.js"></script>
     <script src="config.js"></script>
     <script src="youtube-api.js"></script>
@@ -693,14 +731,12 @@
 
     <div class="bg-glow"></div>
 
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="logo" style="margin: 0; padding: 0; line-height: 0;">
-                <img src="imgs/cd_logo.png" alt="Chris Dabatos Logo" style="height: 40px; display: block; margin: 0; padding: 0;">
-            </a>
-            <a href="index.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </a>
+    <nav style="width: 100%; padding: 8px 20px; border-bottom: var(--glass-border);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <img src="imgs/cd_logo.png" alt="Chris Dabatos Logo" style="height: 40px; display: block; margin: 0; padding: 0;">
+            <div style="display: flex; gap: 20px;">
+                <a href="index.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Back to Home</a>
+            </div>
         </div>
     </nav>
 
@@ -723,8 +759,9 @@
             <!-- Search & Sort Controls -->
             <div class="controls-bar reveal">
                 <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search content...">
+                    <label for="searchInput" class="sr-only">Search content</label>
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input type="text" id="searchInput" placeholder="Search content..." aria-label="Search content">
                 </div>
                 <div class="sort-dropdown">
                     <select id="sortSelect">
@@ -778,10 +815,12 @@
 
     <footer class="reveal">
         <div class="container">
+            <!-- Newsletter subscription - uncomment when ready
             <p style="font-size: 0.9rem; color: var(--text-muted);">
-                Want to stay updated? <a href="#" style="color: var(--accent-primary); text-decoration: none;">Subscribe to my newsletter</a>
+                Want to stay updated? <a href="YOUR_NEWSLETTER_URL" style="color: var(--accent-primary); text-decoration: none;">Subscribe to my newsletter</a>
             </p>
             <br>
+            -->
             <p style="font-size: 0.8rem;">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
         </div>
     </footer>
@@ -981,7 +1020,7 @@
                 gridTop.innerHTML = topItems.map((item, index) => `
                     <div class="content-box reveal" data-type="${item.type}" ${item.youtubeId ? `data-youtube-id="${item.youtubeId}"` : ''} onclick="${item.youtubeId ? `playVideo(this, '${item.youtubeId}')` : `window.open('${item.link}', '_blank')`}" style="cursor: pointer; --index: ${index};">
                         <div class="content-thumbnail">
-                            <img src="${item.thumbnail}" alt="${item.title}">
+                            <img src="${item.thumbnail}" alt="${item.title}" loading="lazy">
                             ${item.youtubeId ? `
                             <div class="short-overlay">
                                 <div class="play-icon">
@@ -1011,7 +1050,7 @@
                 gridBottom.innerHTML = bottomItems.map(item => `
                     <div class="content-box reveal" data-type="${item.type}" ${item.youtubeId ? `data-youtube-id="${item.youtubeId}"` : ''} onclick="${item.youtubeId ? `playVideo(this, '${item.youtubeId}')` : `window.open('${item.link}', '_blank')`}" style="cursor: pointer;">
                         <div class="content-thumbnail">
-                            <img src="${item.thumbnail}" alt="${item.title}">
+                            <img src="${item.thumbnail}" alt="${item.title}" loading="lazy">
                             ${item.youtubeId ? `
                             <div class="short-overlay">
                                 <div class="play-icon">
@@ -1040,7 +1079,7 @@
                 const newHTML = newItems.map(item => `
                     <div class="content-box reveal" data-type="${item.type}" ${item.youtubeId ? `data-youtube-id="${item.youtubeId}"` : ''} onclick="${item.youtubeId ? `playVideo(this, '${item.youtubeId}')` : `window.open('${item.link}', '_blank')`}" style="cursor: pointer;">
                         <div class="content-thumbnail">
-                            <img src="${item.thumbnail}" alt="${item.title}">
+                            <img src="${item.thumbnail}" alt="${item.title}" loading="lazy">
                             ${item.youtubeId ? `
                             <div class="short-overlay">
                                 <div class="play-icon">
@@ -1123,7 +1162,7 @@
                 gridTop.innerHTML = topItems.map(short => `
                     <div class="short-card reveal" onclick="window.open('https://www.youtube.com/shorts/${short.youtubeId}', '_blank')" style="cursor: pointer;">
                         <div class="short-thumbnail">
-                            <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}">
+                            <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}" loading="lazy">
                             <div class="short-overlay">
                                 <div class="play-icon">
                                     <i class="fab fa-youtube"></i>
@@ -1146,7 +1185,7 @@
                 gridBottom.innerHTML = bottomItems.map(short => `
                     <div class="short-card reveal" onclick="window.open('https://www.youtube.com/shorts/${short.youtubeId}', '_blank')" style="cursor: pointer;">
                         <div class="short-thumbnail">
-                            <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}">
+                            <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}" loading="lazy">
                             <div class="short-overlay">
                                 <div class="play-icon">
                                     <i class="fab fa-youtube"></i>
@@ -1169,7 +1208,7 @@
                 const newHTML = newItems.map(short => `
                     <div class="short-card reveal" onclick="window.open('https://www.youtube.com/shorts/${short.youtubeId}', '_blank')" style="cursor: pointer;">
                         <div class="short-thumbnail">
-                            <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}">
+                            <img src="${short.thumbnail || `https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}" alt="${short.title || 'YouTube Short'}" loading="lazy">
                             <div class="short-overlay">
                                 <div class="play-icon">
                                     <i class="fab fa-youtube"></i>
