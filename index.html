@@ -592,6 +592,33 @@
             box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
         }
 
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-demo-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1070,11 +1097,12 @@
         const projectData = {
             'atlasMemory': {
                 title: 'atlasMemory',
-                subtitle: 'AI memory system with branching and rollbacks - like Git for AI context.',
+                subtitle: 'AI memory system with branching and rollbacks. One TiDB table replaces three services.',
                 github: 'https://github.com/RealChrisSean/atlasMemory',
-                problem: 'AI forgets everything between sessions. Existing vector stores don\'t handle branching conversations or let you undo bad context.',
-                tech: 'TiDB Vector storage, Git-style branching logic, SQLAlchemy ORM, Python',
-                why: 'This solves the "AI poisoning" problem - when an agent picks up wrong info, you can roll back to before it went sideways. It also lets you explore different conversation branches without losing the main thread. Most devs building AI apps hit this wall eventually - their agent gets confused and they have to restart from scratch. This gives you version control for AI context, which means you can build more reliable agents that recover from mistakes instead of spiraling.'
+                demo: 'https://atlasmemory-production.up.railway.app',
+                problem: 'AI memory usually means three services: vector DB, relational DB, cache. Experimenting with memory changes risks corrupting production. And nothing catches when your agent remembers contradictory things.',
+                tech: 'TiDB (vector + full-text + JSON), Branch isolation, SQLAlchemy ORM, Python',
+                why: 'One TiDB table replaces Pinecone + Postgres + Redis. Vectors, full-text, metadata, all in one place. Branching means you experiment without touching production. It\'s just a WHERE clause, no extra infrastructure. Built-in conflict detection catches contradictory memories before they confuse your agent.'
             },
             'semantic-qna': {
                 title: 'semantic-qna',
@@ -1136,9 +1164,12 @@
                     </div>
                 </div>
 
-                <a href="${project.github}" target="_blank" class="modal-github-btn">
-                    GitHub →
-                </a>
+                <div class="modal-buttons">
+                    <a href="${project.github}" target="_blank" class="modal-github-btn">
+                        GitHub →
+                    </a>
+                    ${project.demo ? `<a href="${project.demo}" target="_blank" class="modal-demo-btn">View Demo →</a>` : ''}
+                </div>
             `;
 
             modal.classList.add('active');
