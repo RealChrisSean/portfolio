@@ -852,7 +852,7 @@
                 <button class="filter-tab" data-filter="interview">Interviews</button>
                 <!-- <button class="filter-tab" data-filter="blog">Blogs</button> -->
                 <button class="filter-tab" data-filter="talk">Talks</button>
-                <button class="filter-tab" data-filter="shorts">Shorts</button>
+                <!-- <button class="filter-tab" data-filter="shorts">Shorts</button> -->
             </div>
 
             <!-- Search & Sort Controls -->
@@ -1108,16 +1108,14 @@
             const gridBottom = document.getElementById('contentGridBottom');
             const shortsSection = document.getElementById('shortsSection');
 
-            // Handle shorts filter - show in grid like other content
-            if (currentFilter === 'shorts') {
-                gridTop.style.display = 'grid';
-                gridBottom.style.display = 'grid';
-                shortsSection.style.display = 'none';
-
-                // Render shorts as grid items
-                renderShortsAsGrid(forceFullRender);
-                return;
-            }
+            // DISABLED: Shorts filter hidden for now
+            // if (currentFilter === 'shorts') {
+            //     gridTop.style.display = 'grid';
+            //     gridBottom.style.display = 'grid';
+            //     shortsSection.style.display = 'none';
+            //     renderShortsAsGrid(forceFullRender);
+            //     return;
+            // }
 
             // Remove shorts-grid class for regular content (3 columns)
             gridTop.classList.remove('shorts-grid');
@@ -1127,13 +1125,8 @@
             gridTop.style.display = 'grid';
             gridBottom.style.display = 'grid';
 
-            // Show shorts section only when "All" is selected and no search
-            if (currentFilter === 'all' && searchQuery.trim() === '') {
-                shortsSection.style.display = 'block';
-                renderShorts();
-            } else {
-                shortsSection.style.display = 'none';
-            }
+            // DISABLED: Shorts section hidden for now
+            shortsSection.style.display = 'none';
 
             const filtered = getFilteredAndSortedContent();
 
@@ -1566,7 +1559,7 @@
 
         // --- FETCH AND UPDATE YOUTUBE DATA ---
         enrichContentWithYouTubeData();
-        loadShortsData();
+        // loadShortsData(); // DISABLED: Shorts hidden for now
 
         // --- THEME TOGGLE ---
         function toggleTheme() {
