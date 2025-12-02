@@ -815,12 +815,16 @@
                     <p style="color: var(--text-muted); line-height: 1.6;">AI-powered branching decision simulator that models long-term life, career, and financial outcomes using multi-model reasoning.</p>
                     <div style="margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.8rem;">
                         <i class="fab fa-github" style="font-size: 0.75rem;"></i>
-                        <span>Private · Demo available on request</span>
+                        <span>Private</span>
                     </div>
                 </div>
-                <div style="margin-top: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-primary);">
-                    <span>Learn More</span>
-                    <i class="fas fa-arrow-right"></i>
+                <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="display: flex; align-items: center; gap: 0.5rem; color: var(--accent-primary);">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </span>
+                    <a href="https://app.parallellives.ai" target="_blank" onclick="event.stopPropagation();" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--accent-primary); color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">
+                        View Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
                 </div>
             </div>
 
@@ -1225,6 +1229,7 @@
                 title: 'Parallel Lives',
                 subtitle: 'AI-powered branching decision simulator built on multi-model reasoning and agent orchestration.',
                 isPrivate: true,
+                demo: 'https://app.parallellives.ai',
                 problem: 'Most decision tools show static calculators or linear predictions. They can\'t model reasoning chains, multi-step consequences, or how a change in one choice propagates through the rest of someone\'s life.',
                 tech: 'Claude Opus (causal reasoning), GPT-5.1 (structured analysis), Multi-agent orchestration, Evaluation layer, TiDB Vector + relational state store',
                 why: 'Parallel Lives prototypes an agent-style architecture:<br><br>• Claude Opus generates deeply reasoned scenario branches<br>• GPT-5.1 evaluates financial, probabilistic, and risk outcomes<br>• A custom evaluation layer checks consistency, safety, and plausibility across branches<br>• A memory + state model tracks long-term consequences, not single responses<br><br>It\'s a working example of how reasoning models and tool-using models can collaborate to produce stable, interpretable outcomes. Exactly the kind of workflow underlying the future of Claude Code, MCP, and agent platforms.'
@@ -1273,9 +1278,10 @@
             ).join('');
 
             modalBody.innerHTML = `
-                <div class="modal-header">
+                <div class="modal-header" style="display: flex; align-items: center; gap: 1rem;">
                     <i class="fab fa-github" style="font-size: 2rem; color: var(--accent-primary);"></i>
-                    <h3>${project.title}</h3>
+                    <h3 style="margin: 0;">${project.title}</h3>
+                    ${project.isPrivate && project.demo ? `<a href="${project.demo}" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--accent-primary); color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">View Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i></a>` : ''}
                 </div>
                 <p class="modal-subtitle">${project.subtitle}</p>
 
@@ -1293,7 +1299,7 @@
                         ${project.isPrivate ? `
                         <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem;">
                             <i class="fab fa-github" style="font-size: 0.75rem;"></i>
-                            <span>Private · Demo available on request</span>
+                            <span>Private${project.demo ? '' : ' · Demo available on request'}</span>
                         </div>
                         ` : ''}
                     </div>
