@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallel Lives - Technical Architecture</title>
+    <meta name="description" content="A real-time AI decision visualization engine. Built with Claude Code. Ships fast, works at scale.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --accent-primary: #0ea5e9;
+            --accent-vegas: #c4a000;
+            --border-color: #e5e5e5;
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: #333;
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .live-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 48px;
+            transition: all 0.3s;
+        }
+
+        .live-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Collapsible sections */
+        details {
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 0;
+        }
+
+        details[open] {
+            padding-bottom: 32px;
+        }
+
+        summary {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        summary:hover {
+            color: var(--accent-primary);
+        }
+
+        .section-content {
+            padding-top: 24px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            color: var(--text-main);
+        }
+
+        .section-content > h3:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        blockquote {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 20px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 24px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            background: var(--code-bg);
+        }
+
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            summary { font-size: 1.5rem; }
+            .container { padding: 24px 16px 60px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <div class="container">
+        <h1>Parallel Lives</h1>
+        <p class="subtitle">A real-time AI decision visualization engine. Built with Claude Code. Ships fast, works at scale.</p>
+        <a href="https://app.parallellives.ai" target="_blank" class="live-link">
+            View Live Demo <i class="fas fa-external-link-alt"></i>
+        </a>
+
+        <details open>
+            <summary>Why I Built This</summary>
+            <div class="section-content">
+                <p>The question that keeps me up at night is:</p>
+                <blockquote>"What if I made the wrong decision today... and don't realize it for 10 years?"</blockquote>
+                <p>Job offers, moving cities, buying a house, going back to school. You make a call now and only find out in 2035 whether it was dumb or genius.</p>
+                <p>Parallel Lives is my attempt to make that less random.</p>
+                <p>You type a decision in plain English. The app plays out branching futures over the next decade, with money, probabilities, and emotional tradeoffs, and turns it into a visual tree you can actually think about.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>What This Actually Is</summary>
+            <div class="section-content">
+                <p><strong>Not a prompt wrapper.</strong></p>
+                <p>It is a stateful, streaming, multi-model system that:</p>
+                <ol>
+                    <li>Takes a messy, real-life decision
+                        <blockquote>Should I leave Google for a startup in NYC?</blockquote>
+                    </li>
+                    <li>Classifies it into a scenario (job change, move, school, etc.)</li>
+                    <li>Generates a branching 10-year simulation with:
+                        <ul>
+                            <li>income and net worth projections</li>
+                            <li>probabilities on each branch</li>
+                            <li>qualitative stuff like burnout, regret, relationships</li>
+                        </ul>
+                    </li>
+                    <li>Streams that tree into a visual graph so you can see "future you" at a glance</li>
+                    <li>Lets you poke it: "What if I negotiated 20 percent more equity?" and only updates the affected branches</li>
+                </ol>
+            </div>
+        </details>
+
+        <details>
+            <summary>Stack</summary>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Tech</th>
+                            <th>Why</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Next.js 16, React 19, TypeScript</td>
+                            <td>App Router + RSC for streaming</td>
+                        </tr>
+                        <tr>
+                            <td>Visualization</td>
+                            <td>XYFlow (React Flow)</td>
+                            <td>handles 100+ nodes without choking</td>
+                        </tr>
+                        <tr>
+                            <td>AI</td>
+                            <td>Claude Opus 4.5 and GPT-5.1</td>
+                            <td>Opus for reasoning, GPT for speed and summaries</td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>TiDB Cloud</td>
+                            <td>serverless, horizontally scalable, SQL I actually like</td>
+                        </tr>
+                        <tr>
+                            <td>Hosting</td>
+                            <td>Vercel Edge</td>
+                            <td>global CDN, simple CI/CD</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>I designed the UX, wired the streaming, and wrote all the infra glue myself.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>How It Works (End to End)</summary>
+            <div class="section-content">
+                <h3>1. User input</h3>
+                <p>You type:</p>
+                <blockquote>"Should I take the startup offer ($180k + 0.5 percent equity) or stay at BigCo ($250k + RSUs)?"</blockquote>
+                <p>The request hits a Next.js route on Vercel Edge.</p>
+
+                <h3>2. Scenario detection</h3>
+                <p>A lightweight classifier decides <code>scenario = "job-offer"</code> and picks the right prompt template plus guidance.</p>
+
+                <h3>3. Tree generation (Claude Opus)</h3>
+                <p>Claude Opus gets a structured system prompt with:</p>
+                <ul>
+                    <li>scenario guidance (comp breakdowns, equity math, typical outcomes)</li>
+                    <li>constraints on JSON shape</li>
+                    <li>max years, branching factor, and so on</li>
+                </ul>
+                <p>It responds with a full decision tree in JSON (nodes, edges, probabilities, metrics).</p>
+
+                <h3>4. Streaming and repair</h3>
+                <p>I stream tokens as they are generated, repair the JSON on the fly, and push incremental tree updates down to the client via SSE.</p>
+
+                <h3>5. Rendering</h3>
+                <p>The frontend parses chunks into nodes and edges, feeds them into XYFlow, and animates new branches as they appear.</p>
+                <p>For big trees, I only render the visible viewport and lazy-load the rest.</p>
+
+                <h3>6. Fast summaries and tables (GPT-5.1)</h3>
+                <p>In parallel, GPT-5.1 produces tabular summaries (path vs salary vs net worth vs stress) because speed matters more than ultra-deep reasoning there.</p>
+
+                <h3>7. Persistence (WIP)</h3>
+                <p>TiDB stores decisions, trees, and metadata so future runs can become personalized: risk tolerance, values, prior choices.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>The Interesting Engineering Problems</summary>
+            <div class="section-content">
+                <h3>Why Two Models?</h3>
+                <p>Different jobs, different tools.</p>
+                <ul>
+                    <li><strong>Claude Opus 4.5</strong> generates the trees. This is where reasoning quality actually matters.</li>
+                    <li><strong>GPT-5.1</strong> turns those trees into quick tables and summaries so the UI feels snappy.</li>
+                </ul>
+                <pre><code>// Tree generation: Claude Opus (quality matters)
+const stream = anthropic.messages.stream({
+  model: "claude-opus-4-5-20251101",
+  max_tokens: isExploreMode ? 512 : 1500,
+});
+
+// Table summary: GPT-5.1 (speed matters)
+const tableResponse = await openai.responses.create({
+  model: "gpt-5.1",
+  max_output_tokens: 500,
+  text: { format: { type: "json_object" } },
+});</code></pre>
+                <p><strong>Tradeoff:</strong> initial tree generation can take a few extra seconds.<br>
+                <strong>Upside:</strong> you get deep, structured simulations that still feel instant because the structured bits arrive first.</p>
+
+                <h3>Streaming So Users Do Not Stare at Nothing</h3>
+                <p>Full trees are around 1500 tokens. That is about 8 to 12 seconds if you block.</p>
+                <p>I stream partial results and send progress events every ~200 characters, so the UI can show branches as they grow instead of one big reveal at the end.</p>
+                <pre><code>const readableStream = new ReadableStream({
+  async start(controller) {
+    for await (const event of stream) {
+      if (event.type === "content_block_delta") {
+        fullText += event.delta.text;
+        if (fullText.length - lastProgressUpdate > 200) {
+          controller.enqueue(encoder.encode(JSON.stringify({
+            type: "progress",
+            chars: fullText.length
+          }) + "\n"));
+        }
+      }
+    }
+
+    const treeData = parseJSONWithRepair(jsonText);
+    controller.enqueue(encoder.encode(JSON.stringify({
+      type: "complete",
+      data: treeData
+    })));
+  }
+});</code></pre>
+                <p><strong>Result:</strong> you see the first branches in about 800ms, not 10 seconds of nothing.</p>
+
+                <h3>LLMs Break JSON. I Fix It Anyway.</h3>
+                <p>Sometimes Claude sends almost-correct JSON — trailing commas, single quotes, unclosed braces.</p>
+                <p>Instead of giving users an error, I repair it:</p>
+                <pre><code>function repairJSON(jsonText: string): string {
+  // Single quotes -> double quotes
+  text = text.replace(/'([^']+)'(\s*:)/g, '"$1"$2');
+  // Kill trailing commas
+  text = text.replace(/,(\s*[}\]])/g, '$1');
+  // Balance braces
+  while (braceCount > 0) {
+    text = text + '}';
+    braceCount--;
+  }
+  return text;
+}</code></pre>
+                <p>Parse success went from about 92 percent to about 99.5 percent. Less rage for everyone.</p>
+
+                <h3>Rate Limiting With a Dev Escape Hatch</h3>
+                <p>I do not want a Hacker News spike to nuke my Anthropic bill.</p>
+                <ul>
+                    <li><strong>Prod:</strong> 10 requests per hour per IP.</li>
+                    <li><strong>Me:</strong> I still need to hammer this thing.</li>
+                </ul>
+                <p>So there is a tiny dev escape hatch via URL param to localStorage:</p>
+                <pre><code>// Frontend: store dev key with expiry
+const devParam = urlParams.get('dev');
+if (devParam) {
+  const expiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+  localStorage.setItem('parallel-lives-dev', JSON.stringify({ key: devParam, expiry }));
+}
+
+// API: skip rate limit for valid dev keys
+const isDev = DEV_KEY && devKey === DEV_KEY;
+if (!isDev) {
+  const rateLimitResult = rateLimit(`generate:${clientIP}`, RATE_LIMIT_CONFIG);
+  if (!rateLimitResult.allowed) {
+    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+  }
+}</code></pre>
+                <p>Simple, boring, and it works.</p>
+
+                <h3>No White Flash on Dark Mode</h3>
+                <p>SSR apps love flashing white before React hydrates. Parallel Lives runs in dark mode a lot, so that flash is painful at 2 AM.</p>
+                <p>I ship the user theme before React loads:</p>
+                <pre><code>&lt;html lang="en" className="dark" suppressHydrationWarning&gt;
+  &lt;head&gt;
+    &lt;script dangerouslySetInnerHTML={{
+      __html: `
+        (function() {
+          var saved = localStorage.getItem('parallel-lives-dark-mode');
+          if (saved === 'light') {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          }
+        })();
+      `,
+    }} /&gt;
+  &lt;/head&gt;</code></pre>
+                <p>Theme applies before first paint. Zero flash.</p>
+
+                <h3>Mobile Gestures That Feel Native</h3>
+                <p>Desktop gets a floating draggable panel. Mobile gets a bottom sheet with flick-to-dismiss.</p>
+                <p>I track finger velocity myself so it does not feel like a janky web modal:</p>
+                <pre><code>const velocityRef = useRef(0);
+
+onTouchMove={(e) => {
+  const currentY = e.touches[0].clientY;
+  const currentTime = Date.now();
+  const timeDiff = currentTime - lastTouchTime.current;
+  if (timeDiff > 0) {
+    velocityRef.current = (currentY - lastTouchY.current) / timeDiff;
+  }
+}}
+
+onTouchEnd={() => {
+  // Fast downward flick = minimize
+  if (velocityRef.current > 0.5) {
+    setMobileSheetHeight(minSheetHeight);
+  }
+}}</code></pre>
+                <p>Feels closer to a native app than a dashboard.</p>
+
+                <h3>Prompt Engineering That Actually Works</h3>
+                <p>One generic "You are a helpful AI" prompt gives you generic futures.</p>
+                <p>I detect the scenario type and inject domain-specific guidance into the system prompt:</p>
+                <pre><code>const scenarioGuidance: Record&lt;string, string&gt; = {
+  'job-offer': `
+    - Total comp breakdown: base, bonus, RSUs, 401k match
+    - Equity: calculate value at different valuations
+    - Benefits value: health insurance ($5-20k/year), PTO
+  `,
+  'startup': `
+    - Runway calculation: savings ÷ monthly burn = months
+    - Success rates: ~10% succeed, ~40% fail completely
+  `,
+};
+
+const scenarioType = detectScenarioType(templateId, decision);
+const guidance = scenarioGuidance[scenarioType] || '';
+systemMessage = systemPrompt.replace('{{SCENARIO_GUIDANCE}}', guidance);</code></pre>
+                <p>This is what makes the app feel grounded instead of "AI fanfic about your life."</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Numbers</summary>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Time to first token</td>
+                            <td>~800ms</td>
+                        </tr>
+                        <tr>
+                            <td>Full tree generation</td>
+                            <td>6-10 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Tree render (100 nodes)</td>
+                            <td>&lt;16ms</td>
+                        </tr>
+                        <tr>
+                            <td>Lighthouse</td>
+                            <td>94</td>
+                        </tr>
+                        <tr>
+                            <td>Bundle</td>
+                            <td>287kb gzipped</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </details>
+
+        <details>
+            <summary>Data and Privacy (High Level)</summary>
+            <div class="section-content">
+                <ul>
+                    <li>User decisions and trees are stored in TiDB under a per-user scope.</li>
+                    <li>No training or fine-tuning on user data.</li>
+                    <li>Future "agentic memory" features will be opt-in and transparent.</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>What Is Next</summary>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Agentic memory</strong> — remember past decisions, risk tolerance, values. Make future sims personal instead of one-off.</li>
+                    <li><strong>Multi-turn refinement</strong> — "What if I negotiated 20 percent more equity?" Regenerate only the branches that change.</li>
+                    <li><strong>Collaborative decisions</strong> — share trees with partners and see where your probability estimates disagree.</li>
+                    <li><strong>Framework exports</strong> — turn a tree into SWOT, decision matrix, or "future regret" analysis with one click.</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Built With Claude Code</summary>
+            <div class="section-content">
+                <p>Every feature here — streaming, JSON repair, mobile gestures, the whole stack — was built talking to Claude Code in a terminal and editor.</p>
+                <p>I am applying to work on Claude Code with a project I built using Claude Code. Feels like the right kind of full circle.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Code Access</summary>
+            <div class="section-content">
+                <p>The repo is private right now.</p>
+                <p>If you are a recruiter or hiring manager and want to walk through the code or architecture in more detail, I am happy to do a live session.</p>
+            </div>
+        </details>
+
+        <div class="footer">
+            <strong>Chris Sean</strong><br>
+            <a href="https://linkedin.com/in/chrisdabatos" target="_blank">LinkedIn</a>
+            <a href="https://twitter.com/realchrissean" target="_blank">Twitter</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</body>
+</html>
