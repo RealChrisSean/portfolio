@@ -5,12 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parallel Lives - Technical Architecture</title>
     <meta name="description" content="A real-time AI decision visualization engine. Built with Claude Code. Ships fast, works at scale.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Parallel Lives - Technical Architecture">
+    <meta property="og:description" content="A real-time AI decision visualization engine. Built with Claude Code. Ships fast, works at scale.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" content="https://realchrissean.com/parallel-lives/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Parallel Lives - Technical Architecture">
+    <meta name="twitter:description" content="A real-time AI decision visualization engine. Built with Claude Code. Ships fast, works at scale.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
     <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../imgs/cd_logo.png">
+    <link rel="apple-touch-icon" href="../imgs/cd_logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --bg-color: #fafafa;
             --card-bg: rgba(255, 255, 255, 0.9);
@@ -641,9 +662,16 @@ systemMessage = systemPrompt.replace('{{SCENARIO_GUIDANCE}}', guidance);</code><
         </details>
 
         <div class="footer">
-            <strong>Chris Sean</strong><br>
-            <a href="https://linkedin.com/in/chrisdabatos" target="_blank">LinkedIn</a>
-            <a href="https://twitter.com/realchrissean" target="_blank">Twitter</a>
+            <h2 style="font-size: 1.5rem; margin-bottom: 16px;">Let's build something <span style="color: var(--accent-primary);">awesome.</span></h2>
+            <p style="margin-bottom: 24px;">Open for speaking engagements and collaborations.</p>
+            <a href="mailto:realchrissean@gmail.com" style="display: inline-block; padding: 12px 24px; background: var(--text-main); color: var(--bg-color); border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 24px; transition: all 0.3s;">Get in Touch</a>
+            <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 24px;">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
         </div>
     </div>
 
@@ -665,5 +693,7 @@ systemMessage = systemPrompt.replace('{{SCENARIO_GUIDANCE}}', guidance);</code><
             }
         })();
     </script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
