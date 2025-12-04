@@ -27,6 +27,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
         html {
             scroll-behavior: smooth;
@@ -247,20 +249,120 @@
             font-size: 0.9em;
         }
 
-        pre {
-            background: var(--code-bg);
-            border-radius: 8px;
-            padding: 20px;
-            overflow-x: auto;
+        /* VS Code Dark Theme Style */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
             margin: 24px 0;
-            border: 1px solid var(--border-color);
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        pre code {
-            background: none;
-            padding: 0;
+        /* VS Code title bar */
+        pre[class*="language-"]::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        /* Window control dots */
+        pre[class*="language-"]::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+        }
+
+        pre[class*="language-"] code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
             font-size: 0.85rem;
             line-height: 1.6;
+            background: transparent !important;
+            border: none;
+        }
+
+        /* Override Prism theme for VS Code colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #d4d4d4 !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code (not in pre) */
+        :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
         }
 
         table {
@@ -441,7 +543,7 @@
                     <li><strong>Claude Opus 4.5</strong> generates the trees. This is where reasoning quality actually matters.</li>
                     <li><strong>GPT-5.1</strong> turns those trees into quick tables and summaries so the UI feels snappy.</li>
                 </ul>
-                <pre><code>// Tree generation: Claude Opus (quality matters)
+                <pre class="language-javascript"><code class="language-javascript">// Tree generation: Claude Opus (quality matters)
 const stream = anthropic.messages.stream({
   model: "claude-opus-4-5-20251101",
   max_tokens: isExploreMode ? 512 : 1500,
@@ -459,7 +561,7 @@ const tableResponse = await openai.responses.create({
                 <h3>Streaming So Users Do Not Stare at Nothing</h3>
                 <p>Full trees are around 1500 tokens. That is about 8 to 12 seconds if you block.</p>
                 <p>I stream partial results and send progress events every ~200 characters, so the UI can show branches as they grow instead of one big reveal at the end.</p>
-                <pre><code>const readableStream = new ReadableStream({
+                <pre class="language-javascript"><code class="language-javascript">const readableStream = new ReadableStream({
   async start(controller) {
     for await (const event of stream) {
       if (event.type === "content_block_delta") {
@@ -485,7 +587,7 @@ const tableResponse = await openai.responses.create({
                 <h3>LLMs Break JSON. I Fix It Anyway.</h3>
                 <p>Sometimes Claude sends almost-correct JSON — trailing commas, single quotes, unclosed braces.</p>
                 <p>Instead of giving users an error, I repair it:</p>
-                <pre><code>function repairJSON(jsonText: string): string {
+                <pre class="language-typescript"><code class="language-typescript">function repairJSON(jsonText: string): string {
   // Single quotes -> double quotes
   text = text.replace(/'([^']+)'(\s*:)/g, '"$1"$2');
   // Kill trailing commas
@@ -506,7 +608,7 @@ const tableResponse = await openai.responses.create({
                     <li><strong>Me:</strong> I still need to hammer this thing.</li>
                 </ul>
                 <p>So there is a tiny dev escape hatch via URL param to localStorage:</p>
-                <pre><code>// Frontend: store dev key with expiry
+                <pre class="language-javascript"><code class="language-javascript">// Frontend: store dev key with expiry
 const devParam = urlParams.get('dev');
 if (devParam) {
   const expiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
@@ -526,7 +628,7 @@ if (!isDev) {
                 <h3>No White Flash on Dark Mode</h3>
                 <p>SSR apps love flashing white before React hydrates. Parallel Lives runs in dark mode a lot, so that flash is painful at 2 AM.</p>
                 <p>I ship the user theme before React loads:</p>
-                <pre><code>&lt;html lang="en" className="dark" suppressHydrationWarning&gt;
+                <pre class="language-jsx"><code class="language-jsx">&lt;html lang="en" className="dark" suppressHydrationWarning&gt;
   &lt;head&gt;
     &lt;script dangerouslySetInnerHTML={{
       __html: `
@@ -545,7 +647,7 @@ if (!isDev) {
                 <h3>Mobile Gestures That Feel Native</h3>
                 <p>Desktop gets a floating draggable panel. Mobile gets a bottom sheet with flick-to-dismiss.</p>
                 <p>I track finger velocity myself so it does not feel like a janky web modal:</p>
-                <pre><code>const velocityRef = useRef(0);
+                <pre class="language-javascript"><code class="language-javascript">const velocityRef = useRef(0);
 
 onTouchMove={(e) => {
   const currentY = e.touches[0].clientY;
@@ -567,7 +669,7 @@ onTouchEnd={() => {
                 <h3>Prompt Engineering That Actually Works</h3>
                 <p>One generic "You are a helpful AI" prompt gives you generic futures.</p>
                 <p>I detect the scenario type and inject domain-specific guidance into the system prompt:</p>
-                <pre><code>const scenarioGuidance: Record&lt;string, string&gt; = {
+                <pre class="language-typescript"><code class="language-typescript">const scenarioGuidance: Record&lt;string, string&gt; = {
   'job-offer': `
     - Total comp breakdown: base, bonus, RSUs, 401k match
     - Equity: calculate value at different valuations
@@ -693,6 +795,11 @@ systemMessage = systemPrompt.replace('{{SCENARIO_GUIDANCE}}', guidance);</code><
             }
         })();
     </script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 </body>

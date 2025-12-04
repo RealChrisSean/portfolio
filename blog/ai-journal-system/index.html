@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Built a System That Writes My Autobiography While I Use It | Chris Dabatos</title>
+    <meta name="description" content="Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person - like a biographer following me around.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="I Built a System That Writes My Autobiography While I Use It">
+    <meta property="og:description" content="Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" content="https://realchrissean.com/blog/ai-journal-system/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="I Built a System That Writes My Autobiography While I Use It">
+    <meta name="twitter:description" content="Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../imgs/cd_logo.png">
+    <link rel="apple-touch-icon" href="../../imgs/cd_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 17px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.08), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        /* Hero Header */
+        .post-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(192, 38, 211, 0.15));
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .post-meta time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 56px 0 20px;
+            color: var(--text-main);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-vegas));
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 36px 0 12px;
+            color: var(--accent-primary);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        ul, ol {
+            margin: 16px 0 24px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.88em;
+            border: 1px solid var(--border-color);
+        }
+
+        /* VS Code Dark Theme Style */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            margin: 28px 0;
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* VS Code title bar */
+        pre[class*="language-"]::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        /* Window control dots */
+        pre[class*="language-"]::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+        }
+
+        pre[class*="language-"] code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            background: transparent !important;
+            border: none;
+        }
+
+        /* Override Prism theme for VS Code colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #d4d4d4 !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code (not in pre) */
+        :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
+        }
+
+        /* Callout Box */
+        .callout {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(192, 38, 211, 0.05));
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 32px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 56px 0;
+        }
+
+        /* Author Section */
+        .author-section {
+            margin-top: 64px;
+            padding: 32px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .author-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .author-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .author-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .author-links a:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 1.5rem;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 24px 16px 60px; }
+            body { font-size: 16px; }
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="../../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <article class="container">
+        <header class="post-header">
+            <span class="post-tag"><i class="fas fa-brain"></i> &nbsp;AI + Personal Data</span>
+            <h1>I Built a System That Writes My Autobiography While I Use It</h1>
+            <p class="subtitle">Most journaling apps are just storage. You write, it saves, you forget. I wanted something that actually does something with what I write.</p>
+            <div class="post-meta">
+                <time datetime="2025-12-03"><i class="far fa-calendar"></i> December 3, 2025</time>
+                <span class="reading-time"><i class="far fa-clock"></i> 8 min read</span>
+            </div>
+        </header>
+
+        <p>So I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around. Chapters update automatically. I can read my own life like a book.</p>
+
+        <h2>The Problem With Journaling Apps</h2>
+
+        <p>I've tried a lot of them. They all have the same issue: they're filing cabinets. You put stuff in, maybe tag it, and then it sits there. The only value you get is if you go back and read it yourself.</p>
+
+        <p>But I don't go back and read it. Nobody does.</p>
+
+        <p>What I actually wanted was a system that:</p>
+
+        <ul>
+            <li>Synthesizes what I've been thinking about</li>
+            <li>Notices patterns I might miss</li>
+            <li>Writes something I'd actually want to read later</li>
+            <li>Reminds me to revisit it</li>
+        </ul>
+
+        <p>So I built that.</p>
+
+        <h2>How It Works</h2>
+
+        <p>There are four main pieces.</p>
+
+        <h3>Journal entries</h3>
+
+        <p>I write these manually. Title, content, tags. Nothing fancy. These are the raw material everything else builds on.</p>
+
+        <h3>Reflect chat</h3>
+
+        <p>Every entry has a "Reflect" button. It opens a short conversation with an AI that responds to what I wrote. Not therapy. Not advice. Just acknowledgment and the occasional follow-up question. Responses are 1-2 sentences max. It matches my tone because I configured it to.</p>
+
+        <h3>Life story chapters</h3>
+
+        <p>This is the autobiography part. Every time I add an entry or have a reflection conversation, the system updates a "chapter" of my life story. It's written in third person, like a biography. Short - 2-3 paragraphs, around 150 words. After 7 days of not writing anything, it starts a new chapter.</p>
+
+        <h3>Email digests</h3>
+
+        <p>Weekly, monthly, quarterly, bi-yearly, and yearly. Each one includes a chapter excerpt, patterns it detected, and a link back to read the full story. This is what actually gets me to revisit what I've written.</p>
+
+        <h2>The Technical Decisions</h2>
+
+        <p>I used different AI models for different jobs. This matters more than people think.</p>
+
+        <p><strong>Claude Opus</strong> handles the reflect chat. I needed high-quality conversational responses that feel natural and match my voice. Opus is the best at this.</p>
+
+        <p><strong>Claude Haiku</strong> handles background chapter updates. These run constantly as I add content, so I needed something fast and cheap. Haiku is perfect for continuous synthesis tasks where you don't need the absolute best output, just good-enough-and-fast.</p>
+
+        <p><strong>GPT-4o</strong> generates AI-written journal entries. When I've been exploring decisions in another part of the app, it writes reflections about patterns it noticed. GPT-4o is strong at structured reflective writing.</p>
+
+        <p><strong>GPT-4o-mini</strong> handles metadata - inferring titles and tags. Fast, cheap, good enough.</p>
+
+        <p><strong>text-embedding-3-small</strong> for all embeddings. Semantic search powers the reflect chat (pulling relevant past entries) and chapter generation (finding thematic connections). This model hits the best quality/cost tradeoff for retrieval.</p>
+
+        <div class="callout">
+            <p>The key insight: don't use one model for everything. Match the model to the job.</p>
+        </div>
+
+        <h2>The Architecture</h2>
+
+        <p>Everything runs through three API endpoints:</p>
+
+        <ul>
+            <li><code>/api/journal</code> - CRUD for entries. Manual or AI-generated.</li>
+            <li><code>/api/reflect</code> - Conversation management. Load, send message, clear.</li>
+            <li><code>/api/journey</code> - Chapter management. List, generate, update.</li>
+        </ul>
+
+        <p>All endpoints are stateless. The AI processing happens as non-blocking async calls so the UI stays responsive. When I create an entry, I see it immediately. The chapter update happens behind the scenes.</p>
+
+        <p>The database has five tables:</p>
+
+        <ul>
+            <li><code>journal_entries</code> - the raw entries</li>
+            <li><code>reflection_messages</code> - chat history with embeddings for search</li>
+            <li><code>life_story_chapters</code> - the narrative summaries</li>
+            <li><code>decision_history</code> - decisions I've explored elsewhere in the app</li>
+            <li><code>decision_embeddings</code> - multi-dimensional vectors (financial, emotional, career, health, relationship, overall)</li>
+        </ul>
+
+        <p>The embeddings let me do semantic search across everything. When I reflect on an entry, the system pulls related entries from my history to give the AI context. When it writes chapters, it can find thematic connections across months of content.</p>
+
+        <h2>Voice Customization</h2>
+
+        <p>This part was important to me. I didn't want AI responses that sound like a therapist or a corporate chatbot.</p>
+
+        <p>There's a config file (<code>/src/lib/voice-config.ts</code>) where I define my communication preferences:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">export const VOICE_CONFIG = {
+  ENABLED: true,
+  STYLE: `
+    - Confident, approachable, direct
+    - Simple, plain English with short sentences
+    - Use contractions
+    - No flowery intros or conclusions
+    - NEVER use em dashes
+  `,
+};</code></pre>
+
+        <p>This gets injected into the reflect chat prompts. The AI responses actually sound like how I talk.</p>
+
+        <h2>The Bigger Vision</h2>
+
+        <p>Right now, the Journal is a standalone system. But it's designed to plug into something larger.</p>
+
+        <p>The idea: my reflections should feed back into decision simulations. Here's the loop I'm building toward:</p>
+
+        <ol>
+            <li>I explore a decision tree - should I take this job, move to this city, whatever</li>
+            <li>I pick a path</li>
+            <li>Later, I log how it actually played out</li>
+            <li>The system updates my profile - patterns, preferences, tendencies</li>
+            <li>My journal reflects on those patterns</li>
+            <li>Next time I face a similar decision, the simulation uses everything it knows about me</li>
+        </ol>
+
+        <p>The predictions get more personalized over time. And because it's all transparent and editable, I stay in control.</p>
+
+        <p>That's the end state. The Journal is the memory layer that makes it possible.</p>
+
+        <h2>What I Learned</h2>
+
+        <p><strong>Model selection is product design.</strong> Picking Claude Opus vs Haiku vs GPT-4o isn't just a technical decision. It directly affects user experience - response quality, latency, cost. You have to think about it as a product tradeoff, not just an engineering one.</p>
+
+        <p><strong>Background processing is underrated.</strong> The chapter updates don't block the UI. That seems obvious, but a lot of AI products make you wait for everything. Users don't care about your AI running. They care that their action felt instant.</p>
+
+        <p><strong>Email digests are engagement infrastructure.</strong> The product only works if I actually come back to it. The digests solve that. They're not spam - they're excerpts of my own life story. I open them.</p>
+
+        <h2>Try It</h2>
+
+        <p>The system is live. I use it daily. Every week I get an email with a chapter of my life written by an AI that actually knows what I've been thinking about.</p>
+
+        <p>That's the experience I wanted. Storage apps don't do that.</p>
+
+        <hr>
+
+        <div class="author-section">
+            <img src="../../imgs/chrisdabatos.jpg" alt="Chris Dabatos" class="author-avatar">
+            <div class="author-info">
+                <p class="author-name">Chris Dabatos</p>
+                <p class="author-title">Developer Advocate, Engineer, Speaker</p>
+                <div class="author-links">
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-social">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </article>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
