@@ -17,6 +17,7 @@ const TODAY = new Date().toISOString().split('T')[0];
 const staticPages = [
     { url: '/', priority: '1.0', changefreq: 'weekly' },
     { url: '/all-content.html', priority: '0.8', changefreq: 'weekly' },
+    { url: '/projects.html', priority: '0.9', changefreq: 'weekly' },
 ];
 
 // Scan for project README pages
