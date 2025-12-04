@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Source Projects | Chris Dabatos</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore my open source projects: AI-powered decision simulators, journaling systems, memory layers, and developer tools built with Claude, GPT, TiDB, and more.">
+    <meta name="author" content="Chris Dabatos">
+    <meta name="keywords" content="open source, AI projects, TiDB, Claude, GPT, developer tools, semantic search, decision simulator">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Open Source Projects - Chris Dabatos">
+    <meta property="og:description" content="Explore my open source projects: AI-powered decision simulators, journaling systems, and developer tools.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" content="https://realchrissean.com/projects.html">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Open Source Projects - Chris Dabatos">
+    <meta name="twitter:description" content="Explore my open source projects: AI-powered decision simulators, journaling systems, and developer tools.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://realchrissean.com/projects.html">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Open Source Projects - Chris Dabatos",
+        "description": "Explore open source projects: AI-powered decision simulators, journaling systems, memory layers, and developer tools.",
+        "author": {
+            "@type": "Person",
+            "name": "Chris Dabatos",
+            "url": "https://realchrissean.com"
+        },
+        "url": "https://realchrissean.com/projects.html"
+    }
+    </script>
+
+    <link rel="icon" type="image/png" href="imgs/cd_logo.png">
+    <link rel="apple-touch-icon" href="imgs/cd_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.05), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            width: 100%;
+            padding: 8px 20px;
+            border-bottom: var(--glass-border);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        .page-header {
+            padding: 60px 0 40px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .highlight {
+            color: var(--accent-primary);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding-bottom: 80px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.15);
+        }
+
+        .project-card:hover .featured-badge {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.5);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .card-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .learn-more {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .modal-content {
+            background: #1a1a1a;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #111827;
+        }
+
+        [data-theme="dark"] .modal-close:hover {
+            color: #f0f0f0;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-header h3 {
+            font-size: 1.75rem;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-sections-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-section {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: var(--card-bg);
+        }
+
+        .modal-section.full-width {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(192, 38, 211, 0.08) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .modal-section h4 {
+            color: var(--accent-primary);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .modal-section p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-badge {
+            background: transparent;
+            color: var(--accent-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1.5px solid var(--accent-primary);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-github-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .modal-demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-demo-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--text-muted);
+            border-top: var(--glass-border);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 1.5rem;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-sections-row {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <a href="https://github.com/RealChrisSean" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Open Source <span class="highlight">Projects</span></h1>
+            <p>AI-powered tools and systems I've built. Some are private (demos available), others are fully open source.</p>
+        </header>
+
+        <div class="projects-grid">
+            <!-- Parallel Lives -->
+            <div class="project-card" onclick="openProjectModal('parallelLives')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                        <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--text-muted);"></i>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Private repo</span>
+                    </div>
+                    <span class="featured-badge">Featured</span>
+                </div>
+                <h3>Parallel Lives</h3>
+                <p>AI-powered branching decision simulator that models long-term life, career, and financial outcomes using multi-model reasoning.</p>
+                <div class="card-actions">
+                    <a href="parallel-lives/" onclick="event.stopPropagation();" class="btn-outline">
+                        README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://app.parallellives.ai" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Journal It -->
+            <div class="project-card" onclick="openProjectModal('journalIt')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                        <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--text-muted);"></i>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Private repo</span>
+                    </div>
+                    <span class="featured-badge">Featured</span>
+                </div>
+                <h3>Journal It</h3>
+                <p>AI-powered journaling system that synthesizes entries, detects patterns, and writes your life story in third person like a biographer following you around.</p>
+                <div class="card-actions">
+                    <a href="journalit_readme/" onclick="event.stopPropagation();" class="btn-outline">
+                        README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://app.parallellives.ai/journal?dev=beta031419!" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- atlasMemory -->
+            <div class="project-card" onclick="openProjectModal('atlasMemory')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                </div>
+                <h3>atlasMemory</h3>
+                <p>A unified AI memory layer with branching, rollbacks, and conflict detection — all powered by a single TiDB table.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/atlasMemory" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://atlasmemory-production.up.railway.app" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- tidb-ai-docs-copilot -->
+            <div class="project-card" onclick="openProjectModal('tidb-ai-docs-copilot')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                </div>
+                <h3>tidb-ai-docs-copilot</h3>
+                <p>Turns unstructured docs and GitHub issues into a structured TiDB knowledge graph using Bedrock embeddings + TiDB Vector, making docs instantly searchable for agents, CLIs, and dev tools.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/tidb-ai-docs-copilot" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+
+            <!-- semantic-qna -->
+            <div class="project-card" onclick="openProjectModal('semantic-qna')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                </div>
+                <h3>semantic-qna</h3>
+                <p>A semantic FAQ assistant (CLI + web UI) using AWS Bedrock embeddings & TiDB Cloud vector search, with built-in progress bars and automated tests.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/semantic-qna" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-social">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem;">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </footer>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProjectModal()">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const projectData = {
+            'parallelLives': {
+                title: 'Parallel Lives',
+                subtitle: 'AI-powered branching decision simulator built on multi-model reasoning and agent orchestration.',
+                isPrivate: true,
+                demo: 'https://app.parallellives.ai',
+                readme: 'parallel-lives/',
+                problem: 'Most decision tools show static calculators or linear predictions. They can\'t model reasoning chains, multi-step consequences, or how a change in one choice propagates through the rest of someone\'s life.',
+                tech: 'Claude Opus (causal reasoning), GPT-5.1 (structured analysis), Multi-agent orchestration, Evaluation layer, TiDB Vector + relational state store',
+                why: 'Parallel Lives prototypes an agent-style architecture:<br><br>• Claude Opus generates deeply reasoned scenario branches<br>• GPT-5.1 evaluates financial, probabilistic, and risk outcomes<br>• A custom evaluation layer checks consistency, safety, and plausibility across branches<br>• A memory + state model tracks long-term consequences, not single responses<br><br>It\'s a working example of how reasoning models and tool-using models can collaborate to produce stable, interpretable outcomes.'
+            },
+            'journalIt': {
+                title: 'Journal It',
+                subtitle: 'AI-powered journaling system that writes your autobiography while you use it.',
+                isPrivate: true,
+                demo: 'https://app.parallellives.ai/journal?dev=beta031419!',
+                readme: 'journalit_readme/',
+                problem: 'Most journaling apps are just storage. You write, it saves, you forget. The only value you get is if you go back and read it yourself. But nobody does.',
+                tech: 'Opus 4.5, GPT 5.1, Semantic search, Email digests',
+                why: 'Journal It synthesizes what you\'ve been thinking about, notices patterns you might miss, and writes something you\'d actually want to read later.<br><br>• Journal entries are the raw material<br>• Reflect chat uses Opus 4.5 for natural, voice-matched responses<br>• Life story chapters auto-update in third person like a biography<br>• Email digests (weekly to yearly) bring you back to your own story<br><br>The key insight: don\'t use one model for everything. Match the model to the job.'
+            },
+            'atlasMemory': {
+                title: 'atlasMemory',
+                subtitle: 'AI memory system with branching and rollbacks. One TiDB table replaces three services.',
+                github: 'https://github.com/RealChrisSean/atlasMemory',
+                demo: 'https://atlasmemory-production.up.railway.app',
+                problem: 'AI memory usually means three services: vector DB, relational DB, cache. Experimenting with memory changes risks corrupting production. And nothing catches when your agent remembers contradictory things.',
+                tech: 'TiDB (vector + full-text + JSON), Branch isolation, SQLAlchemy ORM, Python',
+                why: 'One TiDB table replaces Pinecone + Postgres + Redis. Vectors, full-text, metadata, all in one place. Branching means you experiment without touching production. It\'s just a WHERE clause, no extra infrastructure. Built-in conflict detection catches contradictory memories before they confuse your agent.'
+            },
+            'semantic-qna': {
+                title: 'semantic-qna',
+                subtitle: 'Semantic search over TiDB docs using AWS Bedrock and TiDB Vector.',
+                github: 'https://github.com/RealChrisSean/semantic-qna',
+                problem: 'Keyword search in docs is garbage. Developers need actual answers, not 50 pages to read through.',
+                tech: 'AWS Bedrock Titan embeddings, TiDB Cloud vector search, FastAPI + React, CLI and web UI',
+                why: 'This cuts doc search time from 10 minutes to 10 seconds. Instead of reading through multiple pages hoping to find the answer, you ask a question and get the relevant section immediately. Shipped with both CLI and web UI because terminal devs and browser devs work differently.'
+            },
+            'tidb-ai-docs-copilot': {
+                title: 'tidb-ai-docs-copilot',
+                subtitle: 'Self-updating documentation assistant that scrapes docs and GitHub issues.',
+                github: 'https://github.com/RealChrisSean/tidb-ai-docs-copilot',
+                problem: 'Documentation gets outdated fast. Manually answering the same questions doesn\'t scale.',
+                tech: 'Web scraping (BeautifulSoup), AWS Bedrock embeddings, TiDB Vector storage, FastAPI with CLI/web/API endpoints',
+                why: 'Static RAG systems die the moment docs change. This one re-scrapes and re-embeds automatically, so the knowledge base stays current without manual updates. It also pulls from GitHub issues, not just docs - which means it knows about common problems and workarounds that never make it into official documentation.'
+            }
+        };
+
+        function openProjectModal(projectId) {
+            const modal = document.getElementById('projectModal');
+            const modalBody = document.getElementById('modalBody');
+            const project = projectData[projectId];
+
+            const techItems = project.tech.split(',').map(item => {
+                const match = item.trim().match(/^([^(]+)/);
+                return match ? match[1].trim() : item.trim();
+            });
+
+            const techBadgesHTML = techItems.map(tech =>
+                `<span class="tech-badge">${tech}</span>`
+            ).join('');
+
+            modalBody.innerHTML = `
+                <div class="modal-header">
+                    <i class="fab fa-github" style="font-size: 2rem; color: var(--accent-primary);"></i>
+                    <h3>${project.title}</h3>
+                    ${project.isPrivate && project.demo ? `<a href="${project.demo}" target="_blank" class="btn-primary">Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i></a>` : ''}
+                    ${project.readme ? `<a href="${project.readme}" class="btn-outline">README.md <i class="fas fa-file-code" style="font-size: 0.75rem;"></i></a>` : ''}
+                </div>
+                <p class="modal-subtitle">${project.subtitle}</p>
+
+                <div class="modal-sections-row">
+                    <div class="modal-section">
+                        <h4>Problem</h4>
+                        <p>${project.problem}</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>Stack</h4>
+                        <div class="tech-badges">
+                            ${techBadgesHTML}
+                        </div>
+                        ${project.isPrivate ? `
+                        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem;">
+                            <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                            <span>Private${project.demo ? '' : ' · Demo available on request'}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="modal-section full-width">
+                        <h4>Why it matters</h4>
+                        <p>${project.why}</p>
+                    </div>
+                </div>
+
+                ${!project.isPrivate ? `
+                <div class="modal-buttons">
+                    <a href="${project.github}" target="_blank" class="modal-github-btn">
+                        GitHub <i class="fab fa-github"></i>
+                    </a>
+                    ${project.demo ? `<a href="${project.demo}" target="_blank" class="modal-demo-btn">View Demo <i class="fas fa-external-link-alt"></i></a>` : ''}
+                </div>
+                ` : ''}
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProjectModal() {
+            const modal = document.getElementById('projectModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('projectModal');
+            if (e.target === modal) {
+                closeProjectModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeProjectModal();
+            }
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
