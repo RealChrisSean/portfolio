@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal It - Technical Architecture</title>
+    <meta name="description" content="An AI-powered journaling system that writes your autobiography while you use it. Multi-model architecture with semantic search and automated life story generation.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Journal It - Technical Architecture">
+    <meta property="og:description" content="An AI-powered journaling system that writes your autobiography while you use it.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" content="https://realchrissean.com/journalit_readme/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Journal It - Technical Architecture">
+    <meta name="twitter:description" content="An AI-powered journaling system that writes your autobiography while you use it.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/png" href="../imgs/cd_logo.png">
+    <link rel="apple-touch-icon" href="../imgs/cd_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.08), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 50%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Collapsible sections */
+        details {
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 0;
+        }
+
+        details[open] {
+            padding-bottom: 32px;
+        }
+
+        summary {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        summary:hover {
+            color: var(--accent-primary);
+        }
+
+        .section-content {
+            padding-top: 24px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 32px 0 12px;
+            color: var(--accent-primary);
+        }
+
+        .section-content > h3:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        blockquote {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 20px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        /* VS Code Dark Theme Style */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            margin: 24px 0;
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* VS Code title bar */
+        pre[class*="language-"]::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        /* Window control dots */
+        pre[class*="language-"]::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+        }
+
+        pre[class*="language-"] code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            background: transparent !important;
+            border: none;
+        }
+
+        /* Override Prism theme for VS Code colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #d4d4d4 !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code (not in pre) */
+        :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            background: var(--code-bg);
+        }
+
+        /* Callout Box */
+        .callout {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(192, 38, 211, 0.05));
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            summary { font-size: 1.25rem; }
+            .container { padding: 24px 16px 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <div class="container">
+        <h1>Journal It</h1>
+        <p class="subtitle">An AI-powered journaling system that writes your autobiography while you use it. Multi-model architecture with semantic search.</p>
+
+        <details open>
+            <summary>Why I Built This</summary>
+            <div class="section-content">
+                <p>The question that drives this project:</p>
+                <blockquote>"Why don't I ever go back and read my journal entries?"</blockquote>
+                <p>Most journaling apps are just storage. You write, it saves, you forget. The only value you get is if you go back and read it yourself.</p>
+                <p>But I don't go back and read it. Nobody does.</p>
+                <p>Journal It is my attempt to fix that. It watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around. Chapters update automatically. I can read my own life like a book.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>What This Actually Is</summary>
+            <div class="section-content">
+                <p><strong>Not another notes app.</strong></p>
+                <p>It's a system that:</p>
+                <ul>
+                    <li>Synthesizes what you've been thinking about</li>
+                    <li>Notices patterns you might miss</li>
+                    <li>Writes something you'd actually want to read later</li>
+                    <li>Reminds you to revisit it</li>
+                </ul>
+                <p>Four main pieces work together:</p>
+                <ol>
+                    <li><strong>Journal entries</strong> - Manual input. Title, content, tags. The raw material.</li>
+                    <li><strong>Reflect chat</strong> - AI responds to what you wrote. Not therapy. Just acknowledgment and follow-up questions. 1-2 sentences max.</li>
+                    <li><strong>Life story chapters</strong> - Auto-updates in third person like a biography. 2-3 paragraphs per chapter. New chapter after 7 days of silence.</li>
+                    <li><strong>Email digests</strong> - Weekly, monthly, quarterly, yearly. Excerpts of your own life story delivered to your inbox.</li>
+                </ol>
+            </div>
+        </details>
+
+        <details>
+            <summary>Stack</summary>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Job</th>
+                            <th>Why</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Opus 4.5</td>
+                            <td>Reflect chat & reasoning</td>
+                            <td>High-quality conversational responses that match your voice</td>
+                        </tr>
+                        <tr>
+                            <td>GPT 5.1</td>
+                            <td>Chapter synthesis & metadata</td>
+                            <td>Fast structured writing and background processing</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout">
+                    <p>The key insight: don't use one model for everything. Match the model to the job.</p>
+                </div>
+            </div>
+        </details>
+
+        <details>
+            <summary>Architecture</summary>
+            <div class="section-content">
+                <h3>API Endpoints</h3>
+                <p>Everything runs through three stateless endpoints:</p>
+                <ul>
+                    <li><code>/api/journal</code> - CRUD for entries. Manual or AI-generated.</li>
+                    <li><code>/api/reflect</code> - Conversation management. Load, send message, clear.</li>
+                    <li><code>/api/journey</code> - Chapter management. List, generate, update.</li>
+                </ul>
+                <p>AI processing happens as non-blocking async calls. When you create an entry, you see it immediately. Chapter updates happen behind the scenes.</p>
+
+                <h3>Database Schema</h3>
+                <p>Five tables handle everything:</p>
+                <ul>
+                    <li><code>journal_entries</code> - the raw entries</li>
+                    <li><code>reflection_messages</code> - chat history with embeddings for search</li>
+                    <li><code>life_story_chapters</code> - the narrative summaries</li>
+                    <li><code>decision_history</code> - decisions explored elsewhere in the app</li>
+                    <li><code>decision_embeddings</code> - multi-dimensional vectors (financial, emotional, career, health, relationship, overall)</li>
+                </ul>
+
+                <h3>Semantic Search</h3>
+                <p>Embeddings power two features:</p>
+                <ul>
+                    <li><strong>Reflect chat</strong> - pulls relevant past entries to give the AI context</li>
+                    <li><strong>Chapter generation</strong> - finds thematic connections across months of content</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Voice Customization</summary>
+            <div class="section-content">
+                <p>AI responses shouldn't sound like a therapist or a corporate chatbot. They should sound like you.</p>
+                <p>There's a config file where you define communication preferences:</p>
+                <pre class="language-typescript"><code class="language-typescript">export const VOICE_CONFIG = {
+  ENABLED: true,
+  STYLE: `
+    - Confident, approachable, direct
+    - Simple, plain English with short sentences
+    - Use contractions
+    - No flowery intros or conclusions
+    - NEVER use em dashes
+  `,
+};</code></pre>
+                <p>This gets injected into reflect chat prompts. The AI responses actually sound like how you talk.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>The Bigger Vision</summary>
+            <div class="section-content">
+                <p>Right now, Journal It is a standalone system. But it's designed to plug into something larger.</p>
+                <p>The idea: reflections should feed back into decision simulations. Here's the loop:</p>
+                <ol>
+                    <li>Explore a decision tree - should I take this job, move to this city, whatever</li>
+                    <li>Pick a path</li>
+                    <li>Later, log how it actually played out</li>
+                    <li>System updates your profile - patterns, preferences, tendencies</li>
+                    <li>Journal reflects on those patterns</li>
+                    <li>Next time you face a similar decision, the simulation uses everything it knows about you</li>
+                </ol>
+                <p>Predictions get more personalized over time. And because it's all transparent and editable, you stay in control.</p>
+                <p>That's the end state. Journal It is the memory layer that makes it possible.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>What I Learned</summary>
+            <div class="section-content">
+                <h3>Model selection is product design</h3>
+                <p>Picking Opus 4.5 vs GPT 5.1 isn't just a technical decision. It directly affects user experience - response quality, latency, cost. You have to think about it as a product tradeoff, not just an engineering one.</p>
+
+                <h3>Background processing is underrated</h3>
+                <p>Chapter updates don't block the UI. That seems obvious, but a lot of AI products make you wait for everything. Users don't care about your AI running. They care that their action felt instant.</p>
+
+                <h3>Email digests are engagement infrastructure</h3>
+                <p>The product only works if you actually come back to it. Digests solve that. They're not spam - they're excerpts of your own life story. You open them.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Code Access</summary>
+            <div class="section-content">
+                <p>The repo is private right now.</p>
+                <p>If you're a recruiter or hiring manager and want to walk through the code or architecture in more detail, I'm happy to do a live session.</p>
+            </div>
+        </details>
+
+        <div class="footer">
+            <h2 style="font-size: 1.5rem; margin-bottom: 16px;">Let's build something <span style="color: var(--accent-primary);">awesome.</span></h2>
+            <p style="margin-bottom: 24px;">Open for speaking engagements and collaborations.</p>
+            <a href="mailto:realchrissean@gmail.com" style="display: inline-block; padding: 12px 24px; background: var(--text-main); color: var(--bg-color); border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 24px; transition: all 0.3s;">Get in Touch</a>
+            <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 24px;">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
