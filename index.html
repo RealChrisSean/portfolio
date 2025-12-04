@@ -1106,15 +1106,15 @@
         });
         } // END: Shorts carousel disabled
 
-        // --- LOAD LATEST VIDEOS FROM content.js ---
-        const latestContent = getLatestVideos(3);
+        // --- LOAD LATEST CONTENT FROM content.js ---
+        const latestContent = getLatestContent(3);
         const latestGrid = document.getElementById('latestContentGrid');
 
         // Get label and color for each content type
         function getContentTypeInfo(type) {
             const typeMap = {
-                'video': { label: 'Video Tutorial', color: 'var(--accent-vegas)', icon: 'fab fa-youtube', linkText: 'Watch Video' },
-                'blog': { label: 'Technical Blog', color: 'var(--accent-primary)', icon: 'fas fa-book-open', linkText: 'Read Article' },
+                'video': { label: 'Video', color: 'var(--accent-vegas)', icon: 'fab fa-youtube', linkText: 'Watch Video' },
+                'blog': { label: 'Blog', color: 'var(--accent-primary)', icon: 'fas fa-book-open', linkText: 'Read Article' },
                 'talk': { label: 'Conference Talk', color: '#10b981', icon: 'fas fa-microphone-alt', linkText: 'View Talk' }
             };
             return typeMap[type] || typeMap['video'];

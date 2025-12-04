@@ -348,7 +348,14 @@ const portfolioContent = {
         }
     ],
 
-    blogs: []
+    blogs: [
+        {
+            title: 'I Built a System That Writes My Autobiography While I Use It',
+            description: 'Most journaling apps are just storage. I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around.',
+            date: 'Dec 3, 2025',
+            link: 'blog/ai-journal-system/'
+        }
+    ]
 };
 
 function getYouTubeThumbnail(videoId) {
