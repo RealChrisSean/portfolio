@@ -354,7 +354,57 @@ const portfolioContent = {
             title: 'I Built a System That Writes My Autobiography While I Use It',
             description: 'Most journaling apps are just storage. I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around.',
             date: 'Dec 3, 2025',
-            link: 'blog/ai-journal-system/'
+            link: 'blog/ai-journal-system/',
+            customThumbnail: 'imgs/image12-4.jpeg'
+        }
+    ],
+
+    projects: [
+        {
+            title: 'Parallel Lives',
+            description: 'AI-powered branching decision simulator that models long-term life, career, and financial outcomes using multi-model reasoning.',
+            date: 'Dec 2025',
+            link: 'parallel-lives/',
+            demo: 'https://app.parallellives.ai',
+            customThumbnail: 'imgs/parallellives.jpeg',
+            tags: ['AI', 'Branching', 'Multi-Model', 'Vector Search'],
+            isPrivate: true
+        },
+        {
+            title: 'Journal It',
+            description: 'AI-powered journaling system that synthesizes entries, detects patterns, and writes your life story in third person like a biographer following you around.',
+            date: 'Dec 2025',
+            link: 'journalit_readme/',
+            demo: 'https://app.parallellives.ai/journal?dev=beta031419!',
+            customThumbnail: 'imgs/image12-4.jpeg',
+            tags: ['AI', 'Semantic Memory', 'Multi-Model', 'Vector Search'],
+            isPrivate: true
+        },
+        {
+            title: 'atlasMemory',
+            description: 'A unified AI memory layer with branching, rollbacks, and conflict detection — all powered by a single TiDB table.',
+            date: 'Nov 2025',
+            link: 'https://github.com/RealChrisSean/atlasMemory',
+            demo: 'https://atlasmemory-production.up.railway.app',
+            customThumbnail: 'imgs/atlasMemory.jpeg',
+            tags: ['AI', 'Vector Search', 'MySQL'],
+            isPrivate: false
+        },
+        {
+            title: 'tidb-ai-docs-copilot',
+            description: 'Turns unstructured docs and GitHub issues into a structured TiDB knowledge graph using Bedrock embeddings + TiDB Vector.',
+            date: 'Oct 2025',
+            link: 'https://github.com/RealChrisSean/tidb-ai-docs-copilot',
+            tags: ['AI', 'RAG', 'Vector Search', 'MySQL'],
+            isPrivate: false
+        },
+        {
+            title: 'semantic-qna',
+            description: 'A semantic FAQ assistant (CLI + web UI) using AWS Bedrock embeddings & TiDB Cloud vector search.',
+            date: 'Sep 2025',
+            link: 'https://github.com/RealChrisSean/semantic-qna',
+            tags: ['AI', 'RAG', 'Vector Search', 'MySQL'],
+            isPrivate: false
         }
     ]
 };
@@ -420,6 +470,21 @@ function getAllContent() {
             icon: 'fas fa-book-open',
             thumbnail: blog.customThumbnail || 'https://placehold.co/1920x1080/ffffff/0ea5e9?text=Blog+Post',
             link: blog.link
+        });
+    });
+
+    portfolioContent.projects.forEach(project => {
+        content.push({
+            type: 'project',
+            title: project.title,
+            description: project.description,
+            date: project.date,
+            icon: 'fab fa-github',
+            thumbnail: project.customThumbnail || 'https://placehold.co/1920x1080/0f0f0f/0ea5e9?text=OSS+Project',
+            link: project.link,
+            demo: project.demo,
+            tags: project.tags,
+            isPrivate: project.isPrivate
         });
     });
 
