@@ -4,7 +4,8 @@ const portfolioContent = {
             title: 'Kimi K2 Thinking: Testing the Model That Beat GPT-5',
             description: 'Open-source models are getting scary good. Kimi K2 Thinking from Moonshot AI just beat GPT-5 on Humanity\'s Last Exam, and you can run it on consumer hardware right now.',
             date: 'Nov 28, 2025',
-            youtubeId: 'tNNxELV6F0s'
+            youtubeId: 'tNNxELV6F0s',
+            customThumbnail: 'imgs/kimi.jpeg'
         },
         {
             title: 'Build a Semantic Q&A App in Minutes',
