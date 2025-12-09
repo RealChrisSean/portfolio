@@ -306,6 +306,14 @@ const portfolioContent = {
     talks: [
         {
             title: 'Why Your FAQ Search Sucks and How I Fixed It',
+            description: 'Conference talk at OSA Con demonstrating how semantic search and AI can transform FAQ search from keyword matching to actually understanding what users are asking.',
+            date: 'Nov 2025',
+            conference: 'OSA Con 2025',
+            youtubeId: 'RNbGtEcXEj4',
+            hasRecording: true
+        },
+        {
+            title: 'Why Your FAQ Search Sucks and How I Fixed It',
             description: 'Conference talk demonstrating how to improve FAQ search functionality using modern search techniques.',
             date: 'Aug 20, 2025',
             conference: 'Tech Conference',
