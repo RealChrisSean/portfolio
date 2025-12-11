@@ -627,6 +627,45 @@
 
         <p>The embeddings let me do semantic search across everything. When I reflect on an entry, the system pulls related entries from my history to give the AI context. When it writes chapters, it can find thematic connections across months of content.</p>
 
+        <h2>The Database Choice</h2>
+
+        <p>I needed a database that could do two things at once:</p>
+        <ol>
+            <li>Store regular data - users, entries, chat history</li>
+            <li>Store and search vector embeddings - semantic search across all my content</li>
+        </ol>
+
+        <p>Most people solve this with two databases: Postgres for the data, Pinecone or Weaviate for vectors. That means two connections, sync logic, and twice the infrastructure to manage.</p>
+
+        <p>TiDB does both in one place. It's MySQL-compatible (so I use the standard mysql2 driver), but it has a native VECTOR column type and built-in distance functions.</p>
+
+        <p>Here's what the schema looks like:</p>
+
+        <pre class="language-sql"><code class="language-sql">CREATE TABLE journal_entries (
+  id VARCHAR(36) PRIMARY KEY,
+  session_id VARCHAR(255),
+  title VARCHAR(500),
+  content TEXT,
+  embedding VECTOR(1536),
+  created_at TIMESTAMP
+);</code></pre>
+
+        <p>And here's semantic search:</p>
+
+        <pre class="language-sql"><code class="language-sql">SELECT content, VEC_COSINE_DISTANCE(embedding, ?) as distance
+FROM journal_entries
+WHERE session_id = ?
+ORDER BY distance ASC
+LIMIT 5;</code></pre>
+
+        <p>One query. No separate vector database. No sync issues.</p>
+
+        <p>The <code>VEC_COSINE_DISTANCE</code> function compares two vectors and returns how different they are - 0 is identical, 2 is opposite. I threshold at 0.5 for relevance and order ascending so the most similar entries come first.</p>
+
+        <p>This simplifies everything: one connection, one schema, and foreign keys/transactions just work. Multi-tenancy is a WHERE clause.</p>
+
+        <p>The tradeoff: TiDB's vector search isn't as optimized as purpose-built vector databases at massive scale. If I had 100 million entries, I'd probably need something else. For a personal app with thousands of entries? It's more than enough, and the simplicity is worth it.</p>
+
         <h2>Voice Customization</h2>
 
         <p>This part was important to me. I didn't want AI responses that sound like a therapist or a corporate chatbot.</p>
