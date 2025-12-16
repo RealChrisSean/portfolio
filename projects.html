@@ -342,6 +342,16 @@
             color: #14b8a6;
             border: 1px solid rgba(20, 184, 166, 0.3);
         }
+        .tag-extension {
+            background: rgba(251, 146, 60, 0.15);
+            color: #f97316;
+            border: 1px solid rgba(251, 146, 60, 0.3);
+        }
+        .tag-ml {
+            background: rgba(99, 102, 241, 0.15);
+            color: #6366f1;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
 
         /* Modal Styles */
         .modal {
@@ -718,6 +728,32 @@
                     <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
                 </div>
             </div>
+
+            <!-- OriginAI -->
+            <div class="project-card" onclick="openProjectModal('originai')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                    <span class="featured-badge">Featured</span>
+                </div>
+                <h3>OriginAI</h3>
+                <div class="project-tags">
+                    <span class="project-tag tag-ai">AI</span>
+                    <span class="project-tag tag-extension">Chrome Extension</span>
+                    <span class="project-tag tag-ml">ML Detection</span>
+                    <span class="project-tag tag-mysql">TiDB</span>
+                </div>
+                <p>Chrome extension that detects AI-generated content using multiple ML models. Floating popup on text selection, right-click menu, and browser UI.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/OriginAI" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://app.parallellives.ai/detect" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -787,6 +823,15 @@
                 problem: 'Documentation gets outdated fast. Manually answering the same questions doesn\'t scale.',
                 tech: 'Web scraping (BeautifulSoup), AWS Bedrock embeddings, TiDB Vector storage, FastAPI with CLI/web/API endpoints',
                 why: 'Static RAG systems die the moment docs change. This one re-scrapes and re-embeds automatically, so the knowledge base stays current without manual updates. It also pulls from GitHub issues, not just docs - which means it knows about common problems and workarounds that never make it into official documentation.'
+            },
+            'originai': {
+                title: 'OriginAI',
+                subtitle: 'Chrome extension for AI content detection using ensemble ML scoring.',
+                github: 'https://github.com/RealChrisSean/OriginAI',
+                demo: 'https://app.parallellives.ai/detect',
+                problem: 'Hard to tell if content was written by AI or a human. Existing detectors are clunky web apps that break your workflow.',
+                tech: 'Chrome Extension (Manifest V3), OpenAI classifier, ChatGPT detector, Fakespot model, Ensemble scoring, TiDB, Next.js/Vercel',
+                why: 'Three ways to check any text without leaving the page: floating popup on selection, right-click context menu, or paste into the extension popup.<br><br>Backend runs multiple ML models and combines them with ensemble scoring for better accuracy than any single detector. Results are cached in TiDB for fast responses. User feedback (accurate/wrong) gets stored so I can tune detection over time.<br><br>Free tier has daily limits. Pro unlocks higher accuracy models, humanization tips, and plagiarism checks.'
             }
         };
 
