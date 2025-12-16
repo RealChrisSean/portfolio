@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Project - Chris Dabatos</title>
+    <meta name="description" id="meta-description" content="Project details">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" id="og-title" content="Project - Chris Dabatos">
+    <meta property="og:description" id="og-description" content="Project details">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+    <meta property="og:url" id="og-url" content="https://realchrissean.com/project.html">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" id="twitter-title" content="Project - Chris Dabatos">
+    <meta name="twitter:description" id="twitter-description" content="Project details">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" id="canonical-url" href="https://realchrissean.com/project.html">
+
+    <link rel="icon" type="image/png" href="imgs/cd_logo.png">
+    <link rel="apple-touch-icon" href="imgs/cd_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/fontawesome-subset.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #fafafa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --accent-primary: #0ea5e9;
+            --accent-vegas: #c4a000;
+            --border-color: #e5e5e5;
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: #333;
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        /* Header section */
+        .project-header {
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 50%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .tech-badge {
+            background: var(--code-bg);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .private-notice {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+
+        /* Markdown content styling */
+        #markdown-content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        #markdown-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            color: var(--text-main);
+        }
+
+        #markdown-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: var(--text-main);
+        }
+
+        #markdown-content p {
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        #markdown-content blockquote {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 20px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        #markdown-content ul, #markdown-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        #markdown-content li {
+            margin-bottom: 8px;
+        }
+
+        #markdown-content strong {
+            font-weight: 600;
+        }
+
+        #markdown-content a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        #markdown-content a:hover {
+            text-decoration: underline;
+        }
+
+        #markdown-content code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        /* VS Code Dark Theme Style for code blocks */
+        #markdown-content pre {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            margin: 24px 0;
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* VS Code title bar */
+        #markdown-content pre::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        /* Window control dots */
+        #markdown-content pre::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+        }
+
+        #markdown-content pre code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            background: transparent !important;
+            border: none;
+            color: #d4d4d4 !important;
+        }
+
+        /* Inline code (not in pre) */
+        #markdown-content :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] #markdown-content :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
+        }
+
+        #markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        #markdown-content th, #markdown-content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #markdown-content th {
+            font-weight: 600;
+            background: var(--code-bg);
+        }
+
+        #markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        #markdown-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 48px 0;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 64px 0;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error state */
+        .error {
+            text-align: center;
+            padding: 64px 0;
+            color: var(--text-muted);
+        }
+
+        .error i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            color: #ef4444;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 24px 16px 60px; }
+            .header-buttons { flex-direction: column; }
+            .btn-primary, .btn-outline { width: 100%; justify-content: center; }
+        }
+
+        /* Prism token colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="projects.html"><i class="fas fa-arrow-left"></i> Back to Projects</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <div class="container">
+        <div id="content">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading project...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h2 style="font-size: 1.5rem; margin-bottom: 16px;">Let's build something <span style="color: var(--accent-primary);">awesome.</span></h2>
+            <p style="margin-bottom: 24px;">Open for speaking engagements and collaborations.</p>
+            <a href="mailto:realchrissean@gmail.com" style="display: inline-block; padding: 12px 24px; background: var(--text-main); color: var(--bg-color); border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 24px; transition: all 0.3s;">Get in Touch</a>
+            <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 24px;">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+    <script>
+        // Theme handling
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
+        // Parse YAML-like frontmatter
+        function parseFrontmatter(content) {
+            const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+            const match = content.match(frontmatterRegex);
+
+            if (!match) {
+                return { metadata: {}, content: content };
+            }
+
+            const frontmatter = match[1];
+            const markdown = match[2];
+            const metadata = {};
+
+            frontmatter.split('\n').forEach(line => {
+                const colonIndex = line.indexOf(':');
+                if (colonIndex > 0) {
+                    const key = line.slice(0, colonIndex).trim();
+                    let value = line.slice(colonIndex + 1).trim();
+                    // Remove quotes if present
+                    if ((value.startsWith('"') && value.endsWith('"')) ||
+                        (value.startsWith("'") && value.endsWith("'"))) {
+                        value = value.slice(1, -1);
+                    }
+                    // Handle booleans
+                    if (value === 'true') value = true;
+                    if (value === 'false') value = false;
+                    metadata[key] = value;
+                }
+            });
+
+            return { metadata, content: markdown };
+        }
+
+        // Update meta tags
+        function updateMetaTags(metadata) {
+            const title = metadata.title ? `${metadata.title} - Chris Dabatos` : 'Project - Chris Dabatos';
+            const description = metadata.subtitle || 'Project details';
+            const url = window.location.href;
+
+            document.getElementById('page-title').textContent = title;
+            document.getElementById('meta-description').content = description;
+            document.getElementById('og-title').content = title;
+            document.getElementById('og-description').content = description;
+            document.getElementById('og-url').content = url;
+            document.getElementById('twitter-title').content = title;
+            document.getElementById('twitter-description').content = description;
+            document.getElementById('canonical-url').href = url;
+        }
+
+        // Render header section
+        function renderHeader(metadata) {
+            let html = '<div class="project-header">';
+
+            if (metadata.title) {
+                html += `<h1>${metadata.title}</h1>`;
+            }
+
+            if (metadata.subtitle) {
+                html += `<p class="subtitle">${metadata.subtitle}</p>`;
+            }
+
+            // Buttons
+            const hasButtons = metadata.demo || metadata.github;
+            if (hasButtons) {
+                html += '<div class="header-buttons">';
+                if (metadata.demo) {
+                    html += `<a href="${metadata.demo}" target="_blank" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt"></i>
+                    </a>`;
+                }
+                if (metadata.github) {
+                    html += `<a href="${metadata.github}" target="_blank" class="btn-outline">
+                        <i class="fab fa-github"></i> View on GitHub
+                    </a>`;
+                }
+                html += '</div>';
+            }
+
+            // Tech badges
+            if (metadata.tech) {
+                const techItems = metadata.tech.split(',').map(item => item.trim());
+                html += '<div class="tech-badges">';
+                techItems.forEach(tech => {
+                    html += `<span class="tech-badge">${tech}</span>`;
+                });
+                html += '</div>';
+            }
+
+            // Private notice
+            if (metadata.private === true) {
+                html += `<div class="private-notice">
+                    <i class="fas fa-lock"></i>
+                    <span>Private repository${metadata.demo ? '' : ' - Demo available on request'}</span>
+                </div>`;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h2>Oops!</h2>
+                    <p>${message}</p>
+                    <a href="projects.html" class="btn-primary" style="margin-top: 24px;">
+                        <i class="fas fa-arrow-left"></i> Back to Projects
+                    </a>
+                </div>
+            `;
+        }
+
+        // Main load function
+        async function loadProject() {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get('id');
+
+            if (!projectId) {
+                showError('No project specified.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`projects/${projectId}.md`);
+
+                if (!response.ok) {
+                    throw new Error('Project not found');
+                }
+
+                const rawContent = await response.text();
+                const { metadata, content } = parseFrontmatter(rawContent);
+
+                // Update page metadata
+                updateMetaTags(metadata);
+
+                // Configure marked
+                marked.setOptions({
+                    gfm: true,
+                    breaks: true,
+                    highlight: function(code, lang) {
+                        if (Prism.languages[lang]) {
+                            return Prism.highlight(code, Prism.languages[lang], lang);
+                        }
+                        return code;
+                    }
+                });
+
+                // Render content
+                const headerHtml = renderHeader(metadata);
+                const markdownHtml = marked.parse(content);
+
+                document.getElementById('content').innerHTML = `
+                    ${headerHtml}
+                    <div id="markdown-content">${markdownHtml}</div>
+                `;
+
+                // Re-run Prism on any code blocks
+                Prism.highlightAll();
+
+            } catch (error) {
+                console.error('Error loading project:', error);
+                showError('Could not load this project. It may not exist or there was a network error.');
+            }
+        }
+
+        // Load on page ready
+        loadProject();
+    </script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
