@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Chris Dabatos</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Technical blog posts about building AI-powered applications, voice-to-text systems, journaling apps, and developer tools.">
+    <meta name="author" content="Chris Dabatos">
+    <meta name="keywords" content="blog, AI, developer, TiDB, Claude, voice-to-text, journaling, developer advocate">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Blog - Chris Dabatos">
+    <meta property="og:description" content="Technical blog posts about building AI-powered applications and developer tools.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.webp">
+    <meta property="og:url" content="https://realchrissean.com/blogs.html">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Blog - Chris Dabatos">
+    <meta name="twitter:description" content="Technical blog posts about building AI-powered applications and developer tools.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.webp">
+
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://realchrissean.com/blogs.html">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Blog - Chris Dabatos",
+        "description": "Technical blog posts about building AI-powered applications and developer tools.",
+        "author": {
+            "@type": "Person",
+            "name": "Chris Dabatos",
+            "url": "https://realchrissean.com"
+        },
+        "url": "https://realchrissean.com/blogs.html"
+    }
+    </script>
+
+    <link rel="icon" type="image/webp" href="imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="imgs/cd_logo.webp">
+    <link rel="stylesheet" href="css/fontawesome-subset.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.05), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            width: 100%;
+            padding: 8px 20px;
+            border-bottom: var(--glass-border);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        .page-header {
+            padding: 60px 0 40px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .highlight {
+            color: var(--accent-primary);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .blogs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding-bottom: 80px;
+        }
+
+        .blog-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.15);
+        }
+
+        .blog-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .blog-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .blog-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .read-more {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .read-more:hover {
+            gap: 0.75rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--text-muted);
+            border-top: var(--glass-border);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .blogs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html"><img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;"></a>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <a href="index.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem;">Back to Home</a>
+                <div style="display: flex; gap: 1rem; font-size: 1.1rem;">
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-youtube"></i></a>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="page-header">
+            <h1>Blog <span class="highlight">Posts</span></h1>
+            <p>Technical deep-dives into the projects I build. How they work, why I made certain choices, and what I learned.</p>
+        </header>
+
+        <div class="blogs-grid" id="blogsGrid">
+            <!-- Blogs will be dynamically loaded here -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p style="font-size: 0.8rem;">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </footer>
+
+    <script src="content.js"></script>
+    <script>
+        // Load blogs from content.js
+        const blogsGrid = document.getElementById('blogsGrid');
+        const blogs = portfolioContent.blogs;
+
+        // Sort by date (newest first)
+        blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        blogsGrid.innerHTML = blogs.map(blog => `
+            <article class="blog-card" onclick="window.location.href='${blog.link}'">
+                <img src="${blog.customThumbnail || 'imgs/chrisdabatos.webp'}" alt="${blog.title}" class="blog-thumbnail" loading="lazy">
+                <div class="blog-content">
+                    <div class="blog-date">
+                        <i class="far fa-calendar"></i> ${blog.date}
+                    </div>
+                    <h3>${blog.title}</h3>
+                    <p>${blog.description}</p>
+                    <a href="${blog.link}" class="read-more" onclick="event.stopPropagation();">
+                        Read Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+        `).join('');
+
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

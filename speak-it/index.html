@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speak It - Technical Architecture</title>
+    <meta name="description" content="Voice-to-text Chrome extension that learns your writing style without storing your words. Platform-aware formatting with style fingerprinting.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Speak It - Technical Architecture">
+    <meta property="og:description" content="Voice-to-text Chrome extension that learns your writing style without storing your words.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.webp">
+    <meta property="og:url" content="https://realchrissean.com/speak-it/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Speak It - Technical Architecture">
+    <meta name="twitter:description" content="Voice-to-text Chrome extension that learns your writing style without storing your words.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.webp">
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://realchrissean.com/speak-it/">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Speak It",
+        "description": "Voice-to-text Chrome extension that learns your writing style without storing your words. Platform-aware formatting with style fingerprinting.",
+        "applicationCategory": "Productivity",
+        "operatingSystem": "Chrome",
+        "author": {
+            "@type": "Person",
+            "name": "Chris Dabatos",
+            "url": "https://realchrissean.com"
+        },
+        "url": "https://app.parallellives.ai/speak-it"
+    }
+    </script>
+
+    <link rel="icon" type="image/webp" href="../imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="../imgs/cd_logo.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/fontawesome-subset.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.08), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 50%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Collapsible sections */
+        details {
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 0;
+        }
+
+        details[open] {
+            padding-bottom: 32px;
+        }
+
+        summary {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        summary:hover {
+            color: var(--accent-primary);
+        }
+
+        .section-content {
+            padding-top: 24px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 32px 0 12px;
+            color: var(--accent-primary);
+        }
+
+        .section-content > h3:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        blockquote {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 20px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        /* VS Code Dark Theme Style */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            margin: 24px 0;
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* VS Code title bar */
+        pre[class*="language-"]::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        /* Window control dots */
+        pre[class*="language-"]::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+        }
+
+        pre[class*="language-"] code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            background: transparent !important;
+            border: none;
+        }
+
+        /* Override Prism theme for VS Code colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #d4d4d4 !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code (not in pre) */
+        :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            background: var(--code-bg);
+        }
+
+        /* Callout Box */
+        .callout {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(192, 38, 211, 0.05));
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Architecture diagram */
+        .architecture-diagram {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #d4d4d4;
+            white-space: pre;
+            border: 1px solid #333;
+        }
+
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            summary { font-size: 1.25rem; }
+            .container { padding: 24px 16px 60px; }
+            .architecture-diagram { font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <div class="container">
+        <img src="../imgs/speak-it-hero.jpeg" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
+        <h1>Speak It</h1>
+        <p class="subtitle">Voice-to-text Chrome extension that learns your writing style without storing your words.</p>
+
+        <details open>
+            <summary>What It Does</summary>
+            <div class="section-content">
+                <p>Speak naturally into any text field on the web. The extension transcribes your speech in real-time and formats it based on where you're typing. Emails get proper greetings. Slack stays casual. Twitter keeps it short.</p>
+                <p>The key difference: instead of storing your messages to learn your style, it stores statistics - sentence length, formality scores, phrase frequencies. A style fingerprint, not a transcript.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Features</summary>
+            <div class="section-content">
+                <h3>Voice-to-Text Anywhere</h3>
+                <ul>
+                    <li>Works on any website with text inputs</li>
+                    <li>Keyboard shortcut: <code>Alt+Shift+S</code> to toggle recording</li>
+                    <li>Real-time transcription with live preview</li>
+                    <li>Platform-aware formatting (Gmail, Slack, Twitter, Notion, Google Docs, etc.)</li>
+                </ul>
+
+                <h3>Style Learning</h3>
+                <ul>
+                    <li>Learns how you write without storing what you write</li>
+                    <li>Extracts statistics: average sentence length, formality score, contractions usage</li>
+                    <li>Stores common greetings, sign-offs, and phrases</li>
+                    <li>Style profile improves over time (diminishing influence prevents drift)</li>
+                </ul>
+
+                <h3>Meeting Mode</h3>
+                <ul>
+                    <li>Captures tab audio from Google Meet, Zoom, or any browser-based meeting</li>
+                    <li>Mixes in your microphone for full conversation capture</li>
+                    <li>Speaker diarization (labels who said what)</li>
+                    <li>Live transcript in side panel</li>
+                    <li>Auto-saves meeting notes to web app</li>
+                </ul>
+
+                <h3>Context Detection</h3>
+                <ul>
+                    <li>Detects platform automatically (no manual switching)</li>
+                    <li>Adjusts formality, capitalization, and structure per platform</li>
+                    <li>Preserves your words while cleaning up grammar and filler words</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Stack</summary>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Technology</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Extension</td>
+                            <td>Chrome Manifest V3</td>
+                        </tr>
+                        <tr>
+                            <td>Speech-to-Text</td>
+                            <td>Deepgram Nova-2 (WebSocket streaming)</td>
+                        </tr>
+                        <tr>
+                            <td>AI Formatting</td>
+                            <td>Claude API (Anthropic)</td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>TiDB (style profiles, meeting storage)</td>
+                        </tr>
+                        <tr>
+                            <td>Audio Processing</td>
+                            <td>Web Audio API, ScriptProcessor</td>
+                        </tr>
+                        <tr>
+                            <td>Text-to-Speech</td>
+                            <td>ElevenLabs (practice mode)</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Next.js, Tailwind CSS</td>
+                        </tr>
+                        <tr>
+                            <td>Hosting</td>
+                            <td>Vercel</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </details>
+
+        <details>
+            <summary>Architecture</summary>
+            <div class="section-content">
+                <div class="architecture-diagram">┌─────────────────────────────────────────────────────────────┐
+│                     Chrome Extension                         │
+├─────────────────┬─────────────────┬─────────────────────────┤
+│  Content Script │ Background SW   │  Offscreen Document     │
+│  - UI overlay   │ - Message relay │  - Tab audio capture    │
+│  - Text insert  │ - API calls     │  - Mic mixing           │
+│  - Mic capture  │ - State mgmt    │  - Deepgram streaming   │
+│  - Platform     │ - Keyboard      │  - PCM conversion       │
+│    detection    │   shortcuts     │                         │
+└────────┬────────┴────────┬────────┴────────────┬────────────┘
+         │                 │                      │
+         ▼                 ▼                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Backend API                             │
+├─────────────────┬─────────────────┬─────────────────────────┤
+│  /api/voice/    │  /api/style/    │  /api/meetings          │
+│  - token        │  - format       │  - GET (list)           │
+│  (Deepgram key) │  - learn        │  - POST (save)          │
+│                 │  - profile      │                         │
+└────────┬────────┴────────┬────────┴────────────┬────────────┘
+         │                 │                      │
+         ▼                 ▼                      ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐
+│    Deepgram     │ │   Claude API    │ │       TiDB          │
+│  (transcription)│ │  (formatting)   │ │ (profiles, meetings)│
+└─────────────────┘ └─────────────────┘ └─────────────────────┘</div>
+            </div>
+        </details>
+
+        <details>
+            <summary>How Style Learning Works</summary>
+            <div class="section-content">
+                <h3>What Gets Stored</h3>
+                <pre class="language-sql"><code class="language-sql">CREATE TABLE user_style_profiles (
+  user_id VARCHAR(255) PRIMARY KEY,
+  avg_sentence_length FLOAT,
+  formality_score FLOAT,        -- 0 (casual) to 1 (formal)
+  uses_contractions BOOLEAN,
+  emoji_frequency FLOAT,
+  top_phrases JSON,             -- ["sounds good", "let me know", ...]
+  greetings JSON,               -- ["Hey", "Hi", ...]
+  signoffs JSON,                -- ["Thanks", "Cheers", ...]
+  sample_count INT,
+  updated_at TIMESTAMP
+);</code></pre>
+
+                <h3>What Never Gets Stored</h3>
+                <ul>
+                    <li>Message content</li>
+                    <li>Transcripts</li>
+                    <li>Audio recordings</li>
+                    <li>Conversation history</li>
+                </ul>
+
+                <h3>How It Updates</h3>
+                <p>Each time you accept a formatted message:</p>
+                <ol>
+                    <li>Statistics are extracted from the approved text</li>
+                    <li>New stats are blended with existing profile</li>
+                    <li>Influence decreases as sample count increases (1st message = 100%, 100th message = ~1%)</li>
+                    <li>Profile stabilizes over time</li>
+                </ol>
+
+                <div class="callout">
+                    <p>The privacy angle: instead of storing your messages, it stores statistics. Enough to personalize formatting without keeping what you actually said. A style fingerprint, not a transcript.</p>
+                </div>
+            </div>
+        </details>
+
+        <details>
+            <summary>Audio Processing</summary>
+            <div class="section-content">
+                <h3>Voice-to-Text Mode</h3>
+                <pre class="language-javascript"><code class="language-javascript">// Capture mic at 16kHz
+const stream = await navigator.mediaDevices.getUserMedia({
+  audio: { sampleRate: 16000, echoCancellation: true, noiseSuppression: true }
+});
+
+// Convert Float32 to Int16 PCM for Deepgram
+processor.onaudioprocess = (event) => {
+  const input = event.inputBuffer.getChannelData(0);
+  const pcm = new Int16Array(input.length);
+  for (let i = 0; i < input.length; i++) {
+    const sample = Math.max(-1, Math.min(1, input[i]));
+    pcm[i] = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
+  }
+  socket.send(pcm.buffer);
+};</code></pre>
+
+                <h3>Meeting Mode Audio Mixing</h3>
+                <pre class="language-javascript"><code class="language-javascript">// Tab audio (others' voices) + Mic audio (your voice)
+const mixLength = Math.min(tabPcm.length, micChunk.length);
+for (let i = 0; i < mixLength; i++) {
+  // Mic slightly louder since it's your voice
+  const mixed = (tabPcm[i] * 0.6) + (micChunk[i] * 0.8);
+  finalPcm[i] = Math.max(-32768, Math.min(32767, Math.round(mixed)));
+}</code></pre>
+
+                <h3>Why Mic Capture is in Content Script</h3>
+                <p>Chrome offscreen documents can't show permission prompts (they're invisible). Mic capture silently fails. The fix: capture mic from the content script (runs on visible page), stream chunks to offscreen document for mixing with tab audio.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Platform-Specific Text Insertion</summary>
+            <div class="section-content">
+                <p>Every platform implements text input differently:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Method</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Gmail</td>
+                            <td><code>execCommand('insertText')</code></td>
+                            <td>Works directly</td>
+                        </tr>
+                        <tr>
+                            <td>Twitter/X</td>
+                            <td><code>execCommand('insertText')</code></td>
+                            <td>Must clear field first (Lexical editor)</td>
+                        </tr>
+                        <tr>
+                            <td>Slack</td>
+                            <td><code>execCommand('insertText')</code></td>
+                            <td>Quill editor, mostly works</td>
+                        </tr>
+                        <tr>
+                            <td>Notion</td>
+                            <td>Clipboard + paste prompt</td>
+                            <td>execCommand causes vertical text</td>
+                        </tr>
+                        <tr>
+                            <td>Google Docs</td>
+                            <td>Hidden iframe + input events</td>
+                            <td>Canvas-based, not contentEditable</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre class="language-javascript"><code class="language-javascript">// Notion fallback
+navigator.clipboard.writeText(text);
+showMessage('Press Cmd+V to paste');</code></pre>
+            </div>
+        </details>
+
+        <details>
+            <summary>Deepgram Configuration</summary>
+            <div class="section-content">
+                <pre class="language-javascript"><code class="language-javascript">const url = new URL('wss://api.deepgram.com/v1/listen');
+url.searchParams.set('model', 'nova-2');
+url.searchParams.set('language', 'en');
+url.searchParams.set('smart_format', 'true');
+url.searchParams.set('punctuate', 'true');
+url.searchParams.set('diarize', 'true');        // Speaker labels
+url.searchParams.set('utterances', 'true');
+url.searchParams.set('interim_results', 'true'); // Live preview
+url.searchParams.set('encoding', 'linear16');
+url.searchParams.set('sample_rate', '16000');
+url.searchParams.set('channels', '1');</code></pre>
+            </div>
+        </details>
+
+        <details>
+            <summary>Formatting Prompt</summary>
+            <div class="section-content">
+                <pre class="language-javascript"><code class="language-javascript">function buildStylePrompt(profile, context) {
+  const formality = profile.formality_score > 0.7 ? "formal" :
+                    profile.formality_score < 0.3 ? "casual" : "balanced";
+
+  return `Format this transcript for ${context}.
+
+User's writing style:
+- Tone: ${formality}
+- Average sentence length: ~${Math.round(profile.avg_sentence_length)} words
+- ${profile.uses_contractions ? "Use contractions naturally." : "Avoid contractions."}
+- Preferred greetings: ${profile.greetings.slice(0, 3).join(", ")}
+- Preferred sign-offs: ${profile.signoffs.slice(0, 3).join(", ")}
+
+Rules:
+1. ONLY add punctuation and paragraph breaks
+2. Remove filler words: um, uh, like, basically, you know
+3. Keep EVERY other word exactly as spoken
+4. Do NOT rewrite, rephrase, or improve their language`;
+}</code></pre>
+            </div>
+        </details>
+
+        <details>
+            <summary>File Structure</summary>
+            <div class="section-content">
+                <pre class="language-plaintext"><code>speak-it/
+├── manifest.json           # Extension config (Manifest V3)
+├── background.js           # Service worker, message routing
+├── content.js              # UI overlay, text insertion, mic capture
+├── content.css             # Overlay styles
+├── offscreen.html          # Audio processing document
+├── offscreen.js            # Tab capture, Deepgram streaming, mixing
+├── popup.html              # Extension popup UI
+├── popup.js                # Popup logic
+├── meeting-panel.html      # Side panel for Meeting Mode
+├── meeting-panel.js        # Meeting UI logic
+├── meeting-panel.css       # Meeting panel styles
+└── icons/                  # Extension icons</code></pre>
+            </div>
+        </details>
+
+        <details>
+            <summary>API Endpoints</summary>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Endpoint</th>
+                            <th>Method</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/api/voice/token</code></td>
+                            <td>POST</td>
+                            <td>Get Deepgram API key for client</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/style/format</code></td>
+                            <td>POST</td>
+                            <td>Format transcript with style + context</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/style/learn</code></td>
+                            <td>POST</td>
+                            <td>Update style profile from accepted text</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/style/profile</code></td>
+                            <td>GET</td>
+                            <td>Fetch user's style profile</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/meetings</code></td>
+                            <td>GET</td>
+                            <td>List all saved meetings</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/meetings</code></td>
+                            <td>POST</td>
+                            <td>Save meeting transcripts</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </details>
+
+        <details>
+            <summary>Privacy</summary>
+            <div class="section-content">
+                <ul>
+                    <li><strong>No message storage:</strong> Your words are processed and discarded</li>
+                    <li><strong>Statistics only:</strong> Style profiles contain patterns, not content</li>
+                    <li><strong>Local-first:</strong> Extension works offline for basic transcription</li>
+                    <li><strong>You control your data:</strong> Delete your profile anytime</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Known Limitations</summary>
+            <div class="section-content">
+                <ul>
+                    <li>Notion requires manual paste (Cmd+V)</li>
+                    <li>Google Docs text insertion is slow (character-by-character)</li>
+                    <li>Meeting Mode requires mic permission on each new domain</li>
+                    <li>Deepgram free tier has usage limits</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Code Access</summary>
+            <div class="section-content">
+                <p>The repo is private right now.</p>
+                <p>If you're a recruiter or hiring manager and want to walk through the code or architecture in more detail, I'm happy to do a live session.</p>
+            </div>
+        </details>
+
+        <div class="footer">
+            <h2 style="font-size: 1.5rem; margin-bottom: 16px;">Let's build something <span style="color: var(--accent-primary);">awesome.</span></h2>
+            <p style="margin-bottom: 24px;">Open for speaking engagements and collaborations.</p>
+            <a href="mailto:realchrissean@gmail.com" style="display: inline-block; padding: 12px 24px; background: var(--text-main); color: var(--bg-color); border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 24px; transition: all 0.3s;">Get in Touch</a>
+            <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 24px;">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Custom Analytics -->
+    <script src="/analytics.js"></script>
+</body>
+</html>

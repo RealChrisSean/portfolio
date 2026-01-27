@@ -852,9 +852,15 @@
 
     <nav style="width: 100%; padding: 8px 20px; border-bottom: var(--glass-border);">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;">
+            <a href="index.html"><img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;"></a>
             <div style="display: flex; gap: 20px; align-items: center;">
                 <a href="index.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Back to Home</a>
+                <div style="display: flex; gap: 1rem; font-size: 1.1rem;">
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-youtube"></i></a>
+                </div>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                     <i class="fas fa-sun"></i>
@@ -1560,7 +1566,7 @@
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
         // --- CHECK URL PARAMETERS ---
-        function checkURLParams() {
+        (function applyURLFilter() {
             const urlParams = new URLSearchParams(window.location.search);
             const filter = urlParams.get('filter');
 
@@ -1568,17 +1574,15 @@
                 // Find and activate the corresponding filter tab
                 const targetTab = document.querySelector(`.filter-tab[data-filter="${filter}"]`);
                 if (targetTab) {
-                    filterTabs.forEach(t => t.classList.remove('active'));
+                    // Remove active from all tabs
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
                     targetTab.classList.add('active');
                     currentFilter = filter;
-                    return true; // Indicate that a filter was set from URL
                 }
             }
-            return false;
-        }
+        })();
 
         // --- INITIAL SETUP ---
-        const hasURLFilter = checkURLParams();
         setupCarouselNavigation();
         renderContent(true); // Always force full render on initial load
 
@@ -1607,5 +1611,7 @@
     </script>
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Custom Analytics -->
+    <script src="analytics.js"></script>
 </body>
 </html>

@@ -582,9 +582,15 @@
 
     <nav>
         <div class="nav-inner">
-            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <a href="index.html"><img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;"></a>
             <div style="display: flex; gap: 20px; align-items: center;">
-                <a href="https://github.com/RealChrisSean" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="index.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem;">Back to Home</a>
+                <div style="display: flex; gap: 1rem; font-size: 1.1rem;">
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-youtube"></i></a>
+                </div>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                     <i class="fas fa-sun"></i>
@@ -600,36 +606,63 @@
         </header>
 
         <div class="projects-grid">
-            <!-- Parallel Lives -->
-            <div class="project-card" onclick="openProjectModal('parallelLives')">
-                <img src="imgs/parallellives.webp" alt="Parallel Lives - AI decision simulator" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+            <!-- College Picker - Jan 2026 -->
+            <div class="project-card" onclick="openProjectModal('collegePicker')">
+                <img src="imgs/college picker.png" alt="College Picker - AI college comparison tool" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                </div>
+                <h3>College Picker</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Jan 2026</p>
+                <div class="project-tags">
+                    <span class="project-tag tag-ai">AI</span>
+                    <span class="project-tag tag-vector">Vector Search</span>
+                    <span class="project-tag tag-mysql">TiDB</span>
+                    <span class="project-tag tag-rag">RAG</span>
+                </div>
+                <p>AI-powered college comparison tool that simulates your financial future based on real Department of Education data.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/college-picker" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://app.parallellives.ai/collegepicker" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Speak It - Jan 2026 -->
+            <div class="project-card" onclick="openProjectModal('speakIt')">
+                <img src="imgs/speak-it.png" alt="Speak It - Voice-to-text extension" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
                         <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--text-muted);"></i>
                         <span style="font-size: 0.75rem; color: var(--text-muted);">Private repo</span>
                     </div>
-                    <span class="featured-badge">Featured</span>
                 </div>
-                <h3>Parallel Lives</h3>
+                <h3>Speak It</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Jan 2026</p>
                 <div class="project-tags">
                     <span class="project-tag tag-ai">AI</span>
-                    <span class="project-tag tag-branching">Branching</span>
-                    <span class="project-tag tag-multi-model">Multi-Model</span>
+                    <span class="project-tag tag-extension">Chrome Extension</span>
                     <span class="project-tag tag-vector">Vector Search</span>
+                    <span class="project-tag tag-mysql">TiDB</span>
                 </div>
-                <p>AI-powered branching decision simulator that models long-term life, career, and financial outcomes using multi-model reasoning.</p>
+                <p>Chrome extension for voice-to-text that learns your writing style without storing your words. Works anywhere you type.</p>
                 <div class="card-actions">
-                    <a href="parallel-lives/" onclick="event.stopPropagation();" class="btn-outline">
+                    <a href="speak-it/" onclick="event.stopPropagation();" class="btn-secondary">
                         README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
                     </a>
-                    <a href="https://app.parallellives.ai" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
-                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    <a href="https://app.parallellives.ai/speak-it" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Get Speak It <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- Journal It -->
+            <!-- Journal It - Dec 2025 -->
             <div class="project-card" onclick="openProjectModal('journalIt')">
                 <img src="imgs/image12-4.webp" alt="Journal It - AI journaling system" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
@@ -641,6 +674,7 @@
                     <span class="featured-badge">Featured</span>
                 </div>
                 <h3>Journal It</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Dec 2025</p>
                 <div class="project-tags">
                     <span class="project-tag tag-ai">AI</span>
                     <span class="project-tag tag-memory">Semantic Memory</span>
@@ -658,79 +692,39 @@
                 </div>
             </div>
 
-            <!-- atlasMemory -->
-            <div class="project-card" onclick="openProjectModal('atlasMemory')">
-                <img src="imgs/atlasMemory.webp" alt="atlasMemory - AI memory layer" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+            <!-- Parallel Lives - Dec 2025 -->
+            <div class="project-card" onclick="openProjectModal('parallelLives')">
+                <img src="imgs/parallellives demo.png" alt="Parallel Lives - AI decision simulator" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                        <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--text-muted);"></i>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Private repo</span>
                     </div>
+                    <span class="featured-badge">Featured</span>
                 </div>
-                <h3>atlasMemory</h3>
+                <h3>Parallel Lives</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Dec 2025</p>
                 <div class="project-tags">
                     <span class="project-tag tag-ai">AI</span>
+                    <span class="project-tag tag-branching">Branching</span>
+                    <span class="project-tag tag-multi-model">Multi-Model</span>
                     <span class="project-tag tag-vector">Vector Search</span>
-                    <span class="project-tag tag-mysql">MySQL</span>
                 </div>
-                <p>A unified AI memory layer with branching, rollbacks, and conflict detection — all powered by a single TiDB table.</p>
+                <p>AI-powered branching decision simulator that models long-term life, career, and financial outcomes using multi-model reasoning.</p>
                 <div class="card-actions">
-                    <a href="https://github.com/RealChrisSean/atlasMemory" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
-                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    <a href="parallel-lives/" onclick="event.stopPropagation();" class="btn-outline">
+                        README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
                     </a>
-                    <a href="https://atlasmemory-production.up.railway.app" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                    <a href="https://app.parallellives.ai" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
                         Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- tidb-ai-docs-copilot -->
-            <div class="project-card" onclick="openProjectModal('tidb-ai-docs-copilot')">
-                <div class="card-header">
-                    <div class="card-header-left">
-                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
-                    </div>
-                </div>
-                <h3>tidb-ai-docs-copilot</h3>
-                <div class="project-tags">
-                    <span class="project-tag tag-ai">AI</span>
-                    <span class="project-tag tag-rag">RAG</span>
-                    <span class="project-tag tag-vector">Vector Search</span>
-                    <span class="project-tag tag-mysql">MySQL</span>
-                </div>
-                <p>Turns unstructured docs and GitHub issues into a structured TiDB knowledge graph using Bedrock embeddings + TiDB Vector, making docs instantly searchable for agents, CLIs, and dev tools.</p>
-                <div class="card-actions">
-                    <a href="https://github.com/RealChrisSean/tidb-ai-docs-copilot" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
-                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
-                    </a>
-                    <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-
-            <!-- semantic-qna -->
-            <div class="project-card" onclick="openProjectModal('semantic-qna')">
-                <div class="card-header">
-                    <div class="card-header-left">
-                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
-                    </div>
-                </div>
-                <h3>semantic-qna</h3>
-                <div class="project-tags">
-                    <span class="project-tag tag-ai">AI</span>
-                    <span class="project-tag tag-rag">RAG</span>
-                    <span class="project-tag tag-vector">Vector Search</span>
-                    <span class="project-tag tag-mysql">MySQL</span>
-                </div>
-                <p>A semantic FAQ assistant (CLI + web UI) using AWS Bedrock embeddings & TiDB Cloud vector search, with built-in progress bars and automated tests.</p>
-                <div class="card-actions">
-                    <a href="https://github.com/RealChrisSean/semantic-qna" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
-                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
-                    </a>
-                    <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-
-            <!-- OriginAI -->
+            <!-- OriginAI - Nov 2025 -->
             <div class="project-card" onclick="openProjectModal('originai')">
+                <img src="imgs/detect.png" alt="OriginAI - AI content detector" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -738,6 +732,7 @@
                     <span class="featured-badge">Featured</span>
                 </div>
                 <h3>OriginAI</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Nov 2025</p>
                 <div class="project-tags">
                     <span class="project-tag tag-ai">AI</span>
                     <span class="project-tag tag-extension">Chrome Extension</span>
@@ -755,52 +750,77 @@
                 </div>
             </div>
 
-            <!-- Speak It -->
-            <div class="project-card" onclick="openProjectModal('speakIt')">
+            <!-- atlasMemory - Nov 2025 -->
+            <div class="project-card" onclick="openProjectModal('atlasMemory')">
+                <img src="imgs/atlasMemory.webp" alt="atlasMemory - AI memory layer" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
-                        <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--text-muted);"></i>
-                        <span style="font-size: 0.75rem; color: var(--text-muted);">Private repo</span>
                     </div>
                 </div>
-                <h3>Speak It</h3>
+                <h3>atlasMemory</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Nov 2025</p>
                 <div class="project-tags">
                     <span class="project-tag tag-ai">AI</span>
-                    <span class="project-tag tag-extension">Chrome Extension</span>
                     <span class="project-tag tag-vector">Vector Search</span>
-                    <span class="project-tag tag-mysql">TiDB</span>
+                    <span class="project-tag tag-mysql">MySQL</span>
                 </div>
-                <p>Chrome extension for voice-to-text that learns your writing style without storing your words. Works anywhere you type.</p>
+                <p>A unified AI memory layer with branching, rollbacks, and conflict detection — all powered by a single TiDB table.</p>
                 <div class="card-actions">
-                    <a href="https://app.parallellives.ai/speak-it" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
-                        Get Speak It <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    <a href="https://github.com/RealChrisSean/atlasMemory" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://atlasmemory-production.up.railway.app" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- College Picker -->
-            <div class="project-card" onclick="openProjectModal('collegePicker')">
+            <!-- tidb-ai-docs-copilot - Oct 2025 -->
+            <div class="project-card" onclick="openProjectModal('tidb-ai-docs-copilot')">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
                     </div>
                 </div>
-                <h3>College Picker</h3>
+                <h3>tidb-ai-docs-copilot</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Oct 2025</p>
                 <div class="project-tags">
                     <span class="project-tag tag-ai">AI</span>
-                    <span class="project-tag tag-vector">Vector Search</span>
-                    <span class="project-tag tag-mysql">TiDB</span>
                     <span class="project-tag tag-rag">RAG</span>
+                    <span class="project-tag tag-vector">Vector Search</span>
+                    <span class="project-tag tag-mysql">MySQL</span>
                 </div>
-                <p>AI-powered college comparison tool that simulates your financial future based on real Department of Education data.</p>
+                <p>Turns unstructured docs and GitHub issues into a structured TiDB knowledge graph using Bedrock embeddings + TiDB Vector, making docs instantly searchable for agents, CLIs, and dev tools.</p>
                 <div class="card-actions">
-                    <a href="https://github.com/RealChrisSean/college-picker" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                    <a href="https://github.com/RealChrisSean/tidb-ai-docs-copilot" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
                         GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
                     </a>
-                    <a href="https://app.parallellives.ai/collegepicker" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
-                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+
+            <!-- semantic-qna - Sep 2025 -->
+            <div class="project-card" onclick="openProjectModal('semantic-qna')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                </div>
+                <h3>semantic-qna</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="far fa-calendar"></i> Sep 2025</p>
+                <div class="project-tags">
+                    <span class="project-tag tag-ai">AI</span>
+                    <span class="project-tag tag-rag">RAG</span>
+                    <span class="project-tag tag-vector">Vector Search</span>
+                    <span class="project-tag tag-mysql">MySQL</span>
+                </div>
+                <p>A semantic FAQ assistant (CLI + web UI) using AWS Bedrock embeddings & TiDB Cloud vector search, with built-in progress bars and automated tests.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/semantic-qna" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
                     </a>
+                    <span class="learn-more">Learn More <i class="fas fa-arrow-right"></i></span>
                 </div>
             </div>
         </div>
@@ -887,6 +907,7 @@
                 subtitle: 'Chrome extension for voice-to-text that learns your writing style without storing your words.',
                 isPrivate: true,
                 demo: 'https://app.parallellives.ai/speak-it',
+                readme: 'speak-it/',
                 problem: 'Voice typing tools either sound robotic or store everything you say. You want AI to fix your grammar, not replace your voice with corporate-speak.',
                 tech: 'Chrome Extension, Deepgram, Claude API, TiDB, Real-time WebSocket, OpenAI Embeddings',
                 why: 'Works anywhere you type: Gmail, Slack, Twitter, Notion. Press Alt+Shift+S, speak naturally, get formatted text that matches the platform. Emails get greetings and sign-offs. Slack stays casual.<br><br>The privacy angle: instead of storing your messages, it stores statistics—sentence length, formality score, common phrases. Enough to personalize formatting without keeping what you actually said. A style fingerprint, not a transcript.<br><br>Meeting Mode captures tab audio from Google Meet or Zoom, mixes in your mic, and transcribes with speaker labels. Notes sync to the web app automatically.'

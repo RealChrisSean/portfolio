@@ -310,7 +310,8 @@ const portfolioContent = {
             date: 'Mar 23, 2026',
             conference: 'AllThingsAI (Durham, NC)',
             hasRecording: false,
-            externalLink: 'https://2026.allthingsai.org/'
+            externalLink: 'https://2026.allthingsai.org/',
+            customThumbnail: 'imgs/allthingsai-2026.jpg'
         },
         {
             title: 'Meaningful Answers, Not Keyword Matches',
@@ -378,7 +379,7 @@ const portfolioContent = {
             description: 'Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?',
             date: 'Jan 27, 2026',
             link: 'blog/speak-it/',
-            customThumbnail: 'imgs/speakit.webp'
+            customThumbnail: 'imgs/speak-it-hero.jpeg'
         }
     ],
 
@@ -389,7 +390,7 @@ const portfolioContent = {
             date: 'Dec 2025',
             link: 'parallel-lives/',
             demo: 'https://app.parallellives.ai',
-            customThumbnail: 'imgs/parallellives.webp',
+            customThumbnail: 'imgs/parallellives demo.png',
             tags: ['AI', 'Branching', 'Multi-Model', 'Vector Search'],
             isPrivate: true
         },
@@ -435,6 +436,7 @@ const portfolioContent = {
             date: 'Jan 2026',
             link: 'https://app.parallellives.ai/speak-it',
             demo: 'https://app.parallellives.ai/speak-it',
+            customThumbnail: 'imgs/speak-it.png',
             tags: ['AI', 'Chrome Extension', 'Vector Search', 'TiDB'],
             isPrivate: true
         },
@@ -444,6 +446,7 @@ const portfolioContent = {
             date: 'Jan 2026',
             link: 'https://github.com/RealChrisSean/college-picker',
             demo: 'https://app.parallellives.ai/collegepicker',
+            customThumbnail: 'imgs/college picker.png',
             tags: ['AI', 'Vector Search', 'TiDB', 'RAG'],
             isPrivate: false
         }

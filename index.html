@@ -872,8 +872,14 @@
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;">
             <div style="display: flex; gap: 20px; align-items: center;">
-                <a href="blog/ai-journal-system/" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Blog</a>
+                <a href="blogs.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Blog</a>
                 <a href="all-content.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
+                <div style="display: flex; gap: 1rem; font-size: 1.1rem;">
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-youtube"></i></a>
+                </div>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                     <i class="fas fa-sun"></i>
@@ -961,6 +967,9 @@
                     <p style="color: var(--text-muted); line-height: 1.6;">Chrome extension for voice-to-text that learns your writing style without storing your words. Works anywhere you type.</p>
                 </div>
                 <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+                    <a href="speak-it/" onclick="event.stopPropagation();" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: transparent; border: 2px solid var(--accent-primary); color: var(--accent-primary); border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">
+                        README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
+                    </a>
                     <a href="https://app.parallellives.ai/speak-it" target="_blank" onclick="event.stopPropagation();" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--accent-primary); color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">
                         Get Speak It <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
                     </a>
@@ -1183,8 +1192,6 @@
             <h2>Let's build something <span class="highlight">awesome.</span></h2>
             <p>Open for speaking engagements and collaborations.</p>
             <br>
-            <a href="mailto:realchrissean@gmail.com" class="hero-btn" style="background: var(--text-main); color: var(--bg-color);">Get in Touch</a>
-            <br><br>
             <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; justify-content: center; margin-bottom: 2rem;">
                 <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
                 <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile" style="color: var(--text-muted); transition: all 0.3s;"><i class="fab fa-github" aria-hidden="true"></i></a>
@@ -1531,6 +1538,7 @@
                 subtitle: 'Chrome extension for voice-to-text that learns your writing style without storing your words.',
                 isPrivate: true,
                 demo: 'https://app.parallellives.ai/speak-it',
+                readme: 'speak-it/',
                 problem: 'Voice typing tools either sound robotic or store everything you say. You want AI to fix your grammar, not replace your voice with corporate-speak.',
                 tech: 'Chrome Extension, Deepgram, Claude API, TiDB, Real-time WebSocket, OpenAI Embeddings',
                 why: 'Works anywhere you type: Gmail, Slack, Twitter, Notion. Press Alt+Shift+S, speak naturally, get formatted text that matches the platform. Emails get greetings and sign-offs. Slack stays casual.<br><br>The privacy angle: instead of storing your messages, it stores statistics—sentence length, formality score, common phrases. Enough to personalize formatting without keeping what you actually said. A style fingerprint, not a transcript.<br><br>Meeting Mode captures tab audio from Google Meet or Zoom, mixes in your mic, and transcribes with speaker labels. Notes sync to the web app automatically.'
