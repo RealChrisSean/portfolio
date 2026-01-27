@@ -305,6 +305,14 @@ const portfolioContent = {
 
     talks: [
         {
+            title: 'Write LIKE Me, Not FOR Me',
+            description: 'How I built an AI Chrome extension that learns your writing style without storing your words. Covers real-time audio streaming with Deepgram, context detection, and storing style profiles in TiDB alongside vector embeddings.',
+            date: 'Mar 23, 2026',
+            conference: 'AllThingsAI (Durham, NC)',
+            hasRecording: false,
+            externalLink: 'https://2026.allthingsai.org/'
+        },
+        {
             title: 'Meaningful Answers, Not Keyword Matches',
             description: 'Conference talk at OSA Con demonstrating how semantic search and AI can transform FAQ search from keyword matching to actually understanding what users are asking.',
             date: 'Nov 2025',
@@ -364,6 +372,13 @@ const portfolioContent = {
             date: 'Dec 3, 2025',
             link: 'blog/ai-journal-system/',
             customThumbnail: 'imgs/image12-4.webp'
+        },
+        {
+            title: 'Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)',
+            description: 'Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?',
+            date: 'Jan 27, 2026',
+            link: 'blog/speak-it/',
+            customThumbnail: 'imgs/speakit.webp'
         }
     ],
 
@@ -412,6 +427,24 @@ const portfolioContent = {
             date: 'Sep 2025',
             link: 'https://github.com/RealChrisSean/semantic-qna',
             tags: ['AI', 'RAG', 'Vector Search', 'MySQL'],
+            isPrivate: false
+        },
+        {
+            title: 'Speak It',
+            description: 'Chrome extension for voice-to-text that learns your writing style without storing your words. Works anywhere you type.',
+            date: 'Jan 2026',
+            link: 'https://app.parallellives.ai/speak-it',
+            demo: 'https://app.parallellives.ai/speak-it',
+            tags: ['AI', 'Chrome Extension', 'Vector Search', 'TiDB'],
+            isPrivate: true
+        },
+        {
+            title: 'College Picker',
+            description: 'AI-powered college comparison tool that simulates your financial future based on real Department of Education data.',
+            date: 'Jan 2026',
+            link: 'https://github.com/RealChrisSean/college-picker',
+            demo: 'https://app.parallellives.ai/collegepicker',
+            tags: ['AI', 'Vector Search', 'TiDB', 'RAG'],
             isPrivate: false
         }
     ]
@@ -582,7 +615,10 @@ function getLatestTalks(count = 3) {
 }
 
 function getLatestContent(count = 3) {
-    const all = getAllContent();
+    // Filter out projects and talks - they have their own sections
+    const all = getAllContent().filter(item =>
+        item.type !== 'project' && item.type !== 'talk'
+    );
 
     all.sort((a, b) => {
         const months = {

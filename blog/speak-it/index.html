@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words) | Chris Dabatos</title>
+    <meta name="description" content="Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)">
+    <meta property="og:description" content="Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?">
+    <meta property="og:image" content="https://realchrissean.com/imgs/speakit.webp">
+    <meta property="og:url" content="https://realchrissean.com/blog/speak-it/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)">
+    <meta name="twitter:description" content="Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/speakit.webp">
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://realchrissean.com/blog/speak-it/">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)",
+        "description": "Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?",
+        "image": "https://realchrissean.com/imgs/speakit.webp",
+        "author": {
+            "@type": "Person",
+            "name": "Chris Dabatos",
+            "url": "https://realchrissean.com"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Chris Dabatos"
+        },
+        "datePublished": "2026-01-27",
+        "dateModified": "2026-01-27",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://realchrissean.com/blog/speak-it/"
+        }
+    }
+    </script>
+
+    <link rel="icon" type="image/webp" href="../../imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="../../imgs/cd_logo.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/fontawesome-subset.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 17px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.08), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        /* Hero Header */
+        .post-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(192, 38, 211, 0.15));
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .post-meta time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 56px 0 20px;
+            color: var(--text-main);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-vegas));
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 36px 0 12px;
+            color: var(--accent-primary);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        ul, ol {
+            margin: 16px 0 24px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.88em;
+            border: 1px solid var(--border-color);
+        }
+
+        /* VS Code Dark Theme Style */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            margin: 28px 0;
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* VS Code title bar */
+        pre[class*="language-"]::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        /* Window control dots */
+        pre[class*="language-"]::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+        }
+
+        pre[class*="language-"] code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            background: transparent !important;
+            border: none;
+        }
+
+        /* Override Prism theme for VS Code colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #d4d4d4 !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code (not in pre) */
+        :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
+        }
+
+        /* Callout Box */
+        .callout {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(192, 38, 211, 0.05));
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 32px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Data table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--card-bg);
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        tr:hover {
+            background: var(--card-bg);
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 56px 0;
+        }
+
+        /* Author Section */
+        .author-section {
+            margin-top: 64px;
+            padding: 32px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .author-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .author-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .author-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .author-links a:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 1.5rem;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        /* Architecture diagram */
+        .architecture-diagram {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 24px 16px 60px; }
+            body { font-size: 16px; }
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="../../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <article class="container">
+        <header class="post-header">
+            <span class="post-tag"><i class="fas fa-microphone"></i> &nbsp;Voice + Privacy</span>
+            <h1>Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)</h1>
+            <p class="subtitle">Privacy-first style learning with TiDB vector search</p>
+            <div class="post-meta">
+                <time datetime="2026-01-27"><i class="far fa-calendar"></i> January 27, 2026</time>
+                <span class="reading-time"><i class="far fa-clock"></i> 12 min read</span>
+            </div>
+        </header>
+
+        <h2>The Goal</h2>
+
+        <p>I talk fast. I'm also on a dozen platforms throughout the day from Gmail, Slack, Twitter, to Notion and the list keeps going. Voice-to-text tools have been around forever, but they all had the same problem: they made everything sound the same.</p>
+
+        <p>A Slack message shouldn't read like an email. A tweet shouldn't sound like a JIRA ticket. But every transcription tool I tried would spit out the same robotic output regardless of where I was typing.</p>
+
+        <p>So I built Speak It. Speak It is a Chrome extension that transcribes your voice anywhere on the web and formats it for the platform you're on. But here's the part I'm most proud of: it learns your writing style over time without ever storing your actual messages.</p>
+
+        <p>Most style-learning tools keep a history of everything you've written. That's fine for personal use, but it's a non-starter for enterprise. Legal teams, compliance officers, privacy-conscious users... none of them want a third-party service storing their internal communications.</p>
+
+        <p>The question I set out to answer: can you teach an AI how someone writes by storing statistics only? Like only focus on storing their average sentence length, formality level, and even common phrases to get a fingerprint of your style without the content itself.</p>
+
+        <p>Turns out you can.</p>
+
+        <h2>The Stack</h2>
+
+        <p>Here's what I used and why:</p>
+
+        <p><strong>Chrome Extension</strong> - The app needs to work on any website, not just one platform. A browser extension was the only way to inject a mic button into Gmail, Slack, Notion, Twitter, and everywhere else.</p>
+
+        <p><strong>Web Speech API + Deepgram</strong> - Chrome and Edge support the Web Speech API for free. For browsers that don't (Arc, Safari, Firefox), I fall back to Deepgram's streaming API. This keeps costs low for most users while maintaining broad compatibility.</p>
+
+        <p><strong>TiDB Cloud Starter</strong> - I didn't want to run two databases (one for normal data and one for vectors). TiDB can handle both vectors and business data all in one database. It's also MySQL-compatible, which means I could stick to what I already know. And it scales to zero when idle so I'm not paying for unused capacity.</p>
+
+        <p><strong>Claude Sonnet 4</strong> - I use Claude Sonnet 4 as the formatting engine. It takes raw transcripts and reformats them based on context and style instructions. Sonnet follows constraints well without over-editing (which is extremely important in this context).</p>
+
+        <p><strong>OpenAI Embeddings</strong> - For embeddings, I use text-embedding-3-small with OpenAI. It generates vector representations of writing style samples. These power the similarity matching for style clustering.</p>
+
+        <h2>The Architecture</h2>
+
+        <p>Here's how data flows through the system:</p>
+
+        <div class="architecture-diagram">[User speaks]
+      ↓
+[Deepgram / Web Speech API]
+      ↓
+[Raw transcript]
+      ↓
+[Context detection: Gmail? Slack? Twitter?]
+      ↓
+[Fetch style profile from TiDB]
+      ↓
+[Claude formats transcript using style + context]
+      ↓
+[User accepts or rejects suggestion]
+      ↓
+[Extract stats from accepted text]
+      ↓
+[Update style profile in TiDB]
+      ↓
+[Generate embedding for similarity matching]</div>
+
+        <p>The key architectural decision was storing stats, not content. Here's what goes into a style profile:</p>
+
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td>avg_sentence_length</td>
+                <td>float</td>
+                <td>14.2</td>
+            </tr>
+            <tr>
+                <td>formality_score</td>
+                <td>float (0-1)</td>
+                <td>0.35</td>
+            </tr>
+            <tr>
+                <td>uses_contractions</td>
+                <td>boolean</td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td>greetings</td>
+                <td>JSON array</td>
+                <td>["Hey", "Hi there"]</td>
+            </tr>
+            <tr>
+                <td>signoffs</td>
+                <td>JSON array</td>
+                <td>["Thanks", "Cheers"]</td>
+            </tr>
+            <tr>
+                <td>top_phrases</td>
+                <td>JSON array</td>
+                <td>["sounds good", "let me know"]</td>
+            </tr>
+        </table>
+
+        <p>None of this is the actual message. It's a fingerprint of how you write, not what you write.</p>
+
+        <div class="callout">
+            <p>Enterprise customers won't touch a tool that stores their internal communications. This constraint shaped every design decision.</p>
+        </div>
+
+        <h2>The Implementation</h2>
+
+        <h3>Context Detection</h3>
+
+        <p>Different platforms have different norms. LinkedIn tends to be much more formal compared to X. A Slack message shouldn't read like an email. So the first thing I did was figure out where the user would be typing.</p>
+
+        <p>The extension matches the current URL against known patterns, then looks for platform-specific DOM selectors to find the active text field:</p>
+
+        <pre class="language-javascript"><code class="language-javascript">const CONTEXT_PATTERNS = {
+  email: {
+    urls: [/mail\.google\.com/, /outlook\.live\.com/, /outlook\.office\.com/],
+    selectors: [
+      '[aria-label="Message Body"]',
+      '[role="textbox"][aria-multiline="true"]',
+      'div[contenteditable="true"][g_editable="true"]',
+    ],
+  },
+  slack: {
+    urls: [/\.slack\.com/],
+    selectors: [
+      '[data-qa="message_input"]',
+      '.ql-editor',
+      '[contenteditable="true"][data-message-input]',
+    ],
+  },
+  twitter: {
+    urls: [/twitter\.com/, /x\.com/],
+    selectors: [
+      '[data-testid="tweetTextarea_0"]',
+      '[role="textbox"][data-testid]',
+    ],
+  },
+  // ... 20+ contexts total
+};</code></pre>
+
+        <p>This detection runs before any formatting happens. The detected context determines both how Claude formats the text and what platform-specific instructions it receives.</p>
+
+        <p>X (formerly Twitter) formatting keeps things brief and removes formal greetings. Email formatting preserves sign-offs and adds paragraph breaks. Slack sits somewhere in between.</p>
+
+        <h3>Style Profile Schema</h3>
+
+        <p>The style profile lives in TiDB. Here's the table structure:</p>
+
+        <pre class="language-sql"><code class="language-sql">CREATE TABLE user_style_profiles (
+  user_id VARCHAR(255) PRIMARY KEY,
+  avg_sentence_length FLOAT DEFAULT 12,
+  formality_score FLOAT DEFAULT 0.5,
+  uses_contractions BOOLEAN DEFAULT TRUE,
+  top_phrases JSON,
+  greetings JSON,
+  signoffs JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);</code></pre>
+
+        <p>Notice there's no message_content column. We're storing how you write, not what you write.</p>
+
+        <p>The formality_score ranges from 0 (very casual) to 1 (very formal). This gets calculated from signals like sentence length, punctuation patterns, and word choice. Someone who writes "Hey! Quick question, can u send that over?" scores lower than someone who writes "Good afternoon. I wanted to follow up regarding the materials."</p>
+
+        <p>Fetching a profile is a simple query:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">async function getUserStyleProfile(userId: string): Promise<StyleProfile | null> {
+  const [rows] = await connection.execute<RowDataPacket[]>(
+    `SELECT avg_sentence_length, formality_score, uses_contractions,
+            top_phrases, greetings, signoffs
+     FROM user_style_profiles WHERE user_id = ?`,
+    [userId]
+  );
+
+  if (rows.length === 0) return null;
+
+  const row = rows[0];
+  return {
+    avg_sentence_length: row.avg_sentence_length || 12,
+    formality_score: row.formality_score || 0.5,
+    uses_contractions: row.uses_contractions !== false,
+    top_phrases: row.top_phrases ? JSON.parse(row.top_phrases) : [],
+    greetings: row.greetings ? JSON.parse(row.greetings) : ["Hey"],
+    signoffs: row.signoffs ? JSON.parse(row.signoffs) : ["Thanks"],
+  };
+}</code></pre>
+
+        <p>New users get sensible defaults. The profile evolves as they accept or reject formatting suggestions.</p>
+
+        <h3>The Formatting Prompt</h3>
+
+        <p>The style profile turns into prompt instructions. Claude doesn't see historical messages, it sees constraints.</p>
+
+        <pre class="language-typescript"><code class="language-typescript">function buildStylePrompt(profile: StyleProfile | null, context: string): string {
+  if (!profile) {
+    return `Format this transcript for ${context}. Keep it natural and conversational.`;
+  }
+
+  const formality = profile.formality_score > 0.7 ? "formal" :
+                    profile.formality_score < 0.3 ? "casual" : "balanced";
+
+  const contractionNote = profile.uses_contractions
+    ? "Use contractions naturally (don't, won't, can't)."
+    : "Minimize contractions for a more formal tone.";
+
+  const greetingNote = profile.greetings.length > 0
+    ? `Preferred greetings: ${profile.greetings.slice(0, 3).join(", ")}`
+    : "";
+
+  const signoffNote = profile.signoffs.length > 0
+    ? `Preferred sign-offs: ${profile.signoffs.slice(0, 3).join(", ")}`
+    : "";
+
+  return `Format this transcript for ${context}.
+
+User's writing style:
+- Tone: ${formality}
+- Average sentence length: ~${Math.round(profile.avg_sentence_length)} words
+- ${contractionNote}
+${greetingNote ? `- ${greetingNote}` : ""}
+${signoffNote ? `- ${signoffNote}` : ""}
+
+Rules:
+1. ONLY add punctuation and paragraph breaks
+2. Remove filler words: um, uh, like, basically, you know
+3. Keep EVERY other word exactly as they said it
+4. Do NOT rewrite, rephrase, or "clean up" their language`;
+}</code></pre>
+
+        <p>The rules at the bottom are critical. Without them, Claude will "improve" the user's words. But people don't want their voice replaced, they just want it cleaned up. There's a difference.</p>
+
+        <p>Each context also gets platform-specific instructions:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">function getContextInstructions(context: string): string {
+  switch (context) {
+    case "email":
+      return `Email format:
+- Add punctuation and paragraph breaks
+- Keep their exact words
+- Add sign-off if missing`;
+
+    case "slack":
+      return `Slack format:
+- Keep it brief and casual
+- No formal greetings needed
+- Okay to use shorter sentences`;
+
+    case "twitter":
+      return `Twitter/X format:
+- Add punctuation only
+- Keep their exact words
+- If over 280 characters, don't trim`;
+
+    // ... more contexts
+  }
+}</code></pre>
+
+        <p>The combination of style profile and context instructions gives Claude enough guidance to format appropriately without overstepping.</p>
+
+        <h3>The Learning Loop</h3>
+
+        <p>Here's the part I'm still iterating on.</p>
+
+        <p>When a user accepts or rejects a format suggestion, I want to update their profile. The naive approach was to just overwrite the stats with the new sample.</p>
+
+        <p>But that was wrong.</p>
+
+        <p>If someone has been using the app for months and their profile reflects hundreds of accepted formats, a single new sample shouldn't dramatically shift their stats. New samples need to have less influence as the profile matures.</p>
+
+        <p>The solution is weighted averaging. Each new sample contributes a fraction to the running average, with that fraction decreasing over time:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">function updateStyleProfile(
+  existingProfile: StyleProfile,
+  newStats: TextStats,
+  sampleCount: number
+): StyleProfile {
+  // Weight decreases as sample count increases
+  // First sample: 100% weight. 100th sample: ~1% weight.
+  const weight = 1 / (sampleCount + 1);
+
+  return {
+    avg_sentence_length:
+      existingProfile.avg_sentence_length * (1 - weight) +
+      newStats.avg_sentence_length * weight,
+    formality_score:
+      existingProfile.formality_score * (1 - weight) +
+      calculateFormality(newStats) * weight,
+    // ... other fields
+  };
+}</code></pre>
+
+        <p>For phrases, greetings, and signoffs, I track frequency counts rather than just presence. A greeting you use once shouldn't rank the same as one you use constantly.</p>
+
+        <p>I'm also generating embeddings for each accepted format:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">const embeddingResponse = await openai.embeddings.create({
+  model: "text-embedding-3-small",
+  input: `Sentence length: ${stats.avg_sentence_length}. ` +
+         `Formality: ${stats.formality_score}. ` +
+         `Context: ${context}. ` +
+         `Contractions: ${stats.uses_contractions}`,
+});
+const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
+
+        <p>The idea here is to cluster similar writing styles together. Users who write like you might have formatting preferences you'd also like. But I'll be honest: this piece isn't fully wired up yet. I'm generating the embeddings but not querying them for recommendations.</p>
+
+        <p>That's the next iteration.</p>
+
+        <h2>The Result</h2>
+
+        <p>What works today:</p>
+
+        <ul>
+            <li>Voice-to-text on 20+ platforms (Gmail, Slack, Notion, Twitter, LinkedIn, GitHub, and more)</li>
+            <li>Automatic context detection: no manual switching</li>
+            <li>Style profiles that influence formatting output</li>
+            <li>Privacy-first design: statistics only, no content stored</li>
+        </ul>
+
+        <p>What's next:</p>
+
+        <ul>
+            <li>Vector similarity for style clustering ("users who write like you prefer...")</li>
+            <li>Refined feedback loop for profile updates</li>
+            <li>Multi-language support beyond English</li>
+            <li>Browser support expansion (Firefox add-on)</li>
+        </ul>
+
+        <h2>Try It Yourself</h2>
+
+        <p>If you want to build something similar, TiDB Cloud's Starter gives you enough runway to experiment. The combination of relational tables (for user profiles) and vector search (for style similarity) in one database simplified my architecture significantly.</p>
+
+        <p>The main insight from building this: personalization doesn't require surveillance. You can learn patterns without learning secrets. Statistical fingerprints give you enough signal to customize behavior while keeping actual content out of your database entirely.</p>
+
+        <p>For enterprise use cases where privacy is non-negotiable, this approach opens doors that content-based learning keeps closed.</p>
+
+        <p style="margin-top: 32px;">
+            <a href="https://github.com/RealChrisSean/Speak-It" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 12px 24px; background: var(--accent-primary); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; margin-right: 12px;">
+                GitHub <i class="fab fa-github" style="font-size: 0.85rem;"></i>
+            </a>
+            <a href="https://app.parallellives.ai/speak-it" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 12px 24px; background: transparent; border: 2px solid var(--accent-primary); color: var(--accent-primary); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s;">
+                Get Speak It <i class="fas fa-external-link-alt" style="font-size: 0.85rem;"></i>
+            </a>
+        </p>
+
+        <hr>
+
+        <div class="author-section">
+            <img src="../../imgs/chrisdabatos.webp" alt="Chris Dabatos - Developer Advocate and Engineer" class="author-avatar" loading="lazy">
+            <div class="author-info">
+                <p class="author-name">Chris Dabatos</p>
+                <p class="author-title">Developer Advocate, Engineer, Speaker</p>
+                <div class="author-links">
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-social">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2026 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </article>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Custom Analytics -->
+    <script src="/analytics.js"></script>
+</body>
+</html>

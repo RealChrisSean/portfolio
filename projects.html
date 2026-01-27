@@ -754,6 +754,55 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Speak It -->
+            <div class="project-card" onclick="openProjectModal('speakIt')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                        <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--text-muted);"></i>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Private repo</span>
+                    </div>
+                </div>
+                <h3>Speak It</h3>
+                <div class="project-tags">
+                    <span class="project-tag tag-ai">AI</span>
+                    <span class="project-tag tag-extension">Chrome Extension</span>
+                    <span class="project-tag tag-vector">Vector Search</span>
+                    <span class="project-tag tag-mysql">TiDB</span>
+                </div>
+                <p>Chrome extension for voice-to-text that learns your writing style without storing your words. Works anywhere you type.</p>
+                <div class="card-actions">
+                    <a href="https://app.parallellives.ai/speak-it" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Get Speak It <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- College Picker -->
+            <div class="project-card" onclick="openProjectModal('collegePicker')">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                    </div>
+                </div>
+                <h3>College Picker</h3>
+                <div class="project-tags">
+                    <span class="project-tag tag-ai">AI</span>
+                    <span class="project-tag tag-vector">Vector Search</span>
+                    <span class="project-tag tag-mysql">TiDB</span>
+                    <span class="project-tag tag-rag">RAG</span>
+                </div>
+                <p>AI-powered college comparison tool that simulates your financial future based on real Department of Education data.</p>
+                <div class="card-actions">
+                    <a href="https://github.com/RealChrisSean/college-picker" target="_blank" onclick="event.stopPropagation();" class="btn-outline">
+                        GitHub <i class="fab fa-github" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <a href="https://app.parallellives.ai/collegepicker" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
+                        Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -832,6 +881,24 @@
                 problem: 'Hard to tell if content was written by AI or a human. Existing detectors are clunky web apps that break your workflow.',
                 tech: 'Chrome Extension (Manifest V3), OpenAI classifier, ChatGPT detector, Fakespot model, Ensemble scoring, TiDB, Next.js/Vercel',
                 why: 'Three ways to check any text without leaving the page: floating popup on selection, right-click context menu, or paste into the extension popup.<br><br>Backend runs multiple ML models and combines them with ensemble scoring for better accuracy than any single detector. Results are cached in TiDB for fast responses. User feedback (accurate/wrong) gets stored so I can tune detection over time.<br><br>Free tier has daily limits. Pro unlocks higher accuracy models, humanization tips, and plagiarism checks.'
+            },
+            'speakIt': {
+                title: 'Speak It',
+                subtitle: 'Chrome extension for voice-to-text that learns your writing style without storing your words.',
+                isPrivate: true,
+                demo: 'https://app.parallellives.ai/speak-it',
+                problem: 'Voice typing tools either sound robotic or store everything you say. You want AI to fix your grammar, not replace your voice with corporate-speak.',
+                tech: 'Chrome Extension, Deepgram, Claude API, TiDB, Real-time WebSocket, OpenAI Embeddings',
+                why: 'Works anywhere you type: Gmail, Slack, Twitter, Notion. Press Alt+Shift+S, speak naturally, get formatted text that matches the platform. Emails get greetings and sign-offs. Slack stays casual.<br><br>The privacy angle: instead of storing your messages, it stores statistics—sentence length, formality score, common phrases. Enough to personalize formatting without keeping what you actually said. A style fingerprint, not a transcript.<br><br>Meeting Mode captures tab audio from Google Meet or Zoom, mixes in your mic, and transcribes with speaker labels. Notes sync to the web app automatically.'
+            },
+            'collegePicker': {
+                title: 'College Picker',
+                subtitle: 'AI-powered college comparison tool that simulates your financial future based on real Department of Education data.',
+                github: 'https://github.com/RealChrisSean/college-picker',
+                demo: 'https://app.parallellives.ai/collegepicker',
+                problem: 'College rankings don\'t tell you what matters: will you be able to pay off your loans? Most tools show sticker prices, not what you\'ll actually pay based on your family income.',
+                tech: 'Claude API, TiDB, Vector Search, Department of Education Data, Next.js/Vercel, Voice Input',
+                why: 'Uses real College Scorecard data: graduation rates, median debt, earnings by program, net price by income bracket. Not marketing numbers from college websites.<br><br>Life Path simulation projects your finances 10+ years out—factors in grad school costs, residency years for medical careers, regional salary differences, and loan repayment timelines. See when you\'ll actually be debt-free.<br><br>Chat or guided mode. Voice input supported. Compare any colleges side-by-side with AI analysis that weighs your priorities: ROI, campus life, career outcomes, location.'
             }
         };
 
@@ -935,5 +1002,7 @@
     </script>
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Custom Analytics -->
+    <script src="analytics.js"></script>
 </body>
 </html>

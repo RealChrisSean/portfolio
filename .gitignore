@@ -13,3 +13,13 @@ Thumbs.db
 
 # Claude Code config
 CLAUDE.md
+
+# Analytics (contains sensitive dashboard password)
+analytics.js
+api/
+dashboard.html
+db-schema.sql
+
+# Package files
+package.json
+package-lock.json
