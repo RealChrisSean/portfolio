@@ -1,7 +1,7 @@
 const { query, queryOne } = require('./_lib/db');
 
 // Auth password - requires environment variable
-const DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWORD;
+const DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWOR;
 
 // Time range helpers
 function getTimeRangeSQL(range) {
