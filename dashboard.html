@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard | Chris Dabatos</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/webp" href="imgs/cd_logo.webp">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-card: #1a1a1a;
+            --bg-hover: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent: #0ea5e9;
+            --accent-hover: #38bdf8;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --border: #2a2a2a;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .login-box p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .login-error {
+            color: var(--error);
+            margin-top: 12px;
+            font-size: 0.875rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: none;
+            padding: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Time Range Selector */
+        .time-selector {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .time-btn {
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .time-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .refresh-btn {
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        .logout-btn {
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: var(--error);
+            border-color: var(--error);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .stat-card.live {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Data Tables */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .data-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .data-card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .data-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .data-item-label {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .data-item-primary {
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .data-item-secondary {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .data-item-value {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 16px;
+            white-space: nowrap;
+        }
+
+        .data-item-bar {
+            width: 60px;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            margin-left: 12px;
+            overflow: hidden;
+        }
+
+        .data-item-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* Recent Visitors */
+        .visitors-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .visitors-table th,
+        .visitors-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .visitors-table th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .visitors-table td {
+            font-size: 0.875rem;
+        }
+
+        .visitors-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .device-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 16px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .time-selector {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h1>Analytics Dashboard</h1>
+            <p>Enter password to access</p>
+            <input type="password" id="passwordInput" class="login-input" placeholder="Password" autofocus>
+            <button id="loginBtn" class="login-btn">Access Dashboard</button>
+            <div id="loginError" class="login-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="header">
+            <h1>Analytics Dashboard</h1>
+            <div class="header-controls">
+                <div class="time-selector">
+                    <button class="time-btn" data-range="live">Live</button>
+                    <button class="time-btn" data-range="1h">1H</button>
+                    <button class="time-btn" data-range="12h">12H</button>
+                    <button class="time-btn active" data-range="24h">24H</button>
+                    <button class="time-btn" data-range="7d">7D</button>
+                    <button class="time-btn" data-range="14d">14D</button>
+                    <button class="time-btn" data-range="30d">30D</button>
+                    <button class="time-btn" data-range="60d">60D</button>
+                    <button class="time-btn" data-range="90d">90D</button>
+                    <button class="time-btn" data-range="1y">1Y</button>
+                    <button class="time-btn" data-range="all">All</button>
+                </div>
+                <button id="refreshBtn" class="refresh-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                    </svg>
+                    Refresh
+                </button>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card live">
+                <div class="stat-label">
+                    <span class="live-dot"></span>
+                    Live Visitors
+                </div>
+                <div class="stat-value" id="liveVisitors">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unique Visitors</div>
+                <div class="stat-value" id="uniqueVisitors">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Page Views</div>
+                <div class="stat-value" id="pageViews">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg. Session</div>
+                <div class="stat-value" id="avgSession">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Bounce Rate</div>
+                <div class="stat-value" id="bounceRate">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Sessions</div>
+                <div class="stat-value" id="totalSessions">-</div>
+            </div>
+        </div>
+
+        <!-- Visitor Chart -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">Visitors Over Time</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="visitorChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Tables -->
+        <div class="data-grid">
+            <!-- Top Pages -->
+            <div class="data-card">
+                <div class="data-card-header">Top Pages</div>
+                <div class="data-list" id="topPages">
+                    <div class="loading"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Top Referrers -->
+            <div class="data-card">
+                <div class="data-card-header">Traffic Sources</div>
+                <div class="data-list" id="topReferrers">
+                    <div class="loading"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Devices -->
+            <div class="data-card">
+                <div class="data-card-header">Devices</div>
+                <div class="data-list" id="devices">
+                    <div class="loading"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Browsers -->
+            <div class="data-card">
+                <div class="data-card-header">Browsers</div>
+                <div class="data-list" id="browsers">
+                    <div class="loading"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Countries -->
+            <div class="data-card">
+                <div class="data-card-header">Countries</div>
+                <div class="data-list" id="countries">
+                    <div class="loading"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Top Clicks -->
+            <div class="data-card">
+                <div class="data-card-header">Top Clicked Elements</div>
+                <div class="data-list" id="topClicks">
+                    <div class="loading"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Visitors -->
+        <div class="data-card" style="margin-bottom: 32px;">
+            <div class="data-card-header">Recent Visitors</div>
+            <div style="overflow-x: auto;">
+                <table class="visitors-table">
+                    <thead>
+                        <tr>
+                            <th>Page</th>
+                            <th>Source</th>
+                            <th>Location</th>
+                            <th>Device</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentVisitors">
+                        <tr><td colspan="5" class="loading"><div class="spinner"></div> Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- UTM Campaigns -->
+        <div class="data-card">
+            <div class="data-card-header">UTM Campaigns</div>
+            <div class="data-list" id="utmCampaigns">
+                <div class="loading"><div class="spinner"></div> Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let password = '';
+        let currentRange = '24h';
+        let visitorChart = null;
+        let refreshInterval = null;
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const timeBtns = document.querySelectorAll('.time-btn');
+
+        // Check for saved session
+        const savedPassword = sessionStorage.getItem('dashboard_password');
+        if (savedPassword) {
+            password = savedPassword;
+            showDashboard();
+        }
+
+        // Login
+        loginBtn.addEventListener('click', attemptLogin);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') attemptLogin();
+        });
+
+        function attemptLogin() {
+            password = passwordInput.value;
+            fetchData().then(success => {
+                if (success) {
+                    sessionStorage.setItem('dashboard_password', password);
+                    showDashboard();
+                } else {
+                    loginError.textContent = 'Invalid password';
+                    loginError.style.display = 'block';
+                    passwordInput.value = '';
+                }
+            });
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('dashboard_password');
+            password = '';
+            loginScreen.style.display = 'flex';
+            dashboard.classList.remove('active');
+            if (refreshInterval) clearInterval(refreshInterval);
+        });
+
+        // Show dashboard
+        function showDashboard() {
+            loginScreen.style.display = 'none';
+            dashboard.classList.add('active');
+            fetchData();
+            // Auto refresh every 30 seconds
+            refreshInterval = setInterval(fetchData, 30000);
+        }
+
+        // Time range selection
+        timeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                timeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentRange = btn.dataset.range;
+                fetchData();
+            });
+        });
+
+        // Refresh button
+        refreshBtn.addEventListener('click', fetchData);
+
+        // Fetch data
+        async function fetchData() {
+            try {
+                const response = await fetch(`/api/dashboard-data?range=${currentRange}&password=${password}`);
+                if (!response.ok) {
+                    if (response.status === 401) return false;
+                    throw new Error('Failed to fetch');
+                }
+
+                const { data } = await response.json();
+                updateDashboard(data);
+                return true;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return false;
+            }
+        }
+
+        // Update dashboard
+        function updateDashboard(data) {
+            // Stats
+            document.getElementById('liveVisitors').textContent = formatNumber(data.live_visitors);
+            document.getElementById('uniqueVisitors').textContent = formatNumber(data.unique_visitors);
+            document.getElementById('pageViews').textContent = formatNumber(data.total_pageviews);
+            document.getElementById('avgSession').textContent = formatDuration(data.avg_session_duration);
+            document.getElementById('bounceRate').textContent = data.bounce_rate + '%';
+            document.getElementById('totalSessions').textContent = formatNumber(data.total_sessions);
+
+            // Chart
+            updateChart(data.visitor_chart);
+
+            // Lists
+            updateTopPages(data.top_pages);
+            updateTopReferrers(data.top_referrers);
+            updateDevices(data.devices);
+            updateBrowsers(data.browsers);
+            updateCountries(data.countries);
+            updateTopClicks(data.top_clicks);
+            updateRecentVisitors(data.recent_visitors);
+            updateUTMCampaigns(data.utm_campaigns);
+        }
+
+        // Update chart
+        function updateChart(chartData) {
+            const ctx = document.getElementById('visitorChart').getContext('2d');
+
+            const labels = chartData.map(d => {
+                const date = new Date(d.time_bucket);
+                if (currentRange === '24h' || currentRange === '12h' || currentRange === '1h' || currentRange === 'live') {
+                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+                return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            });
+
+            const visitors = chartData.map(d => d.visitors);
+            const pageviews = chartData.map(d => d.pageviews);
+
+            if (visitorChart) {
+                visitorChart.data.labels = labels;
+                visitorChart.data.datasets[0].data = visitors;
+                visitorChart.data.datasets[1].data = pageviews;
+                visitorChart.update();
+            } else {
+                visitorChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [
+                            {
+                                label: 'Visitors',
+                                data: visitors,
+                                borderColor: '#0ea5e9',
+                                backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Page Views',
+                                data: pageviews,
+                                borderColor: '#8b5cf6',
+                                backgroundColor: 'transparent',
+                                borderDash: [5, 5],
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: { color: '#a0a0a0' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: '#2a2a2a' },
+                                ticks: { color: '#666666' }
+                            },
+                            y: {
+                                grid: { color: '#2a2a2a' },
+                                ticks: { color: '#666666' },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Update list helpers
+        function updateTopPages(pages) {
+            const container = document.getElementById('topPages');
+            if (!pages || pages.length === 0) {
+                container.innerHTML = '<div class="empty-state">No data yet</div>';
+                return;
+            }
+            const max = Math.max(...pages.map(p => p.views));
+            container.innerHTML = pages.map(page => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${cleanUrl(page.page_url)}</div>
+                        <div class="data-item-secondary">${page.unique_views} unique</div>
+                    </div>
+                    <div class="data-item-value">${formatNumber(page.views)}</div>
+                    <div class="data-item-bar">
+                        <div class="data-item-bar-fill" style="width: ${(page.views / max) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateTopReferrers(referrers) {
+            const container = document.getElementById('topReferrers');
+            if (!referrers || referrers.length === 0) {
+                container.innerHTML = '<div class="empty-state">No data yet</div>';
+                return;
+            }
+            const max = Math.max(...referrers.map(r => r.visits));
+            container.innerHTML = referrers.map(ref => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${ref.source || 'Direct'}</div>
+                        <div class="data-item-secondary">${ref.unique_visitors} unique</div>
+                    </div>
+                    <div class="data-item-value">${formatNumber(ref.visits)}</div>
+                    <div class="data-item-bar">
+                        <div class="data-item-bar-fill" style="width: ${(ref.visits / max) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateDevices(devices) {
+            const container = document.getElementById('devices');
+            if (!devices || devices.length === 0) {
+                container.innerHTML = '<div class="empty-state">No data yet</div>';
+                return;
+            }
+            const total = devices.reduce((sum, d) => sum + d.count, 0);
+            container.innerHTML = devices.map(device => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${capitalize(device.device_type)}</div>
+                    </div>
+                    <div class="data-item-value">${Math.round((device.count / total) * 100)}%</div>
+                    <div class="data-item-bar">
+                        <div class="data-item-bar-fill" style="width: ${(device.count / total) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateBrowsers(browsers) {
+            const container = document.getElementById('browsers');
+            if (!browsers || browsers.length === 0) {
+                container.innerHTML = '<div class="empty-state">No data yet</div>';
+                return;
+            }
+            const total = browsers.reduce((sum, b) => sum + b.count, 0);
+            container.innerHTML = browsers.map(browser => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${browser.browser}</div>
+                    </div>
+                    <div class="data-item-value">${Math.round((browser.count / total) * 100)}%</div>
+                    <div class="data-item-bar">
+                        <div class="data-item-bar-fill" style="width: ${(browser.count / total) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCountries(countries) {
+            const container = document.getElementById('countries');
+            if (!countries || countries.length === 0) {
+                container.innerHTML = '<div class="empty-state">No data yet</div>';
+                return;
+            }
+            const max = Math.max(...countries.map(c => c.count));
+            container.innerHTML = countries.map(country => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${getCountryFlag(country.country)} ${country.country}</div>
+                    </div>
+                    <div class="data-item-value">${formatNumber(country.count)}</div>
+                    <div class="data-item-bar">
+                        <div class="data-item-bar-fill" style="width: ${(country.count / max) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateTopClicks(clicks) {
+            const container = document.getElementById('topClicks');
+            if (!clicks || clicks.length === 0) {
+                container.innerHTML = '<div class="empty-state">No clicks recorded yet</div>';
+                return;
+            }
+            container.innerHTML = clicks.map(click => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${click.element_text || click.element_tag}</div>
+                        <div class="data-item-secondary">${click.element_href ? 'Link: ' + cleanUrl(click.element_href) : cleanUrl(click.page_url)}</div>
+                    </div>
+                    <div class="data-item-value">${formatNumber(click.clicks)}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateRecentVisitors(visitors) {
+            const container = document.getElementById('recentVisitors');
+            if (!visitors || visitors.length === 0) {
+                container.innerHTML = '<tr><td colspan="5" class="empty-state">No visitors yet</td></tr>';
+                return;
+            }
+            container.innerHTML = visitors.map(v => `
+                <tr>
+                    <td>${cleanUrl(v.page_url)}</td>
+                    <td>${v.referrer_domain || 'Direct'}</td>
+                    <td>${v.city ? v.city + ', ' : ''}${v.country || 'Unknown'}</td>
+                    <td><span class="device-badge">${capitalize(v.device_type)} / ${v.browser}</span></td>
+                    <td>${timeAgo(v.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateUTMCampaigns(campaigns) {
+            const container = document.getElementById('utmCampaigns');
+            if (!campaigns || campaigns.length === 0) {
+                container.innerHTML = '<div class="empty-state">No campaign data yet</div>';
+                return;
+            }
+            container.innerHTML = campaigns.map(c => `
+                <div class="data-item">
+                    <div class="data-item-label">
+                        <div class="data-item-primary">${c.utm_campaign || c.utm_source || 'Unknown'}</div>
+                        <div class="data-item-secondary">${[c.utm_source, c.utm_medium].filter(Boolean).join(' / ')}</div>
+                    </div>
+                    <div class="data-item-value">${formatNumber(c.visits)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Utility functions
+        function formatNumber(num) {
+            if (num === null || num === undefined) return '-';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds) return '0s';
+            if (seconds < 60) return seconds + 's';
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            if (mins < 60) return mins + 'm ' + secs + 's';
+            const hours = Math.floor(mins / 60);
+            return hours + 'h ' + (mins % 60) + 'm';
+        }
+
+        function cleanUrl(url) {
+            if (!url) return '-';
+            try {
+                const parsed = new URL(url);
+                return parsed.pathname || '/';
+            } catch {
+                return url.substring(0, 50);
+            }
+        }
+
+        function capitalize(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function timeAgo(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+            return Math.floor(seconds / 86400) + 'd ago';
+        }
+
+        function getCountryFlag(countryCode) {
+            if (!countryCode || countryCode === 'Unknown') return '🌍';
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt(0));
+            return String.fromCodePoint(...codePoints);
+        }
+    </script>
+</body>
+</html>

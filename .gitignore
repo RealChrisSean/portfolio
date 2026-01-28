@@ -14,12 +14,5 @@ Thumbs.db
 # Claude Code config
 CLAUDE.md
 
-# Analytics (contains sensitive dashboard password)
-analytics.js
-api/
-dashboard.html
-db-schema.sql
-
-# Package files
-package.json
-package-lock.json
+# Package files (keep node_modules ignored)
+# package.json and package-lock.json are now tracked
