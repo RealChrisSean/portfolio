@@ -498,17 +498,6 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <h1>Analytics Dashboard</h1>
-            <p>Enter password to access</p>
-            <input type="password" id="passwordInput" class="login-input" placeholder="Password" autofocus>
-            <button id="loginBtn" class="login-btn">Access Dashboard</button>
-            <div id="loginError" class="login-error" style="display: none;"></div>
-        </div>
-    </div>
-
     <!-- Dashboard -->
     <div id="dashboard" class="dashboard">
         <div class="header">
@@ -663,65 +652,23 @@
 
     <script>
         // State
-        let password = '';
         let currentRange = '24h';
         let visitorChart = null;
         let refreshInterval = null;
 
         // DOM Elements
-        const loginScreen = document.getElementById('loginScreen');
         const dashboard = document.getElementById('dashboard');
-        const passwordInput = document.getElementById('passwordInput');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginError = document.getElementById('loginError');
         const logoutBtn = document.getElementById('logoutBtn');
         const refreshBtn = document.getElementById('refreshBtn');
         const timeBtns = document.querySelectorAll('.time-btn');
 
-        // Check for saved session
-        const savedPassword = sessionStorage.getItem('dashboard_password');
-        if (savedPassword) {
-            password = savedPassword;
-            showDashboard();
-        }
+        // Show dashboard immediately
+        dashboard.classList.add('active');
+        fetchData();
+        refreshInterval = setInterval(fetchData, 30000);
 
-        // Login
-        loginBtn.addEventListener('click', attemptLogin);
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') attemptLogin();
-        });
-
-        function attemptLogin() {
-            password = passwordInput.value;
-            fetchData().then(success => {
-                if (success) {
-                    sessionStorage.setItem('dashboard_password', password);
-                    showDashboard();
-                } else {
-                    loginError.textContent = 'Invalid password';
-                    loginError.style.display = 'block';
-                    passwordInput.value = '';
-                }
-            });
-        }
-
-        // Logout
-        logoutBtn.addEventListener('click', () => {
-            sessionStorage.removeItem('dashboard_password');
-            password = '';
-            loginScreen.style.display = 'flex';
-            dashboard.classList.remove('active');
-            if (refreshInterval) clearInterval(refreshInterval);
-        });
-
-        // Show dashboard
-        function showDashboard() {
-            loginScreen.style.display = 'none';
-            dashboard.classList.add('active');
-            fetchData();
-            // Auto refresh every 30 seconds
-            refreshInterval = setInterval(fetchData, 30000);
-        }
+        // Hide logout button (no auth needed)
+        if (logoutBtn) logoutBtn.style.display = 'none';
 
         // Time range selection
         timeBtns.forEach(btn => {
@@ -739,7 +686,7 @@
         // Fetch data
         async function fetchData() {
             try {
-                const response = await fetch(`/api/dashboard-data?range=${currentRange}&password=${password}`);
+                const response = await fetch(`/api/dashboard-data?range=${currentRange}`);
                 if (!response.ok) {
                     if (response.status === 401) return false;
                     throw new Error('Failed to fetch');

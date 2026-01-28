@@ -1,8 +1,5 @@
 const { query, queryOne } = require('./_lib/db');
 
-// Auth password - requires environment variable
-const DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWOR;
-
 // Time range helpers
 function getTimeRangeSQL(range) {
     const ranges = {
@@ -29,14 +26,6 @@ module.exports = async (req, res) => {
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
-    }
-
-    // Auth check
-    const authHeader = req.headers.authorization;
-    const providedPassword = authHeader?.replace('Bearer ', '') || req.query.password;
-
-    if (providedPassword !== DASHBOARD_PASSWORD) {
-        return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
