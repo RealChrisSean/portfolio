@@ -46,6 +46,19 @@ module.exports = async (req, res) => {
             return res.status(400).json({ error: 'Text is required' });
         }
 
+        // ElevenLabs has a ~5000 char limit - truncate if needed
+        const MAX_CHARS = 4500;
+        let processedText = text;
+        if (text.length > MAX_CHARS) {
+            // Truncate at sentence boundary
+            processedText = text.substring(0, MAX_CHARS);
+            const lastPeriod = processedText.lastIndexOf('.');
+            if (lastPeriod > MAX_CHARS * 0.8) {
+                processedText = processedText.substring(0, lastPeriod + 1);
+            }
+            processedText += ' Article truncated for audio.';
+        }
+
         const apiKey = process.env.ELEVENLABS_API_KEY;
         if (!apiKey) {
             return res.status(500).json({ error: 'ElevenLabs API key not configured' });
@@ -53,7 +66,7 @@ module.exports = async (req, res) => {
 
         // Check cache first
         ensureCacheDir();
-        const cacheKey = getCacheKey(text, voice, stability, similarity);
+        const cacheKey = getCacheKey(processedText, voice, stability, similarity);
         const cachePath = path.join(CACHE_DIR, `${cacheKey}.mp3`);
 
         if (fs.existsSync(cachePath)) {
@@ -74,7 +87,7 @@ module.exports = async (req, res) => {
                     'xi-api-key': apiKey,
                 },
                 body: JSON.stringify({
-                    text,
+                    text: processedText,
                     model_id: 'eleven_multilingual_v2',
                     voice_settings: {
                         stability,

@@ -1253,7 +1253,9 @@ LIMIT 5;</code></pre>
                 });
 
                 if (!response.ok) {
-                    throw new Error('TTS request failed');
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('TTS API error:', response.status, errorData);
+                    throw new Error(errorData.error || 'TTS request failed');
                 }
 
                 const blob = await response.blob();
