@@ -1153,7 +1153,7 @@ LIMIT 5;</code></pre>
             const clone = article.cloneNode(true);
 
             // Remove elements we don't want to read
-            clone.querySelectorAll('pre, code, .toc, .author-section, .footer, .callout, table, button, nav, .scroll-indicator, .audio-progress').forEach(el => el.remove());
+            clone.querySelectorAll('.post-header, pre, code, .toc, .author-section, .footer, .callout, table, button, nav, .scroll-indicator, .audio-progress, .post-tag, .post-meta').forEach(el => el.remove());
 
             let text = clone.textContent || '';
 
