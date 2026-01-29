@@ -558,44 +558,37 @@
         .fade-up:nth-child(3) { transition-delay: 0.2s; }
         .fade-up:nth-child(4) { transition-delay: 0.3s; }
 
-        /* Table of Contents */
-        .toc {
-            border-left: 3px solid var(--accent-primary);
-            padding: 0 0 0 20px;
-            margin-bottom: 40px;
-        }
-
-        .toc-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .toc-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px 20px;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
         }
 
-        .toc-list li {
-            margin: 0;
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .toc-list a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .toc-list a:hover {
-            color: var(--accent-primary);
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         /* Code Block Copy Button */
@@ -659,21 +652,6 @@
         </header>
 
         <p>So I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around. Chapters update automatically. I can read my own life like a book.</p>
-
-        <nav class="toc">
-            <div class="toc-title">Table of Contents</div>
-            <ol class="toc-list">
-                <li><a href="#the-problem">The Problem With Journaling Apps</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#technical-decisions">The Technical Decisions</a></li>
-                <li><a href="#the-architecture">The Architecture</a></li>
-                <li><a href="#database-choice">The Database Choice</a></li>
-                <li><a href="#voice-customization">Voice Customization</a></li>
-                <li><a href="#bigger-vision">The Bigger Vision</a></li>
-                <li><a href="#what-i-learned">What I Learned</a></li>
-                <li><a href="#try-it">Try It</a></li>
-            </ol>
-        </nav>
 
         <h2 id="the-problem">The Problem With Journaling Apps</h2>
 
@@ -878,6 +856,10 @@ LIMIT 5;</code></pre>
         </div>
     </article>
 
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <script>
         function toggleTheme() {
             const html = document.documentElement;
@@ -949,6 +931,21 @@ LIMIT 5;</code></pre>
         } else {
             initScrollAnimations();
         }
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
         // Copy Code Button
         document.querySelectorAll('pre').forEach(pre => {
