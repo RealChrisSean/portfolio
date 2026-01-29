@@ -567,9 +567,16 @@
             left: 0;
             width: 0%;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+            background-size: 200% 100%;
+            animation: shimmer 2s ease-in-out infinite;
             z-index: 9999;
             transition: width 0.1s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Scroll Animations */
