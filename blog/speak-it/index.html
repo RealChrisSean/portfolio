@@ -559,9 +559,40 @@
                 justify-content: center;
             }
         }
+
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            z-index: 9999;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stagger animation delays for children */
+        .fade-up:nth-child(1) { transition-delay: 0s; }
+        .fade-up:nth-child(2) { transition-delay: 0.1s; }
+        .fade-up:nth-child(3) { transition-delay: 0.2s; }
+        .fade-up:nth-child(4) { transition-delay: 0.3s; }
     </style>
 </head>
 <body>
+    <div class="progress-bar" id="progressBar"></div>
     <div class="bg-glow"></div>
 
     <nav>
@@ -977,5 +1008,53 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
     <script src="/analytics.js"></script>
+
+    <!-- Progress Bar & Scroll Animations -->
+    <script>
+        // Reading Progress Bar
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        window.addEventListener('scroll', updateProgressBar);
+        updateProgressBar();
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            // Add fade-up class to sections
+            const sections = document.querySelectorAll('h2, .highlight-box, pre, .cta-section, .author-section, p, ul, ol');
+            sections.forEach(el => {
+                if (!el.closest('nav') && !el.closest('.hero')) {
+                    el.classList.add('fade-up');
+                }
+            });
+
+            // Intersection Observer for animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+
+        // Run after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollAnimations);
+        } else {
+            initScrollAnimations();
+        }
+    </script>
 </body>
 </html>
