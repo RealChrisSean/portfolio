@@ -56,6 +56,8 @@
 .fa-map-marker-alt::before { content: "\f3c5"; }
 .fa-book-open::before { content: "\f518"; }
 .fa-brain::before { content: "\f5dc"; }
+.fa-bars::before { content: "\f0c9"; }
+.fa-times::before { content: "\f00d"; }
 
 /* Regular icons (far) */
 .fa-calendar::before { content: "\f133"; }

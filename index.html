@@ -182,7 +182,7 @@
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: clamp(1rem, 3vw, 2rem);
         }
 
         /* --- PROJECT CAROUSEL --- */
@@ -192,7 +192,7 @@
         }
         .projects-carousel {
             display: flex;
-            gap: 2rem;
+            gap: clamp(1rem, 3vw, 2rem);
             overflow-x: auto;
             scroll-behavior: smooth;
             scrollbar-width: none;
@@ -242,6 +242,47 @@
             .projects-carousel .card { flex: 0 0 85%; }
             .projects-carousel-container { padding: 0 30px; }
             .carousel-nav { width: 30px; height: 30px; }
+        }
+        @media (max-width: 480px) {
+            .projects-carousel-container { padding: 0 16px; }
+            .projects-carousel .card { flex: 0 0 90%; min-width: unset; }
+            body { overflow-x: hidden; }
+            .modal-content {
+                padding: 1.25rem;
+                margin: 10px;
+                max-height: 90vh;
+            }
+            .modal-close {
+                top: 0.75rem;
+                right: 0.75rem;
+                font-size: 1.25rem;
+            }
+            .modal-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding-right: 2rem;
+            }
+            .modal-header h3 {
+                font-size: 1.35rem;
+            }
+            .modal-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            .modal-demo-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .modal-subtitle {
+                font-size: 0.9rem;
+            }
+            .modal-section {
+                padding: 1rem;
+            }
+            .modal-section h4 {
+                font-size: 1rem;
+            }
         }
 
         /* --- PROJECT TAGS --- */
@@ -390,14 +431,14 @@
             gap: 1.5rem;
             align-items: flex-start;
             padding: 1.5rem;
-            background: linear-gradient(145deg, rgba(249,250,251,0.6), rgba(243,244,246,0.6));
+            background: var(--card-bg);
             border: var(--glass-border);
             border-radius: 12px;
             margin-bottom: 1rem;
         }
 
         .date-badge {
-            background: rgba(0,0,0,0.04);
+            background: var(--glass-bg);
             padding: 0.5rem 1rem;
             border-radius: 8px;
             text-align: center;
@@ -833,6 +874,20 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
+            .modal-header {
+                flex-wrap: wrap;
+            }
+            .modal-header h3 {
+                font-size: 1.5rem;
+            }
+            .modal-buttons {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .modal-demo-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
             /* Hide navbar social icons on mobile - they're in the hero */
             .nav-social {
                 display: none !important;
@@ -847,7 +902,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 8px;
+            padding: 12px;
             border-radius: 8px;
             color: var(--text-muted);
             font-size: 1.1rem;
@@ -855,6 +910,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-width: 44px;
+            min-height: 44px;
         }
         .theme-toggle:hover {
             color: var(--accent-primary);
@@ -864,6 +921,85 @@
         .theme-toggle .fa-moon { display: block; }
         [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
         [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        /* Hamburger Menu */
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            min-width: 44px;
+            min-height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+        .hamburger-btn:hover { color: var(--accent-primary); }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-color);
+            border-left: var(--glass-border);
+            padding: 80px 24px 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .mobile-menu.active { transform: translateX(0); }
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .mobile-menu-overlay.active { display: block; }
+        .mobile-menu a {
+            display: block;
+            padding: 12px 0;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .mobile-menu a:hover { color: var(--accent-primary); }
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        .mobile-menu-close:hover { color: var(--accent-primary); }
+        .mobile-menu-social {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            font-size: 1.25rem;
+        }
+        .mobile-menu-social a { border: none; padding: 0; }
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .nav-links > a, .nav-social { display: none !important; }
+        }
     </style>
     <link rel="stylesheet" href="css/fontawesome-subset.css">
     <script src="content.js"></script>
@@ -878,7 +1014,7 @@
     <nav style="width: 100%; padding: 8px 20px; border-bottom: var(--glass-border);">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;">
-            <div style="display: flex; gap: 20px; align-items: center;">
+            <div class="nav-links">
                 <a href="blogs.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Blog</a>
                 <a href="all-content.html" class="nav-explore-link" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
                 <div class="nav-social" style="display: flex; gap: 1rem; font-size: 1.1rem;">
@@ -891,9 +1027,29 @@
                     <i class="fas fa-moon"></i>
                     <i class="fas fa-sun"></i>
                 </button>
+                <button class="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </nav>
+
+    <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu">
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html">Home</a>
+        <a href="blogs.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="all-content.html">Explore My Work</a>
+        <div class="mobile-menu-social">
+            <a href="https://x.com/RealChrisSean" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+    </div>
 
     <header class="container hero">
         <p class="hero-subtitle reveal">Las Vegas, NV</p>
@@ -1660,6 +1816,13 @@
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            document.querySelector('.mobile-menu-overlay').classList.toggle('active');
+            document.body.style.overflow = document.querySelector('.mobile-menu').classList.contains('active') ? 'hidden' : '';
         }
 
         // Load saved theme on page load

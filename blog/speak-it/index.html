@@ -601,7 +601,7 @@
         .back-to-top {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
             width: 48px;
             height: 48px;
             background: var(--accent-primary);
@@ -628,6 +628,16 @@
         .back-to-top:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Move back-to-top up when audio player is visible */
+        body.audio-playing .back-to-top {
+            bottom: 90px;
+        }
+        @media (max-width: 640px) {
+            body.audio-playing .back-to-top {
+                bottom: 120px;
+            }
         }
 
         /* Table of Contents */
@@ -1769,12 +1779,14 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
             switch (state) {
                 case 'loading':
                     player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
                     loadingIcon.style.display = 'block';
                     listenText.textContent = 'Loading...';
                     btn.disabled = true;
                     break;
                 case 'playing':
                     player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
                     pauseIcon.style.display = 'block';
                     listenText.textContent = 'Pause';
                     btn.classList.add('playing');
@@ -1782,6 +1794,7 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
                     break;
                 case 'paused':
                     player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
                     playIcon.style.display = 'block';
                     listenText.textContent = 'Play';
                     btn.classList.remove('playing');
@@ -1789,6 +1802,7 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
                     break;
                 default:
                     player.classList.remove('visible');
+                    document.body.classList.remove('audio-playing');
                     playIcon.style.display = 'block';
                     listenText.textContent = 'Play';
                     btn.classList.remove('playing');
