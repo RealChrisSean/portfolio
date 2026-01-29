@@ -797,10 +797,32 @@
             background: #0284c7;
         }
 
-        /* Listen Button */
+        /* Audio Player - Fixed at bottom */
+        .audio-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .audio-player.visible {
+            transform: translateY(0);
+        }
+
         .listen-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             padding: 10px 20px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
@@ -811,7 +833,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 20px;
+            white-space: nowrap;
         }
 
         .listen-btn:hover {
@@ -843,10 +865,37 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Inline listen button in header */
+        .listen-btn-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .listen-btn-inline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        .listen-btn-inline svg {
+            width: 18px;
+            height: 18px;
+        }
+
         /* Audio progress bar */
         .audio-progress {
             display: none;
-            margin-top: 12px;
+            flex: 1;
             align-items: center;
             gap: 12px;
         }
@@ -861,6 +910,7 @@
             background: var(--border-color);
             border-radius: 2px;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .audio-progress-fill {
@@ -874,6 +924,42 @@
             font-size: 0.8rem;
             color: var(--text-muted);
             font-family: var(--font-code);
+            min-width: 90px;
+        }
+
+        .audio-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .audio-close:hover {
+            color: var(--text-main);
+        }
+
+        @media (max-width: 640px) {
+            .audio-player {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 12px 16px;
+            }
+            .audio-progress {
+                order: -1;
+                width: 100%;
+            }
+            .listen-btn span {
+                display: none;
+            }
+            .listen-btn {
+                padding: 12px;
+                border-radius: 50%;
+            }
         }
 
         /* TTS Highlight */
@@ -1000,25 +1086,12 @@
                 <time datetime="2026-01-27"><i class="far fa-calendar"></i> January 27, 2026</time>
                 <span class="reading-time"><i class="far fa-clock"></i> 12 min read</span>
             </div>
-            <button class="listen-btn" id="listenBtn" onclick="toggleAudio()">
-                <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button class="listen-btn-inline" onclick="toggleAudio()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3"/>
                 </svg>
-                <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                    <rect x="6" y="4" width="4" height="16"/>
-                    <rect x="14" y="4" width="4" height="16"/>
-                </svg>
-                <svg id="loadingIcon" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                    <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
-                </svg>
-                <span id="listenText">Listen to article</span>
+                <span>Listen to article</span>
             </button>
-            <div class="audio-progress" id="audioProgress">
-                <div class="audio-progress-bar">
-                    <div class="audio-progress-fill" id="audioProgressFill"></div>
-                </div>
-                <span class="audio-time" id="audioTime">0:00 / 0:00</span>
-            </div>
         </header>
 
         <img src="../../imgs/speak-it-hero.jpeg" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
@@ -1512,6 +1585,35 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
         </svg>
     </button>
 
+    <!-- Fixed Audio Player -->
+    <div class="audio-player" id="audioPlayer">
+        <button class="listen-btn" id="listenBtn" onclick="toggleAudio()">
+            <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+            <svg id="loadingIcon" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
+            </svg>
+            <span id="listenText">Play</span>
+        </button>
+        <div class="audio-progress visible" id="audioProgress">
+            <div class="audio-progress-bar" onclick="seekAudio(event)">
+                <div class="audio-progress-fill" id="audioProgressFill"></div>
+            </div>
+            <span class="audio-time" id="audioTime">0:00 / 0:00</span>
+        </div>
+        <button class="audio-close" onclick="closeAudioPlayer()" aria-label="Close player">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
     <script>
         function toggleTheme() {
             const html = document.documentElement;
@@ -1653,12 +1755,12 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
         }
 
         function updateUI(state) {
+            const player = document.getElementById('audioPlayer');
             const btn = document.getElementById('listenBtn');
             const playIcon = document.getElementById('playIcon');
             const pauseIcon = document.getElementById('pauseIcon');
             const loadingIcon = document.getElementById('loadingIcon');
             const listenText = document.getElementById('listenText');
-            const progress = document.getElementById('audioProgress');
 
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'none';
@@ -1666,35 +1768,53 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
 
             switch (state) {
                 case 'loading':
+                    player.classList.add('visible');
                     loadingIcon.style.display = 'block';
                     listenText.textContent = 'Loading...';
                     btn.disabled = true;
                     break;
                 case 'playing':
+                    player.classList.add('visible');
                     pauseIcon.style.display = 'block';
                     listenText.textContent = 'Pause';
                     btn.classList.add('playing');
                     btn.disabled = false;
-                    progress.classList.add('visible');
                     break;
                 case 'paused':
+                    player.classList.add('visible');
                     playIcon.style.display = 'block';
-                    listenText.textContent = 'Resume';
+                    listenText.textContent = 'Play';
                     btn.classList.remove('playing');
                     btn.disabled = false;
-                    progress.classList.add('visible');
                     break;
                 default:
+                    player.classList.remove('visible');
                     playIcon.style.display = 'block';
-                    listenText.textContent = 'Listen to article';
+                    listenText.textContent = 'Play';
                     btn.classList.remove('playing');
                     btn.disabled = false;
-                    progress.classList.remove('visible');
-                    // Clear highlights
                     document.querySelectorAll('.tts-highlight').forEach(el => {
                         el.classList.remove('tts-highlight');
                     });
             }
+        }
+
+        function seekAudio(event) {
+            if (!audioPlayer) return;
+            const bar = event.currentTarget;
+            const rect = bar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        }
+
+        function closeAudioPlayer() {
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                audioPlayer = null;
+            }
+            isPlaying = false;
+            updateUI('idle');
         }
 
         async function toggleAudio() {

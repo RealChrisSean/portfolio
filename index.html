@@ -833,6 +833,13 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
+            /* Hide navbar social icons on mobile - they're in the hero */
+            .nav-social {
+                display: none !important;
+            }
+            .nav-explore-link {
+                display: none !important;
+            }
         }
 
         /* Dark Mode Toggle */
@@ -873,8 +880,8 @@
             <img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;">
             <div style="display: flex; gap: 20px; align-items: center;">
                 <a href="blogs.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Blog</a>
-                <a href="all-content.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
-                <div style="display: flex; gap: 1rem; font-size: 1.1rem;">
+                <a href="all-content.html" class="nav-explore-link" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
+                <div class="nav-social" style="display: flex; gap: 1rem; font-size: 1.1rem;">
                     <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
                     <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-linkedin"></i></a>
