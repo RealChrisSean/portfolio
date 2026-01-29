@@ -14,5 +14,8 @@ Thumbs.db
 # Claude Code config
 CLAUDE.md
 
+# TTS audio cache
+.tts-cache/
+
 # Package files (keep node_modules ignored)
 # package.json and package-lock.json are now tracked

@@ -630,6 +630,46 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
+        /* Table of Contents */
+        .toc {
+            position: static !important;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+        }
+
+        .toc-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-primary);
+        }
+
         /* Code Block Copy Button */
         pre {
             position: relative;
@@ -664,6 +704,270 @@
             color: #fff;
             border-color: #22c55e;
         }
+
+        /* Link hover underlines */
+        article a:not(.back-to-top):not(.author-links a):not([style]) {
+            position: relative;
+            text-decoration: none;
+            color: var(--accent-primary);
+        }
+
+        article a:not(.back-to-top):not(.author-links a):not([style])::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        article a:not(.back-to-top):not(.author-links a):not([style]):hover::after {
+            width: 100%;
+        }
+
+        /* Bouncing scroll indicator */
+        .scroll-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin: 32px 0 48px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scroll-indicator svg {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(8px); }
+            60% { transform: translateY(4px); }
+        }
+
+        /* Collapsible code blocks */
+        pre.collapsible {
+            max-height: 350px;
+            overflow: hidden;
+        }
+
+        pre.collapsible::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(transparent, #1e1e1e);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        pre.expanded {
+            max-height: none;
+        }
+
+        pre.expanded::before {
+            display: none;
+        }
+
+        .expand-btn {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.2s;
+        }
+
+        .expand-btn:hover {
+            background: #0284c7;
+        }
+
+        /* Listen Button */
+        .listen-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .listen-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        .listen-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .listen-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .listen-btn.playing {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .listen-btn .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Audio progress bar */
+        .audio-progress {
+            display: none;
+            margin-top: 12px;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .audio-progress.visible {
+            display: flex;
+        }
+
+        .audio-progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .audio-progress-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .audio-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-code);
+        }
+
+        /* Before/After Demo Box */
+        .demo-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 32px 0;
+            overflow: hidden;
+        }
+
+        .demo-box-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-primary);
+        }
+
+        .demo-box-header svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .demo-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .demo-label.before {
+            color: var(--text-muted);
+        }
+
+        .demo-label.after {
+            color: #22c55e;
+        }
+
+        .demo-content {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        [data-theme="dark"] .demo-content {
+            background: #1a1a1a;
+        }
+
+        .demo-content:last-child {
+            margin-bottom: 0;
+        }
+
+        .demo-content.before-content {
+            color: var(--text-muted);
+            border-left: 3px solid var(--text-muted);
+        }
+
+        .demo-content.after-content {
+            color: var(--text-main);
+            border-left: 3px solid #22c55e;
+        }
+
+        .demo-arrow {
+            display: flex;
+            justify-content: center;
+            margin: 16px 0;
+            color: var(--accent-primary);
+        }
+
+        .demo-context {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(192, 38, 211, 0.15));
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -687,9 +991,47 @@
                 <time datetime="2026-01-27"><i class="far fa-calendar"></i> January 27, 2026</time>
                 <span class="reading-time"><i class="far fa-clock"></i> 12 min read</span>
             </div>
+            <button class="listen-btn" id="listenBtn" onclick="toggleAudio()">
+                <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <rect x="6" y="4" width="4" height="16"/>
+                    <rect x="14" y="4" width="4" height="16"/>
+                </svg>
+                <svg id="loadingIcon" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
+                </svg>
+                <span id="listenText">Listen to article</span>
+            </button>
+            <div class="audio-progress" id="audioProgress">
+                <div class="audio-progress-bar">
+                    <div class="audio-progress-fill" id="audioProgressFill"></div>
+                </div>
+                <span class="audio-time" id="audioTime">0:00 / 0:00</span>
+            </div>
         </header>
 
-        <img src="../../imgs/speak-it-hero.jpeg" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin-bottom: 48px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
+        <img src="../../imgs/speak-it-hero.jpeg" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
+
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+            </svg>
+        </div>
+
+        <div class="toc">
+            <div class="toc-title">Contents</div>
+            <ul class="toc-list">
+                <li><a href="#the-goal">The Goal</a></li>
+                <li><a href="#the-stack">The Stack</a></li>
+                <li><a href="#the-architecture">The Architecture</a></li>
+                <li><a href="#the-implementation">The Implementation</a></li>
+                <li><a href="#the-result">The Result</a></li>
+                <li><a href="#try-it">Try It Yourself</a></li>
+            </ul>
+        </div>
 
         <h2 id="the-goal">The Goal</h2>
 
@@ -704,6 +1046,38 @@
         <p>The question I set out to answer: can you teach an AI how someone writes by storing statistics only? Like only focus on storing their average sentence length, formality level, and even common phrases to get a fingerprint of your style without the content itself.</p>
 
         <p>Turns out you can.</p>
+
+        <div class="demo-box">
+            <div class="demo-box-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+                Live Demo
+            </div>
+            <div class="demo-label before">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Raw speech
+            </div>
+            <div class="demo-content before-content">
+                hey john wanted to follow up on the proposal um let me know if you have any questions or if theres anything else you need from me thanks
+            </div>
+            <div class="demo-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+            </div>
+            <div class="demo-label after">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Formatted for email
+            </div>
+            <div class="demo-content after-content">
+                Hey John,<br><br>Wanted to follow up on the proposal. Let me know if you have any questions or if there's anything else you need from me.<br><br>Thanks
+            </div>
+        </div>
 
         <h2 id="the-stack">The Stack</h2>
 
@@ -828,6 +1202,42 @@
 
         <p>X (formerly Twitter) formatting keeps things brief and removes formal greetings. Email formatting preserves sign-offs and adds paragraph breaks. Slack sits somewhere in between.</p>
 
+        <div class="demo-box">
+            <div class="demo-box-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                Same input, different platforms
+            </div>
+            <div class="demo-label before">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Raw speech
+            </div>
+            <div class="demo-content before-content">
+                just finished the new feature its ready for review whenever you get a chance
+            </div>
+            <div class="demo-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+            </div>
+            <span class="demo-context">Gmail</span>
+            <div class="demo-content after-content">
+                Hey,<br><br>Just finished the new feature. It's ready for review whenever you get a chance.<br><br>Thanks
+            </div>
+            <span class="demo-context">Slack</span>
+            <div class="demo-content after-content">
+                Just finished the new feature. Ready for review whenever you get a chance
+            </div>
+            <span class="demo-context">X / Twitter</span>
+            <div class="demo-content after-content">
+                Just finished the new feature. Ready for review whenever you get a chance.
+            </div>
+        </div>
+
         <h3>Style Profile Schema</h3>
 
         <p>The style profile lives in TiDB. Here's the table structure:</p>
@@ -914,6 +1324,37 @@ Rules:
 }</code></pre>
 
         <p>The rules at the bottom are critical. Without them, Claude will "improve" the user's words. But people don't want their voice replaced, they just want it cleaned up. There's a difference.</p>
+
+        <div class="demo-box">
+            <div class="demo-box-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Style-matched output
+            </div>
+            <div class="demo-label before">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Same raw speech
+            </div>
+            <div class="demo-content before-content">
+                can we push the meeting to tomorrow something came up
+            </div>
+            <div class="demo-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+            </div>
+            <span class="demo-context">Casual user (formality: 0.2)</span>
+            <div class="demo-content after-content">
+                Hey! Can we push the meeting to tomorrow? Something came up
+            </div>
+            <span class="demo-context">Formal user (formality: 0.8)</span>
+            <div class="demo-content after-content">
+                Hello,<br><br>Would it be possible to reschedule our meeting to tomorrow? Something has come up.<br><br>Thank you
+            </div>
+        </div>
 
         <p>Each context also gets platform-specific instructions:</p>
 
@@ -1057,7 +1498,9 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
     </article>
 
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="fas fa-arrow-up"></i>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
     </button>
 
     <script>
@@ -1087,6 +1530,155 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
     <script src="/analytics.js"></script>
+
+    <!-- TTS Audio Player -->
+    <script>
+        let audioPlayer = null;
+        let isPlaying = false;
+        let isLoading = false;
+
+        function getArticleText() {
+            const article = document.querySelector('article.container');
+            // Get text content, excluding code blocks, nav elements, buttons
+            const clone = article.cloneNode(true);
+
+            // Remove elements we don't want to read
+            clone.querySelectorAll('pre, code, .toc, .author-section, .footer, .demo-box, button, nav, .scroll-indicator').forEach(el => el.remove());
+
+            let text = clone.textContent || '';
+
+            // Clean up the text
+            text = text
+                .replace(/\s+/g, ' ')           // Collapse whitespace
+                .replace(/#{1,6}\s/g, '')       // Headers
+                .replace(/\*\*([^*]+)\*\*/g, '$1')  // Bold
+                .replace(/\*([^*]+)\*/g, '$1')      // Italic
+                .replace(/`([^`]+)`/g, '$1')        // Inline code
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Links
+                .replace(/[-*]\s/g, '')             // List items
+                .trim();
+
+            return text;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateUI(state) {
+            const btn = document.getElementById('listenBtn');
+            const playIcon = document.getElementById('playIcon');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const loadingIcon = document.getElementById('loadingIcon');
+            const listenText = document.getElementById('listenText');
+            const progress = document.getElementById('audioProgress');
+
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'none';
+            loadingIcon.style.display = 'none';
+
+            switch (state) {
+                case 'loading':
+                    loadingIcon.style.display = 'block';
+                    listenText.textContent = 'Loading...';
+                    btn.disabled = true;
+                    break;
+                case 'playing':
+                    pauseIcon.style.display = 'block';
+                    listenText.textContent = 'Pause';
+                    btn.classList.add('playing');
+                    btn.disabled = false;
+                    progress.classList.add('visible');
+                    break;
+                case 'paused':
+                    playIcon.style.display = 'block';
+                    listenText.textContent = 'Resume';
+                    btn.classList.remove('playing');
+                    btn.disabled = false;
+                    progress.classList.add('visible');
+                    break;
+                default:
+                    playIcon.style.display = 'block';
+                    listenText.textContent = 'Listen to article';
+                    btn.classList.remove('playing');
+                    btn.disabled = false;
+                    progress.classList.remove('visible');
+            }
+        }
+
+        async function toggleAudio() {
+            if (isLoading) return;
+
+            if (audioPlayer && isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                updateUI('paused');
+                return;
+            }
+
+            if (audioPlayer && !isPlaying) {
+                audioPlayer.play();
+                isPlaying = true;
+                updateUI('playing');
+                return;
+            }
+
+            // First time - fetch audio
+            isLoading = true;
+            updateUI('loading');
+
+            try {
+                const text = getArticleText();
+
+                const response = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text,
+                        voice: 'kdvGwzzf2ihYtjbv5OWc',
+                        stability: 0.5,
+                        similarity: 0.75
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('TTS request failed');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                audioPlayer = new Audio(url);
+
+                audioPlayer.addEventListener('timeupdate', () => {
+                    const progressFill = document.getElementById('audioProgressFill');
+                    const timeDisplay = document.getElementById('audioTime');
+                    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                    timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+                });
+
+                audioPlayer.addEventListener('ended', () => {
+                    isPlaying = false;
+                    audioPlayer = null;
+                    updateUI('idle');
+                });
+
+                audioPlayer.play();
+                isPlaying = true;
+                isLoading = false;
+                updateUI('playing');
+
+            } catch (error) {
+                console.error('TTS error:', error);
+                isLoading = false;
+                updateUI('idle');
+                alert('Failed to load audio. Please try again.');
+            }
+        }
+    </script>
 
     <!-- Progress Bar & Scroll Animations -->
     <script>
@@ -1150,22 +1742,45 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Copy Code Button
-        document.querySelectorAll('pre').forEach(pre => {
-            const btn = document.createElement('button');
-            btn.className = 'copy-btn';
-            btn.textContent = 'Copy';
-            btn.addEventListener('click', async () => {
+        // Copy Code Button & Collapsible Code
+        document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
+            // Copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = 'Copy';
+            copyBtn.addEventListener('click', async () => {
                 const code = pre.querySelector('code')?.textContent || pre.textContent;
                 await navigator.clipboard.writeText(code);
-                btn.textContent = 'Copied!';
-                btn.classList.add('copied');
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
                 setTimeout(() => {
-                    btn.textContent = 'Copy';
-                    btn.classList.remove('copied');
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.classList.remove('copied');
                 }, 2000);
             });
-            pre.appendChild(btn);
+            pre.appendChild(copyBtn);
+
+            // Collapsible for tall code blocks
+            const codeEl = pre.querySelector('code');
+            if (codeEl) {
+                const lineCount = (codeEl.textContent.match(/\n/g) || []).length + 1;
+                if (lineCount > 15) {
+                    pre.classList.add('collapsible');
+                    const expandBtn = document.createElement('button');
+                    expandBtn.className = 'expand-btn';
+                    expandBtn.textContent = 'Show more';
+                    expandBtn.addEventListener('click', () => {
+                        if (pre.classList.contains('expanded')) {
+                            pre.classList.remove('expanded');
+                            expandBtn.textContent = 'Show more';
+                        } else {
+                            pre.classList.add('expanded');
+                            expandBtn.textContent = 'Show less';
+                        }
+                    });
+                    pre.appendChild(expandBtn);
+                }
+            }
         });
     </script>
 </body>
