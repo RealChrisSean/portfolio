@@ -1159,8 +1159,10 @@ LIMIT 5;</code></pre>
         let paragraphs = [];
         let paragraphTimings = [];
 
-        // Pre-cached audio file for this blog
+        // Pre-cached files for this blog
         const PRECACHED_AUDIO = '/audio/ai-journal-system.mp3';
+        const PRECACHED_TIMESTAMPS = '/audio/ai-journal-system-timestamps.json';
+        let wordTimings = [];
 
         function getReadableParagraphs() {
             const article = document.querySelector('article.container');
@@ -1202,21 +1204,48 @@ LIMIT 5;</code></pre>
                 el.classList.remove('tts-highlight');
             });
 
-            for (let i = 0; i < paragraphTimings.length; i++) {
-                const timing = paragraphTimings[i];
-                if (currentTime >= timing.start && currentTime < timing.end) {
-                    timing.element.classList.add('tts-highlight');
-
-                    const rect = timing.element.getBoundingClientRect();
-                    const viewportHeight = window.innerHeight;
-
-                    if (rect.top < 100 || rect.bottom > viewportHeight - 100) {
-                        timing.element.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
+            // Use word-level timestamps if available
+            if (wordTimings.length > 0) {
+                let currentWordIndex = -1;
+                for (let i = 0; i < wordTimings.length; i++) {
+                    if (currentTime >= wordTimings[i].start && currentTime < wordTimings[i].end) {
+                        currentWordIndex = i;
+                        break;
                     }
-                    break;
+                    if (currentTime < wordTimings[i].start) {
+                        currentWordIndex = Math.max(0, i - 1);
+                        break;
+                    }
+                }
+
+                if (currentWordIndex >= 0) {
+                    const startIdx = Math.max(0, currentWordIndex - 2);
+                    const endIdx = Math.min(wordTimings.length, currentWordIndex + 3);
+                    const phrase = wordTimings.slice(startIdx, endIdx).map(w => w.word).join(' ').toLowerCase();
+
+                    for (const p of paragraphs) {
+                        if (p.text.toLowerCase().includes(phrase) ||
+                            phrase.includes(p.text.toLowerCase().substring(0, 30))) {
+                            p.element.classList.add('tts-highlight');
+                            return;
+                        }
+                    }
+
+                    const currentWord = wordTimings[currentWordIndex].word.toLowerCase();
+                    for (const p of paragraphs) {
+                        if (p.text.toLowerCase().includes(currentWord)) {
+                            p.element.classList.add('tts-highlight');
+                            return;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < paragraphTimings.length; i++) {
+                    const timing = paragraphTimings[i];
+                    if (currentTime >= timing.start && currentTime < timing.end) {
+                        timing.element.classList.add('tts-highlight');
+                        break;
+                    }
                 }
             }
         }
@@ -1298,13 +1327,19 @@ LIMIT 5;</code></pre>
                 let usedCache = false;
 
                 try {
-                    const cacheResponse = await fetch(PRECACHED_AUDIO, { method: 'HEAD' });
-                    if (cacheResponse.ok) {
+                    const [audioCheck, timestampsResponse] = await Promise.all([
+                        fetch(PRECACHED_AUDIO, { method: 'HEAD' }),
+                        fetch(PRECACHED_TIMESTAMPS)
+                    ]);
+
+                    if (audioCheck.ok && timestampsResponse.ok) {
                         usedCache = true;
-                        console.log('Using pre-cached audio');
+                        const timestampData = await timestampsResponse.json();
+                        wordTimings = timestampData.words || [];
+                        console.log('Using pre-cached audio with', wordTimings.length, 'word timings');
                     }
                 } catch (e) {
-                    console.log('Pre-cached audio not available, falling back to API');
+                    console.log('Pre-cached files not available, falling back to API');
                 }
 
                 if (!usedCache) {

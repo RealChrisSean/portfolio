@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Pre-generate TTS audio for blog posts
+ * Pre-generate TTS audio for blog posts with word-level timestamps
  * Run: node scripts/precache-tts.js
  *
  * Requires ELEVENLABS_API_KEY in environment
@@ -18,17 +18,61 @@ const BLOGS = [
     {
         slug: 'speak-it',
         htmlPath: 'blog/speak-it/index.html',
-        outputPath: 'audio/speak-it.mp3'
+        audioPath: 'audio/speak-it.mp3',
+        timestampsPath: 'audio/speak-it-timestamps.json'
     },
     {
         slug: 'ai-journal-system',
         htmlPath: 'blog/ai-journal-system/index.html',
-        outputPath: 'audio/ai-journal-system.mp3'
+        audioPath: 'audio/ai-journal-system.mp3',
+        timestampsPath: 'audio/ai-journal-system-timestamps.json'
     }
 ];
 
+function removeNestedElement(html, startPattern) {
+    // Remove elements including nested tags of the same type
+    let result = html;
+    let match;
+    const regex = new RegExp(startPattern, 'gi');
+
+    while ((match = regex.exec(result)) !== null) {
+        const startIndex = match.index;
+        let depth = 1;
+        let i = startIndex + match[0].length;
+        const tagMatch = match[0].match(/<(\w+)/);
+        if (!tagMatch) continue;
+        const tagName = tagMatch[1];
+        const openTag = new RegExp(`<${tagName}[\\s>]`, 'gi');
+        const closeTag = new RegExp(`</${tagName}>`, 'gi');
+
+        while (depth > 0 && i < result.length) {
+            const remaining = result.substring(i);
+            const nextOpen = remaining.search(openTag);
+            const nextClose = remaining.search(closeTag);
+
+            if (nextClose === -1) break;
+
+            if (nextOpen !== -1 && nextOpen < nextClose) {
+                depth++;
+                i += nextOpen + 1;
+            } else {
+                depth--;
+                if (depth === 0) {
+                    i += nextClose + tagName.length + 3;
+                } else {
+                    i += nextClose + 1;
+                }
+            }
+        }
+
+        result = result.substring(0, startIndex) + ' ' + result.substring(i);
+        regex.lastIndex = startIndex;
+    }
+
+    return result;
+}
+
 function extractTextFromHTML(html) {
-    // Get article content
     const articleMatch = html.match(/<article class="container">([\s\S]*?)<\/article>/);
     if (!articleMatch) {
         throw new Error('Could not find article content');
@@ -36,32 +80,26 @@ function extractTextFromHTML(html) {
 
     let content = articleMatch[1];
 
-    // Remove elements we don't want to read (same as frontend)
-    const removePatterns = [
-        /<header class="post-header">[\s\S]*?<\/header>/gi,
-        /<pre[\s\S]*?<\/pre>/gi,
-        /<code[\s\S]*?<\/code>/gi,
-        /<div class="toc">[\s\S]*?<\/div>/gi,
-        /<div class="author-section">[\s\S]*?<\/div>/gi,
-        /<div class="footer">[\s\S]*?<\/div>/gi,
-        /<div class="demo-box">[\s\S]*?<\/div>/gi,
-        /<div class="architecture-diagram">[\s\S]*?<\/div>/gi,
-        /<div class="callout">[\s\S]*?<\/div>/gi,
-        /<table[\s\S]*?<\/table>/gi,
-        /<button[\s\S]*?<\/button>/gi,
-        /<nav[\s\S]*?<\/nav>/gi,
-        /<div class="scroll-indicator">[\s\S]*?<\/div>/gi,
-        /<div class="audio-progress[\s\S]*?<\/div>/gi,
-    ];
-
-    for (const pattern of removePatterns) {
-        content = content.replace(pattern, '');
-    }
+    // Remove nested elements properly
+    content = removeNestedElement(content, '<header class="post-header"');
+    content = removeNestedElement(content, '<div class="toc"');
+    content = removeNestedElement(content, '<div class="author-section"');
+    content = removeNestedElement(content, '<div class="footer"');
+    content = removeNestedElement(content, '<div class="demo-box"');
+    content = removeNestedElement(content, '<div class="architecture-diagram"');
+    content = removeNestedElement(content, '<div class="callout"');
+    content = removeNestedElement(content, '<div class="scroll-indicator"');
+    content = removeNestedElement(content, '<div class="audio-progress"');
+    content = removeNestedElement(content, '<pre');
+    content = removeNestedElement(content, '<code');
+    content = removeNestedElement(content, '<table');
+    content = removeNestedElement(content, '<button');
+    content = removeNestedElement(content, '<nav');
 
     // Strip remaining HTML tags
     content = content.replace(/<[^>]*>/g, ' ');
 
-    // Clean up whitespace
+    // Clean up entities and whitespace
     content = content
         .replace(/&nbsp;/g, ' ')
         .replace(/&amp;/g, '&')
@@ -110,9 +148,9 @@ function splitIntoChunks(text, maxLength) {
     return chunks;
 }
 
-async function generateAudio(text, apiKey) {
+async function generateAudioWithTimestamps(text, apiKey) {
     const response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`,
+        `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/with-timestamps`,
         {
             method: 'POST',
             headers: {
@@ -135,43 +173,103 @@ async function generateAudio(text, apiKey) {
         throw new Error(`ElevenLabs API error: ${errorText}`);
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    return Buffer.from(arrayBuffer);
+    const data = await response.json();
+
+    // Decode base64 audio
+    const audioBuffer = Buffer.from(data.audio_base64, 'base64');
+
+    // Extract word timings from alignment data
+    const alignment = data.alignment || {};
+    const words = [];
+
+    if (alignment.characters && alignment.character_start_times_seconds) {
+        // Build words from characters
+        let currentWord = '';
+        let wordStart = null;
+        let wordEnd = null;
+
+        for (let i = 0; i < alignment.characters.length; i++) {
+            const char = alignment.characters[i];
+            const startTime = alignment.character_start_times_seconds[i];
+            const endTime = alignment.character_end_times_seconds[i];
+
+            if (char === ' ' || i === alignment.characters.length - 1) {
+                if (char !== ' ') {
+                    currentWord += char;
+                    wordEnd = endTime;
+                }
+                if (currentWord.trim()) {
+                    words.push({
+                        word: currentWord.trim(),
+                        start: wordStart,
+                        end: wordEnd
+                    });
+                }
+                currentWord = '';
+                wordStart = null;
+            } else {
+                if (wordStart === null) {
+                    wordStart = startTime;
+                }
+                currentWord += char;
+                wordEnd = endTime;
+            }
+        }
+    }
+
+    return { audioBuffer, words };
 }
 
 async function processBlog(blog, apiKey) {
     console.log(`\nProcessing: ${blog.slug}`);
 
-    // Read HTML
     const htmlPath = path.join(process.cwd(), blog.htmlPath);
     const html = fs.readFileSync(htmlPath, 'utf8');
 
-    // Extract text
     const text = extractTextFromHTML(html);
     console.log(`  Extracted ${text.length} characters`);
 
-    // Split into chunks
     const chunks = splitIntoChunks(text, CHUNK_SIZE);
     console.log(`  Split into ${chunks.length} chunks`);
 
-    // Generate audio for each chunk
     const audioBuffers = [];
+    const allWords = [];
+    let timeOffset = 0;
+
     for (let i = 0; i < chunks.length; i++) {
         console.log(`  Generating chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)...`);
-        const audio = await generateAudio(chunks[i], apiKey);
-        audioBuffers.push(audio);
 
-        // Small delay to avoid rate limiting
+        const { audioBuffer, words } = await generateAudioWithTimestamps(chunks[i], apiKey);
+        audioBuffers.push(audioBuffer);
+
+        // Adjust word timings with offset and add to all words
+        const chunkDuration = words.length > 0 ? words[words.length - 1].end : 0;
+
+        words.forEach(w => {
+            allWords.push({
+                word: w.word,
+                start: w.start + timeOffset,
+                end: w.end + timeOffset
+            });
+        });
+
+        timeOffset += chunkDuration + 0.1; // Small gap between chunks
+
         if (i < chunks.length - 1) {
             await new Promise(r => setTimeout(r, 500));
         }
     }
 
-    // Combine and save
+    // Save audio
     const combinedAudio = Buffer.concat(audioBuffers);
-    const outputPath = path.join(process.cwd(), blog.outputPath);
-    fs.writeFileSync(outputPath, combinedAudio);
-    console.log(`  Saved: ${blog.outputPath} (${(combinedAudio.length / 1024 / 1024).toFixed(2)} MB)`);
+    const audioPath = path.join(process.cwd(), blog.audioPath);
+    fs.writeFileSync(audioPath, combinedAudio);
+    console.log(`  Saved audio: ${blog.audioPath} (${(combinedAudio.length / 1024 / 1024).toFixed(2)} MB)`);
+
+    // Save timestamps
+    const timestampsPath = path.join(process.cwd(), blog.timestampsPath);
+    fs.writeFileSync(timestampsPath, JSON.stringify({ words: allWords }, null, 2));
+    console.log(`  Saved timestamps: ${blog.timestampsPath} (${allWords.length} words)`);
 }
 
 async function main() {
@@ -183,7 +281,7 @@ async function main() {
         process.exit(1);
     }
 
-    console.log('Pre-caching TTS audio for blogs...');
+    console.log('Pre-caching TTS audio with timestamps for blogs...');
 
     for (const blog of BLOGS) {
         try {
@@ -193,7 +291,7 @@ async function main() {
         }
     }
 
-    console.log('\nDone! Commit the audio files to include them in your deployment.');
+    console.log('\nDone! Commit the audio and timestamp files.');
 }
 
 main();
