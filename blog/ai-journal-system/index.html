@@ -557,6 +557,80 @@
         .fade-up:nth-child(2) { transition-delay: 0.1s; }
         .fade-up:nth-child(3) { transition-delay: 0.2s; }
         .fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+        }
+
+        .toc-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin: 8px 0;
+        }
+
+        .toc-list a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Code Block Copy Button */
+        pre {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s;
+        }
+
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            color: #fff;
+            border-color: #22c55e;
+        }
     </style>
 </head>
 <body>
@@ -585,7 +659,22 @@
 
         <p>So I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around. Chapters update automatically. I can read my own life like a book.</p>
 
-        <h2>The Problem With Journaling Apps</h2>
+        <nav class="toc">
+            <div class="toc-title">Table of Contents</div>
+            <ol class="toc-list">
+                <li><a href="#the-problem">The Problem With Journaling Apps</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#technical-decisions">The Technical Decisions</a></li>
+                <li><a href="#the-architecture">The Architecture</a></li>
+                <li><a href="#database-choice">The Database Choice</a></li>
+                <li><a href="#voice-customization">Voice Customization</a></li>
+                <li><a href="#bigger-vision">The Bigger Vision</a></li>
+                <li><a href="#what-i-learned">What I Learned</a></li>
+                <li><a href="#try-it">Try It</a></li>
+            </ol>
+        </nav>
+
+        <h2 id="the-problem">The Problem With Journaling Apps</h2>
 
         <p>I've tried a lot of them. They all have the same issue: they're filing cabinets. You put stuff in, maybe tag it, and then it sits there. The only value you get is if you go back and read it yourself.</p>
 
@@ -602,7 +691,7 @@
 
         <p>So I built that.</p>
 
-        <h2>How It Works</h2>
+        <h2 id="how-it-works">How It Works</h2>
 
         <p>There are four main pieces.</p>
 
@@ -622,7 +711,7 @@
 
         <p>Weekly, monthly, quarterly, bi-yearly, and yearly. Each one includes a chapter excerpt, patterns it detected, and a link back to read the full story. This is what actually gets me to revisit what I've written.</p>
 
-        <h2>The Technical Decisions</h2>
+        <h2 id="technical-decisions">The Technical Decisions</h2>
 
         <p>I used different AI models for different jobs. This matters more than people think.</p>
 
@@ -640,7 +729,7 @@
             <p>The key insight: don't use one model for everything. Match the model to the job.</p>
         </div>
 
-        <h2>The Architecture</h2>
+        <h2 id="the-architecture">The Architecture</h2>
 
         <p>Everything runs through three API endpoints:</p>
 
@@ -664,7 +753,7 @@
 
         <p>The embeddings let me do semantic search across everything. When I reflect on an entry, the system pulls related entries from my history to give the AI context. When it writes chapters, it can find thematic connections across months of content.</p>
 
-        <h2>The Database Choice</h2>
+        <h2 id="database-choice">The Database Choice</h2>
 
         <p>I needed a database that could do two things at once:</p>
         <ol>
@@ -703,7 +792,7 @@ LIMIT 5;</code></pre>
 
         <p>The tradeoff: TiDB's vector search isn't as optimized as purpose-built vector databases at massive scale. If I had 100 million entries, I'd probably need something else. For a personal app with thousands of entries? It's more than enough, and the simplicity is worth it.</p>
 
-        <h2>Voice Customization</h2>
+        <h2 id="voice-customization">Voice Customization</h2>
 
         <p>This part was important to me. I didn't want AI responses that sound like a therapist or a corporate chatbot.</p>
 
@@ -722,7 +811,7 @@ LIMIT 5;</code></pre>
 
         <p>This gets injected into the reflect chat prompts. The AI responses actually sound like how I talk.</p>
 
-        <h2>The Bigger Vision</h2>
+        <h2 id="bigger-vision">The Bigger Vision</h2>
 
         <p>Right now, the Journal is a standalone system. But it's designed to plug into something larger.</p>
 
@@ -741,7 +830,7 @@ LIMIT 5;</code></pre>
 
         <p>That's the end state. The Journal is the memory layer that makes it possible.</p>
 
-        <h2>What I Learned</h2>
+        <h2 id="what-i-learned">What I Learned</h2>
 
         <p><strong>Model selection is product design.</strong> Picking Claude Opus vs Haiku vs GPT-4o isn't just a technical decision. It directly affects user experience - response quality, latency, cost. You have to think about it as a product tradeoff, not just an engineering one.</p>
 
@@ -749,7 +838,7 @@ LIMIT 5;</code></pre>
 
         <p><strong>Email digests are engagement infrastructure.</strong> The product only works if I actually come back to it. The digests solve that. They're not spam - they're excerpts of my own life story. I open them.</p>
 
-        <h2>Try It</h2>
+        <h2 id="try-it">Try It</h2>
 
         <p>The system is live. I use it daily. Every week I get an email with a chapter of my life written by an AI that actually knows what I've been thinking about.</p>
 
@@ -859,6 +948,24 @@ LIMIT 5;</code></pre>
         } else {
             initScrollAnimations();
         }
+
+        // Copy Code Button
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.textContent = 'Copy';
+            btn.addEventListener('click', async () => {
+                const code = pre.querySelector('code')?.textContent || pre.textContent;
+                await navigator.clipboard.writeText(code);
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+            pre.appendChild(btn);
+        });
     </script>
 </body>
 </html>

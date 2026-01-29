@@ -596,6 +596,80 @@
         .fade-up:nth-child(2) { transition-delay: 0.1s; }
         .fade-up:nth-child(3) { transition-delay: 0.2s; }
         .fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+        }
+
+        .toc-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin: 8px 0;
+        }
+
+        .toc-list a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Code Block Copy Button */
+        pre {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s;
+        }
+
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            color: #fff;
+            border-color: #22c55e;
+        }
     </style>
 </head>
 <body>
@@ -623,7 +697,19 @@
 
         <img src="../../imgs/speak-it-hero.jpeg" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin-bottom: 48px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
 
-        <h2>The Goal</h2>
+        <nav class="toc">
+            <div class="toc-title">Table of Contents</div>
+            <ol class="toc-list">
+                <li><a href="#the-goal">The Goal</a></li>
+                <li><a href="#the-stack">The Stack</a></li>
+                <li><a href="#the-architecture">The Architecture</a></li>
+                <li><a href="#the-implementation">The Implementation</a></li>
+                <li><a href="#the-result">The Result</a></li>
+                <li><a href="#try-it">Try It Yourself</a></li>
+            </ol>
+        </nav>
+
+        <h2 id="the-goal">The Goal</h2>
 
         <p>I talk fast. I'm also on a dozen platforms throughout the day from Gmail, Slack, Twitter, to Notion and the list keeps going. Voice-to-text tools have been around forever, but they all had the same problem: they made everything sound the same.</p>
 
@@ -637,7 +723,7 @@
 
         <p>Turns out you can.</p>
 
-        <h2>The Stack</h2>
+        <h2 id="the-stack">The Stack</h2>
 
         <p>Here's what I used and why:</p>
 
@@ -651,7 +737,7 @@
 
         <p><strong>OpenAI Embeddings</strong> - For embeddings, I use text-embedding-3-small with OpenAI. It generates vector representations of writing style samples. These power the similarity matching for style clustering.</p>
 
-        <h2>The Architecture</h2>
+        <h2 id="the-architecture">The Architecture</h2>
 
         <p>Here's how data flows through the system:</p>
 
@@ -721,7 +807,7 @@
             <p>Enterprise customers won't touch a tool that stores their internal communications. This constraint shaped every design decision.</p>
         </div>
 
-        <h2>The Implementation</h2>
+        <h2 id="the-implementation">The Implementation</h2>
 
         <h3>Context Detection</h3>
 
@@ -924,7 +1010,7 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
 
         <p>That's the next iteration.</p>
 
-        <h2>The Result</h2>
+        <h2 id="the-result">The Result</h2>
 
         <p>What works today:</p>
 
@@ -944,7 +1030,7 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
             <li>Browser support expansion (Firefox add-on)</li>
         </ul>
 
-        <h2>Try It Yourself</h2>
+        <h2 id="try-it">Try It Yourself</h2>
 
         <p>If you want to build something similar, TiDB Cloud's Starter gives you enough runway to experiment. The combination of relational tables (for user profiles) and vector search (for style similarity) in one database simplified my architecture significantly.</p>
 
@@ -1062,6 +1148,24 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
         } else {
             initScrollAnimations();
         }
+
+        // Copy Code Button
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.textContent = 'Copy';
+            btn.addEventListener('click', async () => {
+                const code = pre.querySelector('code')?.textContent || pre.textContent;
+                await navigator.clipboard.writeText(code);
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+            pre.appendChild(btn);
+        });
     </script>
 </body>
 </html>
