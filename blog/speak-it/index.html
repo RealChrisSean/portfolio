@@ -876,6 +876,15 @@
             font-family: var(--font-code);
         }
 
+        /* TTS Highlight */
+        .tts-highlight {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: -2px -4px;
+            transition: background 0.3s ease;
+        }
+
         /* Before/After Demo Box */
         .demo-box {
             background: var(--card-bg);
@@ -1536,29 +1545,73 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
         let audioPlayer = null;
         let isPlaying = false;
         let isLoading = false;
+        let paragraphs = [];
+        let paragraphTimings = [];
+
+        // Pre-cached audio file for this blog
+        const PRECACHED_AUDIO = '/audio/speak-it.mp3';
+
+        function getReadableParagraphs() {
+            const article = document.querySelector('article.container');
+            const elements = article.querySelectorAll('h2, h3, p, li');
+            const readable = [];
+
+            elements.forEach(el => {
+                // Skip elements inside excluded sections
+                if (el.closest('.post-header, .toc, .author-section, .footer, .demo-box, .architecture-diagram, pre, code, table, nav, .scroll-indicator, .audio-progress')) {
+                    return;
+                }
+                const text = el.textContent.trim();
+                if (text.length > 10) {
+                    readable.push({ element: el, text });
+                }
+            });
+
+            return readable;
+        }
 
         function getArticleText() {
-            const article = document.querySelector('article.container');
-            // Get text content, excluding code blocks, nav elements, buttons
-            const clone = article.cloneNode(true);
+            paragraphs = getReadableParagraphs();
+            return paragraphs.map(p => p.text).join(' ');
+        }
 
-            // Remove elements we don't want to read
-            clone.querySelectorAll('.post-header, pre, code, .toc, .author-section, .footer, .demo-box, .architecture-diagram, table, button, nav, .scroll-indicator, .audio-progress, .post-tag, .post-meta').forEach(el => el.remove());
+        function calculateParagraphTimings(duration) {
+            const totalChars = paragraphs.reduce((sum, p) => sum + p.text.length, 0);
+            let currentTime = 0;
 
-            let text = clone.textContent || '';
+            paragraphTimings = paragraphs.map(p => {
+                const start = currentTime;
+                const paragraphDuration = (p.text.length / totalChars) * duration;
+                currentTime += paragraphDuration;
+                return { start, end: currentTime, element: p.element };
+            });
+        }
 
-            // Clean up the text
-            text = text
-                .replace(/\s+/g, ' ')           // Collapse whitespace
-                .replace(/#{1,6}\s/g, '')       // Headers
-                .replace(/\*\*([^*]+)\*\*/g, '$1')  // Bold
-                .replace(/\*([^*]+)\*/g, '$1')      // Italic
-                .replace(/`([^`]+)`/g, '$1')        // Inline code
-                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Links
-                .replace(/[-*]\s/g, '')             // List items
-                .trim();
+        function highlightCurrentParagraph(currentTime) {
+            // Remove previous highlights
+            document.querySelectorAll('.tts-highlight').forEach(el => {
+                el.classList.remove('tts-highlight');
+            });
 
-            return text;
+            // Find and highlight current paragraph
+            for (let i = 0; i < paragraphTimings.length; i++) {
+                const timing = paragraphTimings[i];
+                if (currentTime >= timing.start && currentTime < timing.end) {
+                    timing.element.classList.add('tts-highlight');
+
+                    // Auto-scroll to keep highlighted paragraph in view
+                    const rect = timing.element.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+
+                    if (rect.top < 100 || rect.bottom > viewportHeight - 100) {
+                        timing.element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                    break;
+                }
+            }
         }
 
         function formatTime(seconds) {
@@ -1605,6 +1658,10 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
                     btn.classList.remove('playing');
                     btn.disabled = false;
                     progress.classList.remove('visible');
+                    // Clear highlights
+                    document.querySelectorAll('.tts-highlight').forEach(el => {
+                        el.classList.remove('tts-highlight');
+                    });
             }
         }
 
@@ -1625,34 +1682,56 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
                 return;
             }
 
-            // First time - fetch audio
+            // First time - try pre-cached audio first, fall back to API
             isLoading = true;
             updateUI('loading');
 
             try {
-                const text = getArticleText();
+                // Get paragraphs for highlighting
+                getArticleText();
 
-                const response = await fetch('/api/tts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text,
-                        voice: 'kdvGwzzf2ihYtjbv5OWc',
-                        stability: 0.5,
-                        similarity: 0.75
-                    })
-                });
+                // Try pre-cached audio first
+                let audioUrl = PRECACHED_AUDIO;
+                let usedCache = false;
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    console.error('TTS API error:', response.status, errorData);
-                    throw new Error(errorData.error || 'TTS request failed');
+                try {
+                    const cacheResponse = await fetch(PRECACHED_AUDIO, { method: 'HEAD' });
+                    if (cacheResponse.ok) {
+                        usedCache = true;
+                        console.log('Using pre-cached audio');
+                    }
+                } catch (e) {
+                    console.log('Pre-cached audio not available, falling back to API');
                 }
 
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
+                if (!usedCache) {
+                    // Fall back to API
+                    const text = paragraphs.map(p => p.text).join(' ');
+                    const response = await fetch('/api/tts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text,
+                            voice: 'kdvGwzzf2ihYtjbv5OWc',
+                            stability: 0.5,
+                            similarity: 0.75
+                        })
+                    });
 
-                audioPlayer = new Audio(url);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error || 'TTS request failed');
+                    }
+
+                    const blob = await response.blob();
+                    audioUrl = URL.createObjectURL(blob);
+                }
+
+                audioPlayer = new Audio(audioUrl);
+
+                audioPlayer.addEventListener('loadedmetadata', () => {
+                    calculateParagraphTimings(audioPlayer.duration);
+                });
 
                 audioPlayer.addEventListener('timeupdate', () => {
                     const progressFill = document.getElementById('audioProgressFill');
@@ -1660,6 +1739,9 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
                     const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
                     progressFill.style.width = percent + '%';
                     timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+
+                    // Highlight current paragraph
+                    highlightCurrentParagraph(audioPlayer.currentTime);
                 });
 
                 audioPlayer.addEventListener('ended', () => {
