@@ -16,8 +16,8 @@ Run `node generate-sitemap.js` after adding any new page.
 <!-- 3. Open Graph -->
 <meta property="og:title" content="Page Title">
 <meta property="og:description" content="Your description here.">
-<meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
-<meta property="og:url" content="https://realchrissean.com/your-page/">
+<meta property="og:image" content="https://chrisdabatos.com/imgs/chrisdabatos.jpg">
+<meta property="og:url" content="https://chrisdabatos.com/your-page/">
 <meta property="og:type" content="website">
 
 <!-- 4. Twitter Card -->
@@ -25,11 +25,11 @@ Run `node generate-sitemap.js` after adding any new page.
 <meta name="twitter:site" content="@RealChrisSean">
 <meta name="twitter:title" content="Page Title">
 <meta name="twitter:description" content="Your description here.">
-<meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.jpg">
+<meta name="twitter:image" content="https://chrisdabatos.com/imgs/chrisdabatos.jpg">
 
 <!-- 5. Robots & Canonical (REQUIRED) -->
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://realchrissean.com/your-page/">
+<link rel="canonical" href="https://chrisdabatos.com/your-page/">
 
 <!-- 6. Structured Data - Choose appropriate type -->
 ```
@@ -44,11 +44,11 @@ Run `node generate-sitemap.js` after adding any new page.
     "@type": "BlogPosting",
     "headline": "Your Blog Title",
     "description": "Your description",
-    "image": "https://realchrissean.com/imgs/chrisdabatos.jpg",
+    "image": "https://chrisdabatos.com/imgs/chrisdabatos.jpg",
     "author": {
         "@type": "Person",
         "name": "Chris Dabatos",
-        "url": "https://realchrissean.com"
+        "url": "https://chrisdabatos.com"
     },
     "publisher": {
         "@type": "Person",
@@ -58,7 +58,7 @@ Run `node generate-sitemap.js` after adding any new page.
     "dateModified": "YYYY-MM-DD",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://realchrissean.com/blog/your-post/"
+        "@id": "https://chrisdabatos.com/blog/your-post/"
     }
 }
 </script>
@@ -77,7 +77,7 @@ Run `node generate-sitemap.js` after adding any new page.
     "author": {
         "@type": "Person",
         "name": "Chris Dabatos",
-        "url": "https://realchrissean.com"
+        "url": "https://chrisdabatos.com"
     },
     "url": "https://your-demo-url.com"
 }

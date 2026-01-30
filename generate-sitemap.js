@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE_URL = 'https://realchrissean.com';
+const SITE_URL = 'https://chrisdabatos.com';
 const TODAY = new Date().toISOString().split('T')[0];
 
 // Static pages (always included)

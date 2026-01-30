@@ -9,8 +9,8 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Building an AI That Shows You Your Possible Futures">
     <meta property="og:description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes.">
-    <meta property="og:image" content="https://realchrissean.com/imgs/parallellives demo.png">
-    <meta property="og:url" content="https://realchrissean.com/blog/parallel-lives/">
+    <meta property="og:image" content="https://chrisdabatos.com/imgs/parallellives demo.png">
+    <meta property="og:url" content="https://chrisdabatos.com/blog/parallel-lives/">
     <meta property="og:type" content="article">
 
     <!-- Twitter Card Meta Tags -->
@@ -18,10 +18,10 @@
     <meta name="twitter:site" content="@RealChrisSean">
     <meta name="twitter:title" content="Building an AI That Shows You Your Possible Futures">
     <meta name="twitter:description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes.">
-    <meta name="twitter:image" content="https://realchrissean.com/imgs/parallellives demo.png">
+    <meta name="twitter:image" content="https://chrisdabatos.com/imgs/parallellives demo.png">
 
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://realchrissean.com/blog/parallel-lives/">
+    <link rel="canonical" href="https://chrisdabatos.com/blog/parallel-lives/">
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -30,11 +30,11 @@
         "@type": "BlogPosting",
         "headline": "Building an AI That Shows You Your Possible Futures",
         "description": "I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes across six life dimensions.",
-        "image": "https://realchrissean.com/imgs/parallellives demo.png",
+        "image": "https://chrisdabatos.com/imgs/parallellives demo.png",
         "author": {
             "@type": "Person",
             "name": "Chris Dabatos",
-            "url": "https://realchrissean.com"
+            "url": "https://chrisdabatos.com"
         },
         "publisher": {
             "@type": "Person",
@@ -44,7 +44,7 @@
         "dateModified": "2026-01-30",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://realchrissean.com/blog/parallel-lives/"
+            "@id": "https://chrisdabatos.com/blog/parallel-lives/"
         }
     }
     </script>
@@ -622,8 +622,6 @@
             bottom: 100px;
         }
 
-        {{audio-player-styles}}
-
         /* TTS Highlight */
         .tts-highlight {
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
@@ -676,12 +674,6 @@
                 <time datetime="2026-01-30"><i class="far fa-calendar"></i> January 30, 2026</time>
                 <span class="reading-time"><i class="far fa-clock"></i> 12 min read</span>
             </div>
-            <button class="listen-btn-inline" onclick="toggleAudio()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg>
-                Listen to article
-            </button>
         </header>
 
         <!-- Mobile TOC (dropdown) -->
@@ -1084,32 +1076,6 @@ CRITICAL RULES:
         </div>
     </article>
 
-    <!-- Fixed Audio Player -->
-    <div class="audio-player" id="audioPlayer">
-        <button class="audio-play-btn" id="listenBtn" onclick="toggleAudio()">
-            <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                <rect x="6" y="4" width="4" height="16"/>
-                <rect x="14" y="4" width="4" height="16"/>
-            </svg>
-            <svg id="loadingIcon" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
-            </svg>
-        </button>
-        <div class="audio-progress-bar" onclick="seekAudio(event)">
-            <div class="audio-progress-fill" id="audioProgressFill"></div>
-        </div>
-        <span class="audio-time" id="audioTime">0:00 / 0:00</span>
-        <button class="audio-close" onclick="closeAudioPlayer()" aria-label="Close player">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-        </button>
-    </div>
-
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 15l-6-6-6 6"/>
@@ -1143,9 +1109,6 @@ CRITICAL RULES:
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
     <script src="/analytics.js"></script>
-
-    <!-- TTS Audio Player -->
-    {{audio-player-script}}
 
     <!-- Progress Bar & Scroll Animations -->
     <script>

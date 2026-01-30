@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://realchrissean.com/sitemap.xml
+Sitemap: https://chrisdabatos.com/sitemap.xml

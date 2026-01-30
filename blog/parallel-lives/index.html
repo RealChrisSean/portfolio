@@ -9,8 +9,8 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Building an AI That Shows You Your Possible Futures">
     <meta property="og:description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes.">
-    <meta property="og:image" content="https://realchrissean.com/imgs/parallellives demo.png">
-    <meta property="og:url" content="https://realchrissean.com/blog/parallel-lives/">
+    <meta property="og:image" content="https://chrisdabatos.com/imgs/parallellives demo.png">
+    <meta property="og:url" content="https://chrisdabatos.com/blog/parallel-lives/">
     <meta property="og:type" content="article">
 
     <!-- Twitter Card Meta Tags -->
@@ -18,10 +18,10 @@
     <meta name="twitter:site" content="@RealChrisSean">
     <meta name="twitter:title" content="Building an AI That Shows You Your Possible Futures">
     <meta name="twitter:description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes.">
-    <meta name="twitter:image" content="https://realchrissean.com/imgs/parallellives demo.png">
+    <meta name="twitter:image" content="https://chrisdabatos.com/imgs/parallellives demo.png">
 
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://realchrissean.com/blog/parallel-lives/">
+    <link rel="canonical" href="https://chrisdabatos.com/blog/parallel-lives/">
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -30,11 +30,11 @@
         "@type": "BlogPosting",
         "headline": "Building an AI That Shows You Your Possible Futures",
         "description": "I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes across six life dimensions.",
-        "image": "https://realchrissean.com/imgs/parallellives demo.png",
+        "image": "https://chrisdabatos.com/imgs/parallellives demo.png",
         "author": {
             "@type": "Person",
             "name": "Chris Dabatos",
-            "url": "https://realchrissean.com"
+            "url": "https://chrisdabatos.com"
         },
         "publisher": {
             "@type": "Person",
@@ -44,7 +44,7 @@
         "dateModified": "2026-01-30",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://realchrissean.com/blog/parallel-lives/"
+            "@id": "https://chrisdabatos.com/blog/parallel-lives/"
         }
     }
     </script>
@@ -622,161 +622,6 @@
             bottom: 100px;
         }
 
-        /* Audio Player - Fixed at bottom */
-.audio-player {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border-color);
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    z-index: 1000;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-}
-
-.audio-player.visible {
-    transform: translateY(0);
-}
-
-/* Play/Pause button - compact circle */
-.audio-play-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-
-.audio-play-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
-}
-
-.audio-play-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.audio-play-btn svg {
-    width: 20px;
-    height: 20px;
-}
-
-.audio-play-btn .spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Progress bar */
-.audio-progress-bar {
-    flex: 1;
-    height: 8px;
-    background: var(--border-color);
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-    min-width: 100px;
-}
-
-.audio-progress-fill {
-    height: 100%;
-    background: var(--accent-primary);
-    width: 0%;
-    transition: width 0.1s;
-    border-radius: 4px;
-}
-
-/* Time display */
-.audio-time {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    font-family: var(--font-code);
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-/* Close button */
-.audio-close {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
-    flex-shrink: 0;
-}
-
-.audio-close:hover {
-    color: var(--text-main);
-}
-
-.audio-close svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* Inline listen button in header */
-.listen-btn-inline {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: white;
-    border: none;
-    border-radius: 24px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 20px;
-    min-height: 44px;
-}
-
-.listen-btn-inline:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
-}
-
-.listen-btn-inline svg {
-    width: 18px;
-    height: 18px;
-}
-
-/* Mobile adjustments */
-@media (max-width: 480px) {
-    .audio-player {
-        padding: 12px 16px;
-        gap: 12px;
-    }
-
-    .audio-time {
-        font-size: 0.75rem;
-    }
-}
-
-
         /* TTS Highlight */
         .tts-highlight {
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
@@ -963,12 +808,6 @@
                 <time datetime="2026-01-30"><i class="far fa-calendar"></i> January 30, 2026</time>
                 <span class="reading-time"><i class="far fa-clock"></i> 12 min read</span>
             </div>
-            <button class="listen-btn-inline" onclick="toggleAudio()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg>
-                Listen to article
-            </button>
         </header>
 
         <!-- Mobile TOC (dropdown) -->
@@ -1371,32 +1210,6 @@ CRITICAL RULES:
         </div>
     </article>
 
-    <!-- Fixed Audio Player -->
-    <div class="audio-player" id="audioPlayer">
-        <button class="audio-play-btn" id="listenBtn" onclick="toggleAudio()">
-            <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                <rect x="6" y="4" width="4" height="16"/>
-                <rect x="14" y="4" width="4" height="16"/>
-            </svg>
-            <svg id="loadingIcon" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
-            </svg>
-        </button>
-        <div class="audio-progress-bar" onclick="seekAudio(event)">
-            <div class="audio-progress-fill" id="audioProgressFill"></div>
-        </div>
-        <span class="audio-time" id="audioTime">0:00 / 0:00</span>
-        <button class="audio-close" onclick="closeAudioPlayer()" aria-label="Close player">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-        </button>
-    </div>
-
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 15l-6-6-6 6"/>
@@ -1430,286 +1243,6 @@ CRITICAL RULES:
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
     <script src="/analytics.js"></script>
-
-    <!-- TTS Audio Player -->
-    <script>
-// Audio Player
-(function() {
-    let audioPlayer = null;
-    let isPlaying = false;
-    let isLoading = false;
-    let paragraphs = [];
-    let paragraphTimings = [];
-    let wordTimings = [];
-
-    // Auto-detect blog slug from URL
-    function getBlogSlug() {
-        const path = window.location.pathname;
-        const match = path.match(/\/blog\/([^\/]+)/);
-        return match ? match[1] : null;
-    }
-
-    const blogSlug = getBlogSlug();
-    const PRECACHED_AUDIO = blogSlug ? `/audio/${blogSlug}.mp3` : null;
-    const PRECACHED_TIMESTAMPS = blogSlug ? `/audio/${blogSlug}-timestamps.json` : null;
-
-    function getReadableParagraphs() {
-        const article = document.querySelector('article.container');
-        const elements = article.querySelectorAll('h2, h3, p, li');
-        const readable = [];
-
-        elements.forEach(el => {
-            if (el.closest('.post-header, .toc, .author-section, .footer, .demo-box, .architecture-diagram, pre, code, table, nav, .scroll-indicator, .audio-progress, .mobile-toc')) {
-                return;
-            }
-            const text = el.textContent.trim();
-            if (text.length > 10) {
-                readable.push({ element: el, text });
-            }
-        });
-
-        return readable;
-    }
-
-    function getArticleText() {
-        paragraphs = getReadableParagraphs();
-        return paragraphs.map(p => p.text).join(' ');
-    }
-
-    function calculateParagraphTimings(duration) {
-        const totalChars = paragraphs.reduce((sum, p) => sum + p.text.length, 0);
-        let currentTime = 0;
-
-        paragraphTimings = paragraphs.map(p => {
-            const start = currentTime;
-            const paragraphDuration = (p.text.length / totalChars) * duration;
-            currentTime += paragraphDuration;
-            return { start, end: currentTime, element: p.element };
-        });
-    }
-
-    function highlightCurrentParagraph(currentTime) {
-        document.querySelectorAll('.tts-highlight').forEach(el => {
-            el.classList.remove('tts-highlight');
-        });
-
-        if (wordTimings.length > 0) {
-            let currentWordIndex = -1;
-            for (let i = 0; i < wordTimings.length; i++) {
-                if (currentTime >= wordTimings[i].start && currentTime < wordTimings[i].end) {
-                    currentWordIndex = i;
-                    break;
-                }
-                if (currentTime < wordTimings[i].start) {
-                    currentWordIndex = Math.max(0, i - 1);
-                    break;
-                }
-            }
-
-            if (currentWordIndex >= 0) {
-                const startIdx = Math.max(0, currentWordIndex - 2);
-                const endIdx = Math.min(wordTimings.length, currentWordIndex + 3);
-                const phrase = wordTimings.slice(startIdx, endIdx).map(w => w.word).join(' ').toLowerCase();
-
-                for (const p of paragraphs) {
-                    if (p.text.toLowerCase().includes(phrase) ||
-                        phrase.includes(p.text.toLowerCase().substring(0, 30))) {
-                        p.element.classList.add('tts-highlight');
-                        return;
-                    }
-                }
-
-                const currentWord = wordTimings[currentWordIndex].word.toLowerCase();
-                for (const p of paragraphs) {
-                    if (p.text.toLowerCase().includes(currentWord)) {
-                        p.element.classList.add('tts-highlight');
-                        return;
-                    }
-                }
-            }
-        } else {
-            for (let i = 0; i < paragraphTimings.length; i++) {
-                const timing = paragraphTimings[i];
-                if (currentTime >= timing.start && currentTime < timing.end) {
-                    timing.element.classList.add('tts-highlight');
-                    break;
-                }
-            }
-        }
-    }
-
-    function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    function updateUI(state) {
-        const player = document.getElementById('audioPlayer');
-        const btn = document.getElementById('listenBtn');
-        const playIcon = document.getElementById('playIcon');
-        const pauseIcon = document.getElementById('pauseIcon');
-        const loadingIcon = document.getElementById('loadingIcon');
-
-        if (!player || !btn) return;
-
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'none';
-        loadingIcon.style.display = 'none';
-
-        switch (state) {
-            case 'loading':
-                player.classList.add('visible');
-                document.body.classList.add('audio-playing');
-                loadingIcon.style.display = 'block';
-                btn.disabled = true;
-                break;
-            case 'playing':
-                player.classList.add('visible');
-                document.body.classList.add('audio-playing');
-                pauseIcon.style.display = 'block';
-                btn.disabled = false;
-                break;
-            case 'paused':
-                player.classList.add('visible');
-                document.body.classList.add('audio-playing');
-                playIcon.style.display = 'block';
-                btn.disabled = false;
-                break;
-            default:
-                player.classList.remove('visible');
-                document.body.classList.remove('audio-playing');
-                playIcon.style.display = 'block';
-                btn.disabled = false;
-                document.querySelectorAll('.tts-highlight').forEach(el => {
-                    el.classList.remove('tts-highlight');
-                });
-        }
-    }
-
-    window.seekAudio = function(event) {
-        if (!audioPlayer) return;
-        const bar = event.currentTarget;
-        const rect = bar.getBoundingClientRect();
-        const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-        audioPlayer.currentTime = percent * audioPlayer.duration;
-    };
-
-    window.closeAudioPlayer = function() {
-        if (audioPlayer) {
-            audioPlayer.pause();
-            audioPlayer.currentTime = 0;
-            audioPlayer = null;
-        }
-        isPlaying = false;
-        updateUI('idle');
-    };
-
-    window.toggleAudio = async function() {
-        if (isLoading) return;
-
-        if (audioPlayer && isPlaying) {
-            audioPlayer.pause();
-            isPlaying = false;
-            updateUI('paused');
-            return;
-        }
-
-        if (audioPlayer && !isPlaying) {
-            audioPlayer.play();
-            isPlaying = true;
-            updateUI('playing');
-            return;
-        }
-
-        if (!PRECACHED_AUDIO) {
-            alert('Audio not available for this page.');
-            return;
-        }
-
-        isLoading = true;
-        updateUI('loading');
-
-        try {
-            getArticleText();
-
-            let audioUrl = PRECACHED_AUDIO;
-            let usedCache = false;
-
-            try {
-                const [audioCheck, timestampsResponse] = await Promise.all([
-                    fetch(PRECACHED_AUDIO, { method: 'HEAD' }),
-                    fetch(PRECACHED_TIMESTAMPS)
-                ]);
-
-                if (audioCheck.ok && timestampsResponse.ok) {
-                    usedCache = true;
-                    const timestampData = await timestampsResponse.json();
-                    wordTimings = timestampData.words || [];
-                }
-            } catch (e) {
-                console.log('Pre-cached files not available');
-            }
-
-            if (!usedCache) {
-                const text = paragraphs.map(p => p.text).join(' ');
-                const response = await fetch('/api/tts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text,
-                        voice: 'kdvGwzzf2ihYtjbv5OWc',
-                        stability: 0.5,
-                        similarity: 0.75
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || 'TTS request failed');
-                }
-
-                const blob = await response.blob();
-                audioUrl = URL.createObjectURL(blob);
-            }
-
-            audioPlayer = new Audio(audioUrl);
-
-            audioPlayer.addEventListener('loadedmetadata', () => {
-                calculateParagraphTimings(audioPlayer.duration);
-            });
-
-            audioPlayer.addEventListener('timeupdate', () => {
-                const progressFill = document.getElementById('audioProgressFill');
-                const timeDisplay = document.getElementById('audioTime');
-                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                progressFill.style.width = percent + '%';
-                timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
-
-                highlightCurrentParagraph(audioPlayer.currentTime);
-            });
-
-            audioPlayer.addEventListener('ended', () => {
-                isPlaying = false;
-                audioPlayer = null;
-                updateUI('idle');
-            });
-
-            audioPlayer.play();
-            isPlaying = true;
-            isLoading = false;
-            updateUI('playing');
-
-        } catch (error) {
-            console.error('TTS error:', error);
-            isLoading = false;
-            updateUI('idle');
-            alert('Failed to load audio. Please try again.');
-        }
-    };
-})();
-</script>
-
 
     <!-- Progress Bar & Scroll Animations -->
     <script>

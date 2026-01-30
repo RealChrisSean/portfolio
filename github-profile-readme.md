@@ -24,7 +24,7 @@
 ## 🎬 Content
 
 - **YouTube**: [RealChrisSean](https://youtube.com/@RealChrisSean) - AI tools, databases, developer tutorials
-- **Blog**: [realchrissean.com/blogs](https://realchrissean.com/blogs.html) - Technical deep-dives
+- **Blog**: [chrisdabatos.com/blogs](https://chrisdabatos.com/blogs.html) - Technical deep-dives
 - **Speaking**: AllThingsAI 2026, Percona Live, SF Awesome AI Dev Tools
 
 ## 🛠️ Tech I Work With
@@ -39,4 +39,4 @@
 [![X](https://img.shields.io/badge/@RealChrisSean-black?style=flat-square&logo=x&logoColor=white)](https://x.com/RealChrisSean)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/realchrissean)
 [![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white)](https://youtube.com/@RealChrisSean)
-[![Website](https://img.shields.io/badge/Portfolio-000?style=flat-square&logo=vercel&logoColor=white)](https://realchrissean.com)
+[![Website](https://img.shields.io/badge/Portfolio-000?style=flat-square&logo=vercel&logoColor=white)](https://chrisdabatos.com)
