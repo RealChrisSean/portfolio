@@ -45,9 +45,9 @@
     }
     </script>
 
-    <link rel="icon" type="image/webp" href="imgs/cd_logo.webp">
-    <link rel="apple-touch-icon" href="imgs/cd_logo.webp">
-    <link rel="stylesheet" href="css/fontawesome-subset.css">
+    <link rel="icon" type="image/webp" href="/imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="/imgs/cd_logo.webp">
+    <link rel="stylesheet" href="/css/fontawesome-subset.css">
     <style>
         :root {
             --bg-color: #ffffff;
@@ -666,9 +666,9 @@
 
     <nav>
         <div class="nav-inner">
-            <a href="index.html"><img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;"></a>
+            <a href="/"><img src="/imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;"></a>
             <div class="nav-links">
-                <a href="index.html" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem;">Back to Home</a>
+                <a href="/" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem;">Back to Home</a>
                 <div style="display: flex; gap: 1rem; font-size: 1.1rem;">
                     <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
@@ -691,10 +691,10 @@
         <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close menu">
             <i class="fas fa-times"></i>
         </button>
-        <a href="index.html">Home</a>
+        <a href="/">Home</a>
         <a href="/blog/">Blog</a>
-        <a href="projects.html">Projects</a>
-        <a href="all-content.html">Explore My Work</a>
+        <a href="/projects.html">Projects</a>
+        <a href="/all-content.html">Explore My Work</a>
         <div class="mobile-menu-social">
             <a href="https://x.com/RealChrisSean" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
             <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
@@ -712,7 +712,7 @@
         <div class="projects-grid">
             <!-- College Picker - Jan 2026 -->
             <div class="project-card" onclick="openProjectModal('collegePicker')">
-                <img src="imgs/college picker.png" alt="College Picker - AI college comparison tool" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <img src="/imgs/college picker.png" alt="College Picker - AI college comparison tool" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -739,7 +739,7 @@
 
             <!-- Speak It - Jan 2026 -->
             <div class="project-card" onclick="openProjectModal('speakIt')">
-                <img src="imgs/speak-it.png" alt="Speak It - Voice-to-text extension" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <img src="/imgs/speak-it.png" alt="Speak It - Voice-to-text extension" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -757,7 +757,7 @@
                 </div>
                 <p>Chrome extension for voice-to-text that learns your writing style without storing your words. Works anywhere you type.</p>
                 <div class="card-actions">
-                    <a href="speak-it/" onclick="event.stopPropagation();" class="btn-secondary">
+                    <a href="/speak-it/" onclick="event.stopPropagation();" class="btn-secondary">
                         README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
                     </a>
                     <a href="https://app.parallellives.ai/speak-it" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
@@ -768,7 +768,7 @@
 
             <!-- Journal It - Dec 2025 -->
             <div class="project-card" onclick="openProjectModal('journalIt')">
-                <img src="imgs/image12-4.webp" alt="Journal It - AI journaling system" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <img src="/imgs/image12-4.webp" alt="Journal It - AI journaling system" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -787,7 +787,7 @@
                 </div>
                 <p>AI-powered journaling system that synthesizes entries, detects patterns, and writes your life story in third person like a biographer following you around.</p>
                 <div class="card-actions">
-                    <a href="journalit_readme/" onclick="event.stopPropagation();" class="btn-outline">
+                    <a href="/journalit_readme/" onclick="event.stopPropagation();" class="btn-outline">
                         README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
                     </a>
                     <a href="https://app.parallellives.ai/journal?dev=beta031419!" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
@@ -798,7 +798,7 @@
 
             <!-- Parallel Lives - Dec 2025 -->
             <div class="project-card" onclick="openProjectModal('parallelLives')">
-                <img src="imgs/parallellives demo.png" alt="Parallel Lives - AI decision simulator" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <img src="/imgs/parallellives demo.png" alt="Parallel Lives - AI decision simulator" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -817,7 +817,7 @@
                 </div>
                 <p>AI-powered branching decision simulator that models long-term life, career, and financial outcomes using multi-model reasoning.</p>
                 <div class="card-actions">
-                    <a href="parallel-lives/" onclick="event.stopPropagation();" class="btn-outline">
+                    <a href="/parallel-lives/" onclick="event.stopPropagation();" class="btn-outline">
                         README <i class="fas fa-file-code" style="font-size: 0.75rem;"></i>
                     </a>
                     <a href="https://app.parallellives.ai" target="_blank" onclick="event.stopPropagation();" class="btn-primary">
@@ -828,7 +828,7 @@
 
             <!-- OriginAI - Nov 2025 -->
             <div class="project-card" onclick="openProjectModal('originai')">
-                <img src="imgs/detect.png" alt="OriginAI - AI content detector" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <img src="/imgs/detect.png" alt="OriginAI - AI content detector" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -856,7 +856,7 @@
 
             <!-- atlasMemory - Nov 2025 -->
             <div class="project-card" onclick="openProjectModal('atlasMemory')">
-                <img src="imgs/atlasMemory.webp" alt="atlasMemory - AI memory layer" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
+                <img src="/imgs/atlasMemory.webp" alt="atlasMemory - AI memory layer" style="width: 100%; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; height: 160px;" loading="lazy">
                 <div class="card-header">
                     <div class="card-header-left">
                         <i class="fab fa-github" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
@@ -1134,6 +1134,6 @@
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
-    <script src="analytics.js"></script>
+    <script src="/analytics.js"></script>
 </body>
 </html>

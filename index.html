@@ -55,12 +55,12 @@
     }
     </script>
 
-    <link rel="icon" type="image/webp" href="imgs/cd_logo.webp">
-    <link rel="apple-touch-icon" href="imgs/cd_logo.webp">
+    <link rel="icon" type="image/webp" href="/imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="/imgs/cd_logo.webp">
 
     <!-- Preload critical images -->
-    <link rel="preload" as="image" href="imgs/cd_logo.webp">
-    <link rel="preload" as="image" href="imgs/chrisdabatos.webp">
+    <link rel="preload" as="image" href="/imgs/cd_logo.webp">
+    <link rel="preload" as="image" href="/imgs/chrisdabatos.webp">
     <style>
         /* --- VARIABLES & RESET --- */
         html {
@@ -1001,11 +1001,11 @@
             .nav-links > a, .nav-social { display: none !important; }
         }
     </style>
-    <link rel="stylesheet" href="css/fontawesome-subset.css">
-    <script src="content.js"></script>
-    <script src="config.js"></script>
-    <script src="youtube-api.js"></script>
-    <script src="placeholder-checker.js"></script>
+    <link rel="stylesheet" href="/css/fontawesome-subset.css">
+    <script src="/content.js"></script>
+    <script src="/config.js"></script>
+    <script src="/youtube-api.js"></script>
+    <script src="/placeholder-checker.js"></script>
 </head>
 <body>
 
@@ -1013,10 +1013,10 @@
 
     <nav style="width: 100%; padding: 8px 20px; border-bottom: var(--glass-border);">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <img src="imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;">
+            <img src="/imgs/cd_logo.webp" alt="Chris Dabatos Logo" loading="lazy" style="height: 40px; display: block; margin: 0; padding: 0;">
             <div class="nav-links">
                 <a href="/blog/" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Blog</a>
-                <a href="all-content.html" class="nav-explore-link" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
+                <a href="/all-content.html" class="nav-explore-link" style="text-decoration: none; color: var(--text-muted); font-size: 0.9rem; cursor: pointer;">Explore My Work</a>
                 <div class="nav-social" style="display: flex; gap: 1rem; font-size: 1.1rem;">
                     <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub" style="color: var(--text-muted); transition: color 0.2s;"><i class="fab fa-github"></i></a>
@@ -1039,10 +1039,10 @@
         <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close menu">
             <i class="fas fa-times"></i>
         </button>
-        <a href="index.html">Home</a>
+        <a href="/">Home</a>
         <a href="/blog/">Blog</a>
-        <a href="projects.html">Projects</a>
-        <a href="all-content.html">Explore My Work</a>
+        <a href="/projects.html">Projects</a>
+        <a href="/all-content.html">Explore My Work</a>
         <div class="mobile-menu-social">
             <a href="https://x.com/RealChrisSean" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
             <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
@@ -1061,7 +1061,7 @@
             I break down AI tools and databases for developers who actually ship code.
         </p>
         <div class="reveal">
-            <button class="hero-btn" onclick="window.location.href='all-content.html'">Explore My Work</button>
+            <button class="hero-btn" onclick="window.location.href='/all-content.html'">Explore My Work</button>
         </div>
 
         <div class="reveal" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.5rem;">
@@ -1075,7 +1075,7 @@
     <section id="projects" class="container" style="padding: 60px 20px;">
         <div class="section-header reveal">
             <h2>Open Source <span class="highlight">Projects</span></h2>
-            <a href="projects.html" class="view-all-btn">
+            <a href="/projects.html" class="view-all-btn">
                 View All Projects <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -1324,7 +1324,7 @@
     <section id="content" class="container">
         <div class="section-header reveal">
             <h2>Latest <span class="highlight">Creations</span></h2>
-            <a href="all-content.html" class="view-all-btn">
+            <a href="/all-content.html" class="view-all-btn">
                 Explore My Work <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -1838,6 +1838,6 @@
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
-    <script src="analytics.js"></script>
+    <script src="/analytics.js"></script>
 </body>
 </html>

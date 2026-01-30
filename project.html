@@ -23,12 +23,12 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" id="canonical-url" href="https://realchrissean.com/project.html">
 
-    <link rel="icon" type="image/png" href="imgs/cd_logo.png">
-    <link rel="apple-touch-icon" href="imgs/cd_logo.png">
+    <link rel="icon" type="image/png" href="/imgs/cd_logo.png">
+    <link rel="apple-touch-icon" href="/imgs/cd_logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/fontawesome-subset.css">
+    <link rel="stylesheet" href="/css/fontawesome-subset.css">
     <!-- Prism.js for syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
@@ -486,7 +486,7 @@
 </head>
 <body>
     <nav>
-        <a href="projects.html"><i class="fas fa-arrow-left"></i> Back to Projects</a>
+        <a href="/projects.html"><i class="fas fa-arrow-left"></i> Back to Projects</a>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
             <i class="fas fa-moon"></i>
             <i class="fas fa-sun"></i>
@@ -650,7 +650,7 @@
                     <i class="fas fa-exclamation-circle"></i>
                     <h2>Oops!</h2>
                     <p>${message}</p>
-                    <a href="projects.html" class="btn-primary" style="margin-top: 24px;">
+                    <a href="/projects.html" class="btn-primary" style="margin-top: 24px;">
                         <i class="fas fa-arrow-left"></i> Back to Projects
                     </a>
                 </div>
@@ -668,7 +668,7 @@
             }
 
             try {
-                const response = await fetch(`projects/${projectId}.md`);
+                const response = await fetch(`/projects/${projectId}.md`);
 
                 if (!response.ok) {
                     throw new Error('Project not found');
@@ -716,6 +716,6 @@
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
-    <script src="analytics.js"></script>
+    <script src="/analytics.js"></script>
 </body>
 </html>
