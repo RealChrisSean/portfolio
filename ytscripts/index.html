@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT Scripts | Chris Dabatos</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/webp" href="/imgs/cd_logo.webp">
+    <link rel="stylesheet" href="/css/fontawesome-subset.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(239, 68, 68, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(249, 115, 22, 0.05), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: var(--glass-border);
+            margin-bottom: 3rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .theme-toggle i {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+
+        .page-header {
+            margin-bottom: 48px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .highlight {
+            color: #ef4444;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .warning-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding-bottom: 80px;
+        }
+
+        .script-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .script-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .script-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .script-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .script-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .script-meta i {
+            margin-right: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .scripts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <nav>
+            <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+        </nav>
+
+        <header class="page-header">
+            <div class="warning-badge">
+                <i class="fas fa-lock"></i> Private - Direct URL only
+            </div>
+            <h1>YT <span class="highlight">Scripts</span></h1>
+            <p>Full scripts for YouTube videos. Code blocks formatted for screenshots. Not indexed by search engines.</p>
+        </header>
+
+        <div class="scripts-grid">
+            <a href="/ytscripts/write-like-me/" class="script-card">
+                <span class="script-tag"><i class="fab fa-youtube"></i> Script</span>
+                <h3>Write Like Me, Not For Me</h3>
+                <p>Full script for the Speak It Chrome extension video. Privacy-first voice-to-text that learns your writing style without storing your messages.</p>
+                <div class="script-meta">
+                    <span><i class="far fa-clock"></i> ~8-9 min</span>
+                    <span><i class="fas fa-code"></i> 6 code blocks</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</body>
+</html>

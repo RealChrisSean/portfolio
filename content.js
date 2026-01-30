@@ -368,13 +368,6 @@ const portfolioContent = {
 
     blogs: [
         {
-            title: 'Building an AI That Shows You Your Possible Futures',
-            description: 'Not just pros and cons. Branching timelines of what your life might actually look like. I built Parallel Lives to stop copy-pasting my life decisions into chat windows.',
-            date: 'Jan 30, 2026',
-            link: '/blog/parallel-lives/',
-            customThumbnail: '/imgs/parallellives demo.png'
-        },
-        {
             title: 'I Built a System That Writes My Autobiography While I Use It',
             description: 'Most journaling apps are just storage. I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around.',
             date: 'Dec 3, 2025',
