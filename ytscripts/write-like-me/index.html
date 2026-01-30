@@ -541,6 +541,16 @@ Rules:
 
         <p class="script-direction">(Show schema)</p>
 
+<pre><code class="language-sql">CREATE TABLE user_style_profiles (
+  user_id VARCHAR(255) PRIMARY KEY,
+  avg_sentence_length FLOAT,
+  formality_score FLOAT,
+  uses_contractions BOOLEAN,
+  top_phrases JSON,
+  greetings JSON,
+  signoffs JSON
+);</code></pre>
+
         <p>"Standard SQL stuff."</p>
 
         <p><strong>"Two: Vector embeddings."</strong></p>
