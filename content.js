@@ -379,7 +379,7 @@ const portfolioContent = {
             description: 'Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?',
             date: 'Jan 27, 2026',
             link: '/blog/speak-it/',
-            customThumbnail: '/imgs/speak-it-hero.jpeg'
+            customThumbnail: '/imgs/speak-it.png'
         },
         {
             title: 'Building an AI College Advisor That Shows You the Money (Not Just Rankings)',
