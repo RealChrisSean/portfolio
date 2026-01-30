@@ -371,14 +371,14 @@ const portfolioContent = {
             title: 'I Built a System That Writes My Autobiography While I Use It',
             description: 'Most journaling apps are just storage. I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around.',
             date: 'Dec 3, 2025',
-            link: 'blog/ai-journal-system/',
+            link: '/blog/ai-journal-system/',
             customThumbnail: '/imgs/image12-4.webp'
         },
         {
             title: 'Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)',
             description: 'Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?',
             date: 'Jan 27, 2026',
-            link: 'blog/speak-it/',
+            link: '/blog/speak-it/',
             customThumbnail: '/imgs/speak-it-hero.jpeg'
         }
     ],
