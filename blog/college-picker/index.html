@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building an AI College Advisor That Shows You the Money | Chris Dabatos</title>
+    <meta name="description" content="College rankings don't help. I built an AI-powered tool that compares colleges based on actual financial outcomes. Not vibes. Not rankings. Money.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Building an AI College Advisor That Shows You the Money">
+    <meta property="og:description" content="College rankings don't help. I built an AI-powered tool that compares colleges based on actual financial outcomes.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/college picker.png">
+    <meta property="og:url" content="https://realchrissean.com/blog/college-picker/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Building an AI College Advisor That Shows You the Money">
+    <meta name="twitter:description" content="College rankings don't help. I built an AI-powered tool that compares colleges based on actual financial outcomes.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/college picker.png">
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://realchrissean.com/blog/college-picker/">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Building an AI College Advisor That Shows You the Money (Not Just Rankings)",
+        "description": "College rankings don't help. I built an AI-powered tool that compares colleges based on actual financial outcomes.",
+        "image": "https://realchrissean.com/imgs/college picker.png",
+        "author": {
+            "@type": "Person",
+            "name": "Chris Dabatos",
+            "url": "https://realchrissean.com"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Chris Dabatos"
+        },
+        "datePublished": "2026-01-29",
+        "dateModified": "2026-01-29",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://realchrissean.com/blog/college-picker/"
+        }
+    }
+    </script>
+
+    <link rel="icon" type="image/webp" href="/imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="/imgs/cd_logo.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/fontawesome-subset.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 17px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.08), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+        /* Hero Header */
+        .post-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(192, 38, 211, 0.15));
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .post-meta time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reading-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 56px 0 20px;
+            color: var(--text-main);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-vegas));
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 36px 0 12px;
+            color: var(--accent-primary);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        ul, ol {
+            margin: 16px 0 24px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: var(--accent-vegas);
+            text-decoration: underline;
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.88em;
+            border: 1px solid var(--border-color);
+        }
+
+        /* VS Code Dark Theme Style */
+        pre[class*="language-"] {
+            background: #1e1e1e !important;
+            border-radius: 12px;
+            padding: 0;
+            overflow: visible;
+            margin: 28px 0;
+            border: 1px solid #333;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* VS Code title bar */
+        pre[class*="language-"]::before {
+            content: '';
+            display: block;
+            background: #323233;
+            padding: 12px 16px 12px 70px;
+            border-bottom: 1px solid #333;
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Window control dots */
+        pre[class*="language-"]::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca40;
+            z-index: 10;
+        }
+
+        pre[class*="language-"] code {
+            display: block;
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            background: #1e1e1e !important;
+            border: none;
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* Override Prism theme for VS Code colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6a9955 !important;
+        }
+
+        .token.punctuation {
+            color: #d4d4d4 !important;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #b5cea8 !important;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #ce9178 !important;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #d4d4d4 !important;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #569cd6 !important;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #dcdcaa !important;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #d16969 !important;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #d4d4d4 !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code (not in pre) */
+        :not(pre) > code {
+            background: var(--code-bg);
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] :not(pre) > code {
+            background: #2d2d2d;
+            color: #e06c75;
+        }
+
+        /* Callout Box */
+        .callout {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(192, 38, 211, 0.05));
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 32px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 56px 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            background: var(--card-bg);
+        }
+
+        tr:hover {
+            background: var(--card-bg);
+        }
+
+        /* Author Section */
+        .author-section {
+            margin-top: 64px;
+            padding: 32px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .author-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .author-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .author-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .author-links a:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 1.5rem;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 24px 16px 60px; }
+            body { font-size: 16px; }
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-links {
+                justify-content: center;
+            }
+            table {
+                font-size: 0.8rem;
+            }
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+            background-size: 200% 100%;
+            animation: shimmer 2s ease-in-out infinite;
+            z-index: 9999;
+            transition: width 0.1s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 48px;
+            height: 48px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .toc-title {
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            padding: 6px 12px;
+            background: #3d3d3d;
+            border: none;
+            border-radius: 6px;
+            color: #a0a0a0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background: #4d4d4d;
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            color: #fff;
+        }
+
+        /* Collapsible Code */
+        pre.collapsible:not(.expanded) code {
+            max-height: 400px;
+            overflow: hidden;
+        }
+
+        pre.collapsible .code-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(transparent, #1e1e1e);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        pre.collapsible.expanded .code-fade {
+            display: none;
+        }
+
+        .expand-btn {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        pre.expanded .expand-btn {
+            position: static;
+            transform: none;
+            display: block;
+            margin: 12px auto 0;
+        }
+
+        /* Audio Player - Fixed at bottom */
+        .audio-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .audio-player.visible {
+            transform: translateY(0);
+        }
+
+        .listen-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .listen-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        .listen-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .listen-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .listen-btn.playing {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .listen-btn .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Inline listen button in header */
+        .listen-btn-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .listen-btn-inline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        .listen-btn-inline svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Audio progress bar */
+        .audio-progress {
+            display: none;
+            flex: 1;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .audio-progress.visible {
+            display: flex;
+        }
+
+        .audio-progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .audio-progress-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .audio-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-code);
+            min-width: 90px;
+        }
+
+        .audio-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .audio-close:hover {
+            color: var(--text-main);
+        }
+
+        @media (max-width: 640px) {
+            .audio-player {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 12px 16px;
+            }
+            .audio-progress {
+                order: -1;
+                width: 100%;
+            }
+            .listen-btn span {
+                display: none;
+            }
+            .listen-btn {
+                padding: 12px;
+                border-radius: 50%;
+            }
+        }
+
+        /* TTS Highlight */
+        .tts-highlight {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
+            border-radius: 4px;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.08);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Move back-to-top when audio playing */
+        body.audio-playing .back-to-top {
+            bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="/blog/"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <article class="container">
+        <header class="post-header">
+            <a href="https://app.parallellives.ai/collegepicker" target="_blank"><img src="/imgs/college picker.png" alt="College Picker - AI-powered college comparison tool" style="width: 100%; border-radius: 16px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy"></a>
+            <span class="post-tag"><i class="fas fa-graduation-cap"></i> &nbsp;AI + Education</span>
+            <h1>Building an AI College Advisor That Shows You the Money (Not Just Rankings)</h1>
+            <p class="subtitle">College rankings don't help. US News ranks schools by prestige metrics that have almost nothing to do with whether you'll be able to pay rent after graduation. I built a tool that answers the real question: "Is this degree worth the debt?"</p>
+            <div class="post-meta">
+                <time datetime="2026-01-29"><i class="far fa-calendar"></i> January 29, 2026</time>
+                <span class="reading-time"><i class="far fa-clock"></i> 9 min read</span>
+            </div>
+            <button class="listen-btn-inline" onclick="toggleAudio()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Listen to article
+            </button>
+        </header>
+
+        <div class="toc">
+            <div class="toc-title">Contents</div>
+            <ul class="toc-list">
+                <li><a href="#the-goal">The Goal</a></li>
+                <li><a href="#the-stack">The Stack</a></li>
+                <li><a href="#the-architecture">The Architecture</a></li>
+                <li><a href="#why-tidb">Why TiDB</a></li>
+                <li><a href="#the-implementation">The Implementation</a></li>
+                <li><a href="#hybrid-search">Hybrid Search: Text + Vector</a></li>
+                <li><a href="#college-aliases">The College Aliases Problem</a></li>
+                <li><a href="#financial-projections">20-Year Financial Projections</a></li>
+                <li><a href="#career-data">Career Data via Claude</a></li>
+                <li><a href="#decision-tree">Decision Tree Visualization</a></li>
+                <li><a href="#still-iterating">What I'm Still Iterating On</a></li>
+                <li><a href="#the-result">The Result</a></li>
+                <li><a href="#why-i-built-this">Why I Built This</a></li>
+            </ul>
+        </div>
+
+        <h2 id="the-goal">The Goal</h2>
+
+        <p>I know too many people drowning in student debt.</p>
+
+        <p>A friend got her Master's in music from an expensive private school. She's $120k in debt and works at Starbucks. Another guy I know got a business degree from a school that costs $50k a year. He's doing the same job he could've gotten without the degree, except now he has loan payments until he's 40.</p>
+
+        <p>These aren't dumb people. They just didn't have the right information when they were 17 and picking schools. Nobody showed them the math.</p>
+
+        <p>College rankings don't help. US News ranks schools by prestige metrics that have almost nothing to do with whether you'll be able to pay rent after graduation. A school can be #15 in the country and still leave you with $200k in debt and a $45k starting salary.</p>
+
+        <p>Most college comparison tools show you acceptance rates and campus photos. What they don't show you: "If you pick this school with this major, here's your net worth at age 35."</p>
+
+        <p>That's what I built. <strong><a href="https://app.parallellives.ai/collegepicker" target="_blank">College Picker</a></strong> is an AI-powered tool that compares colleges based on actual financial outcomes. Not vibes. Not rankings. Money.</p>
+
+        <p>It answers the question every 17-year-old should be asking: "Is this degree worth the debt?"</p>
+
+        <p>And here's the thing. I'm not saying don't pursue music or art or whatever you're passionate about. I'm saying if you want to study painting, maybe do it as a minor while you major in something that pays the bills. Keep doing it on the side. Don't take on $120k in debt for it.</p>
+
+        <h2 id="the-stack">The Stack</h2>
+
+        <p>You'll notice I'm using multiple LLMs here. There's no single model that does everything well, so I pick the right tool for each job.</p>
+
+        <p>Here's what powers it:</p>
+
+        <p><strong>TiDB Cloud</strong> for the database. Handles both regular SQL queries and vector search in one place. SQL-compatible, scales to zero when idle.</p>
+
+        <p><strong>Claude Opus 4.5</strong> as the conversational advisor. Students ask questions like "Should I go to Stanford or community college first?" and Opus responds with real data, not platitudes. It's much more friendly and conversational than other models, which matters when you're talking to stressed-out 17-year-olds.</p>
+
+        <p><strong>Claude Sonnet 4</strong> for career data lookup. Given a career like "pediatric surgeon," it returns structured salary data, residency years, and grad school costs. I use Sonnet here because speed matters for lookups and it's cheaper than Opus for structured extraction.</p>
+
+        <p><strong>GPT-4o mini</strong> for college analysis verdicts. Compares multiple schools and outputs ratings with reasoning. It's fast and surprisingly good at weighing tradeoffs between schools.</p>
+
+        <p><strong>OpenAI Embeddings</strong> (text-embedding-3-small) for semantic search. Powers queries like "affordable engineering schools near California" without exact keyword matches.</p>
+
+        <h2 id="the-architecture">The Architecture</h2>
+
+        <p>Here's how data flows through the system:</p>
+
+<pre class="language-text"><code>[Student inputs profile: income, state, intended major]
+      ↓
+[Search colleges via hybrid search (text + vector)]
+      ↓
+[Fetch college data: costs, outcomes, earnings]
+      ↓
+[Claude looks up career salary data for intended path]
+      ↓
+[Generate 20-year financial projection per college]
+      ↓
+[Build decision tree visualization]
+      ↓
+[GPT-4o-mini generates verdict: which school is better ROI]
+      ↓
+[Render comparison with break-even ages]</code></pre>
+
+        <p>The key insight: college cost isn't a single number. It varies by family income, in-state vs out-of-state, financial aid, and whether you do 2+2 community college transfer. The system models all of it.</p>
+
+        <h2 id="why-tidb">Why TiDB</h2>
+
+        <p>I almost used Postgres + Pinecone. That's the standard stack for AI apps right now. Relational data in Postgres, vectors in Pinecone. Everyone does it.</p>
+
+        <p>Here's why I didn't:</p>
+
+        <h3>The sync problem nearly killed me.</h3>
+
+        <p>Early prototype: I stored college data in Postgres and embeddings in Pinecone. Every time I updated a college's earnings data (which happens quarterly when College Scorecard releases new numbers), I had to:</p>
+
+        <ol>
+            <li>Update the Postgres row</li>
+            <li>Regenerate the embedding</li>
+            <li>Upsert to Pinecone</li>
+            <li>Hope nothing failed in between</li>
+        </ol>
+
+        <p>It failed constantly. I'd have colleges where the Postgres data said earnings were $85k but the Pinecone embedding was generated from old $72k data. Search results were wrong in ways that were hard to debug.</p>
+
+        <p>The worst part? No way to verify consistency. Postgres and Pinecone don't talk to each other. I wrote a janky reconciliation script that ran nightly. It found mismatches 2-3 times a week.</p>
+
+        <p>With TiDB, that problem disappears.</p>
+
+<pre class="language-sql"><code>UPDATE colleges
+SET earnings_10yr = 85000,
+    embedding = ?
+WHERE id = 12345;</code></pre>
+
+        <p>One transaction. Both update or neither updates. ACID guarantees across relational and vector data. I deleted 200 lines of sync code.</p>
+
+        <h3>The query problem was even worse.</h3>
+
+        <p>My search needed three things: filter by state and earnings, text match for exact names like "UCLA", and semantic search for queries like "good engineering schools." With Postgres + Pinecone, that's three round trips minimum and ugly merge logic in application code.</p>
+
+        <p>With TiDB, it's one query:</p>
+
+<pre class="language-sql"><code>SELECT id, name, state, earnings_10yr,
+       FTS_MATCH_WORD(name, 'UCLA') as text_score,
+       VEC_COSINE_DISTANCE(embedding, ?) as vector_distance
+FROM colleges
+WHERE state = 'CA' AND earnings_10yr > 60000
+ORDER BY
+  CASE WHEN FTS_MATCH_WORD(name, 'UCLA') > 0 THEN 0 ELSE 1 END,
+  vector_distance ASC
+LIMIT 10;</code></pre>
+
+        <p>Relational filter, text search, vector search, custom ranking. One query. One round trip. 47ms.</p>
+
+        <h3>The economics made the decision easy.</h3>
+
+        <p>Pinecone charges by vector count and queries. At 6,000 colleges with 1,536-dim embeddings, I was looking at ~$70/month minimum. Plus Postgres hosting. Plus the engineering time to maintain sync.</p>
+
+        <p>TiDB Starter: $0 when idle, pennies when active. For a side project that gets sporadic traffic, scale-to-zero isn't a nice-to-have. It's the difference between "I can afford to keep this running" and "I have to shut it down."</p>
+
+        <h2 id="the-implementation">The Implementation</h2>
+
+        <h3>The College Schema</h3>
+
+        <p>Here's what I store for each college:</p>
+
+<pre class="language-sql"><code>CREATE TABLE colleges (
+  id INT PRIMARY KEY,
+  name VARCHAR(255),
+  state VARCHAR(2),
+  ownership ENUM('public', 'private_nonprofit', 'private_forprofit'),
+
+  -- Costs (varies by income bracket)
+  tuition_in_state INT,
+  tuition_out_of_state INT,
+  room_and_board INT,
+  net_price_0_30k INT,      -- Family income $0-30k
+  net_price_30_48k INT,     -- Family income $30k-48k
+  net_price_48_75k INT,     -- Family income $48k-75k
+  net_price_75_110k INT,    -- Family income $75k-110k
+  net_price_110k_plus INT,  -- Family income $110k+
+
+  -- Outcomes
+  graduation_rate_4yr FLOAT,
+  graduation_rate_6yr FLOAT,
+  retention_rate FLOAT,
+
+  -- Earnings
+  earnings_6yr INT,
+  earnings_10yr INT,
+
+  -- Debt
+  median_debt INT,
+  monthly_payment INT,
+
+  -- Vector embedding for semantic search
+  embedding VECTOR(1536),
+
+  INDEX idx_state (state),
+  INDEX idx_earnings (earnings_10yr),
+  VECTOR INDEX idx_embedding (embedding) USING HNSW
+);</code></pre>
+
+        <p>That <code>VECTOR(1536)</code> column sits next to <code>tuition_in_state</code>. Same table. Same row. One read gets structured data and embeddings. With Pinecone, that's two queries to two systems.</p>
+
+        <p>Notice the five income brackets for net price. A family making $40k pays a very different amount than one making $150k. Most college tools ignore this completely. They show you sticker price like everyone pays the same. They don't.</p>
+
+        <h2 id="hybrid-search">Hybrid Search: Text + Vector</h2>
+
+        <p>Students search for colleges in messy ways. "UCLA", "University of California Los Angeles", "good CS schools in California" are all valid queries, but they all require different search strategies.</p>
+
+        <p>So I built a hybrid search that combines keyword matching with semantic similarity:</p>
+
+<pre class="language-typescript"><code>export async function POST(request: NextRequest) {
+  const { query, mode = "hybrid", limit = 10 } = await request.json();
+
+  const queryEmbedding = await generateEmbedding(query);
+
+  if (mode === "text" || mode === "hybrid") {
+    const [textResults] = await pool.execute(`
+      SELECT id, name, state, earnings_10yr,
+             FTS_MATCH_WORD(name, ?) as relevance
+      FROM colleges
+      WHERE FTS_MATCH_WORD(name, ?)
+      ORDER BY relevance DESC
+      LIMIT ?
+    `, [query, query, limit]);
+
+    if (mode === "text" || textResults.length >= limit) {
+      return NextResponse.json({ results: textResults, mode: "text" });
+    }
+  }
+
+  if (mode === "vector" || mode === "hybrid") {
+    const [vectorResults] = await pool.execute(`
+      SELECT id, name, state, earnings_10yr,
+             VEC_COSINE_DISTANCE(embedding, ?) as distance
+      FROM colleges
+      WHERE VEC_COSINE_DISTANCE(embedding, ?) < 0.5
+      ORDER BY distance ASC
+      LIMIT ?
+    `, [queryEmbedding, queryEmbedding, limit]);
+
+    const merged = mergeResults(textResults, vectorResults);
+    return NextResponse.json({ results: merged, mode: "hybrid" });
+  }
+}</code></pre>
+
+        <p><code>FTS_MATCH_WORD()</code> and <code>VEC_COSINE_DISTANCE()</code> in the same SELECT. pgvector can't do this. TiDB handles the ranking at the database level.</p>
+
+        <p><code>FTS_MATCH_WORD()</code> handles exact matches. <code>VEC_COSINE_DISTANCE()</code> handles semantic queries. Same database, same query, both search paradigms.</p>
+
+        <h2 id="college-aliases">The College Aliases Problem (What I Tried First)</h2>
+
+        <p>This is where I wasted a full day.</p>
+
+        <p>My first version just did fuzzy search. Type "MIT" and it would run:</p>
+
+<pre class="language-sql"><code>SELECT * FROM colleges WHERE LOWER(name) LIKE '%mit%' LIMIT 5</code></pre>
+
+        <p>It was slow. And it returned garbage. "MIT" matched "Summit University" and "Smith College" before it matched Massachusetts Institute of Technology.</p>
+
+        <p>I tried adding weights based on string position. I tried Levenshtein distance. I tried regex patterns. All of it was fragile and slow.</p>
+
+        <p>The fix was embarrassingly simple: just maintain a lookup table.</p>
+
+<pre class="language-sql"><code>CREATE TABLE college_aliases (
+  alias VARCHAR(255) PRIMARY KEY,
+  college_id INT,
+  INDEX idx_college (college_id)
+);
+
+INSERT INTO college_aliases VALUES
+  ('UCLA', 110662),
+  ('University of California Los Angeles', 110662),
+  ('UC Los Angeles', 110662),
+  ('USC', 123961),
+  ('University of Southern California', 123961),
+  ('MIT', 166683),
+  ('Massachusetts Institute of Technology', 166683);</code></pre>
+
+        <p>Now the chat route extracts potential college names from user messages, looks them up in aliases first, then falls back to fuzzy search only if needed:</p>
+
+<pre class="language-typescript"><code>async function findColleges(terms: string[]): Promise&lt;College[]&gt; {
+  const colleges: College[] = [];
+
+  for (const term of terms) {
+    // Try alias lookup first (fast, exact)
+    const [aliasRows] = await pool.execute(
+      `SELECT c.* FROM colleges c
+       JOIN college_aliases a ON c.id = a.college_id
+       WHERE LOWER(a.alias) = LOWER(?)`,
+      [term]
+    );
+
+    if (aliasRows.length > 0) {
+      colleges.push(aliasRows[0]);
+      continue;
+    }
+
+    // Fall back to fuzzy search
+    const [fuzzyRows] = await pool.execute(
+      `SELECT * FROM colleges
+       WHERE LOWER(name) LIKE ?
+       LIMIT 1`,
+      [`%${term.toLowerCase()}%`]
+    );
+
+    if (fuzzyRows.length > 0) {
+      colleges.push(fuzzyRows[0]);
+    }
+  }
+
+  return colleges;
+}</code></pre>
+
+        <p>I also log misses:</p>
+
+<pre class="language-sql"><code>CREATE TABLE college_lookup_misses (
+  term VARCHAR(255),
+  searched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+        <p>Every week I check the misses table and add new aliases. Way better than trying to guess what abbreviations people use.</p>
+
+        <h2 id="financial-projections">20-Year Financial Projections</h2>
+
+        <p>This is the part that actually matters. Given a college, major, and career path, I project net worth over 20 years.</p>
+
+        <p>The model factors in:</p>
+
+        <ul>
+            <li>College costs (income-adjusted net price)</li>
+            <li>Scholarships</li>
+            <li>Major-specific earnings multipliers (CS: 1.8x, Arts: 0.65x)</li>
+            <li>Career path requirements (med school adds 4 years + $240k debt)</li>
+            <li>Loan repayment (10-year standard plan)</li>
+            <li>Savings rate (15%) and investment returns (7%)</li>
+        </ul>
+
+<pre class="language-typescript"><code>function generateLifePath(
+  college: College,
+  major: string,
+  career: CareerData,
+  familyIncome: number
+): YearlySnapshot[] {
+  const timeline: YearlySnapshot[] = [];
+
+  const yearlyCollegeCost = getNetPrice(college, familyIncome);
+  const totalCollegeCost = yearlyCollegeCost * 4;
+
+  const earningsMultiplier = MAJOR_MULTIPLIERS[major] || 1.0;
+  const baseSalary = college.earnings_10yr * earningsMultiplier;
+
+  const gradSchoolYears = career.grad_school_years || 0;
+  const gradSchoolCost = career.grad_school_cost || 0;
+  const residencyYears = career.residency_years || 0;
+
+  let totalDebt = totalCollegeCost + gradSchoolCost;
+  let netWorth = -totalDebt;
+  let currentSalary = 0;
+
+  for (let year = 0; year <= 20; year++) {
+    const age = 18 + year;
+    let phase = "college";
+
+    if (year < 4) {
+      phase = "college";
+      currentSalary = 0;
+    } else if (year < 4 + gradSchoolYears) {
+      phase = "grad_school";
+      currentSalary = 0;
+    } else if (year < 4 + gradSchoolYears + residencyYears) {
+      phase = "residency";
+      currentSalary = career.residency_salary || 60000;
+    } else {
+      phase = "career";
+      const yearsWorking = year - 4 - gradSchoolYears - residencyYears;
+      currentSalary = baseSalary * Math.pow(1.03, yearsWorking);
+    }
+
+    const loanPayment = phase === "career" ? (totalDebt / 10) : 0;
+    const savings = currentSalary * 0.15;
+    netWorth = netWorth * 1.07 + savings - loanPayment;
+
+    timeline.push({
+      year,
+      age,
+      phase,
+      salary: Math.round(currentSalary),
+      debt: Math.round(Math.max(0, totalDebt)),
+      netWorth: Math.round(netWorth)
+    });
+
+    totalDebt = Math.max(0, totalDebt - loanPayment);
+  }
+
+  return timeline;
+}</code></pre>
+
+        <p>The output looks like:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Age</th>
+                    <th>Phase</th>
+                    <th>Salary</th>
+                    <th>Debt</th>
+                    <th>Net Worth</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>18</td>
+                    <td>College</td>
+                    <td>$0</td>
+                    <td>$0</td>
+                    <td>-$15,000</td>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>Career</td>
+                    <td>$75,000</td>
+                    <td>$60,000</td>
+                    <td>-$48,000</td>
+                </tr>
+                <tr>
+                    <td>28</td>
+                    <td>Career</td>
+                    <td>$89,000</td>
+                    <td>$24,000</td>
+                    <td>+$32,000</td>
+                </tr>
+                <tr>
+                    <td>35</td>
+                    <td>Career</td>
+                    <td>$109,000</td>
+                    <td>$0</td>
+                    <td>+$180,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>For medical paths, it shows the brutal truth: you don't break even until your mid-30s, but the long-term earnings compensate.</p>
+
+        <p>And for that friend with the music Master's? The projection would have shown her exactly what she was signing up for. $120k debt, $35k starting salary, break-even age: never.</p>
+
+        <h2 id="career-data">Career Data via Claude (What I Tried First)</h2>
+
+        <p>My first version hardcoded salary data. I had a massive JSON file with 200+ careers and their salaries.</p>
+
+        <p>It was wrong within six months. Salaries change. New careers emerge. I was constantly patching it.</p>
+
+        <p>Now I ask Claude Sonnet to look it up:</p>
+
+<pre class="language-typescript"><code>const response = await anthropic.messages.create({
+  model: "claude-sonnet-4-20250514",
+  max_tokens: 500,
+  system: `You are a career data assistant. Given a career, return JSON with:
+    - title: normalized job title
+    - median_salary: annual median
+    - salary_25th: 25th percentile
+    - salary_75th: 75th percentile
+    - growth_rate: projected job growth %
+    - education_years: years of education/training required
+    - grad_school_required: boolean
+    - grad_school_years: if required
+    - grad_school_cost: estimated total cost
+    - residency_years: for medical careers
+    - residency_salary: if applicable`,
+  messages: [{ role: "user", content: `Career: ${careerInput}` }]
+});</code></pre>
+
+        <p>This handles edge cases like "pediatric surgeon" (4 years med school + 5 years residency) or "patent attorney" (3 years law school after undergrad) without me maintaining a massive career database.</p>
+
+        <p>Results are cached in-memory. First lookup for "software engineer" hits Claude. Next 100 lookups hit cache.</p>
+
+        <h2 id="decision-tree">Decision Tree Visualization</h2>
+
+        <p>I generate a visual decision tree showing financial outcomes at key life stages:</p>
+
+<pre class="language-typescript"><code>function buildDecisionTree(colleges: College[], lifePaths: LifePath[]): TreeNode[] {
+  const nodes: TreeNode[] = [];
+  const edges: TreeEdge[] = [];
+
+  nodes.push({
+    id: "start",
+    data: { label: "Now (Age 18)", netWorth: 0 },
+    position: { x: 0, y: 0 }
+  });
+
+  for (const [index, college] of colleges.entries()) {
+    const path = lifePaths[index];
+
+    nodes.push({
+      id: `${college.id}-y1`,
+      data: {
+        label: college.name,
+        phase: "Freshman",
+        netWorth: path[1].netWorth
+      }
+    });
+
+    nodes.push({
+      id: `${college.id}-y4`,
+      data: {
+        label: "Graduation",
+        netWorth: path[4].netWorth,
+        debt: path[4].debt
+      }
+    });
+
+    nodes.push({
+      id: `${college.id}-y10`,
+      data: {
+        label: "Year 10",
+        netWorth: path[10].netWorth,
+        salary: path[10].salary,
+        sentiment: path[10].netWorth > 0 ? "positive" : "negative"
+      }
+    });
+
+    edges.push({ source: "start", target: `${college.id}-y1` });
+    edges.push({ source: `${college.id}-y1`, target: `${college.id}-y4` });
+    edges.push({ source: `${college.id}-y4`, target: `${college.id}-y10` });
+  }
+
+  nodes.push({
+    id: "skip-y10",
+    data: {
+      label: "No Degree - Year 10",
+      netWorth: calculateNoDegreeNetWorth(10),
+      salary: 35000
+    }
+  });
+
+  return { nodes, edges };
+}</code></pre>
+
+        <p>The visualization uses ReactFlow with Dagre for automatic layout. Nodes are color-coded: green for positive net worth, red for negative.</p>
+
+        <h2 id="still-iterating">What I'm Still Iterating On</h2>
+
+        <p>The earnings multipliers by major are rough estimates. A CS degree from Stanford and a CS degree from a regional state school don't produce the same outcomes, but right now I apply the same 1.8x multiplier to both.</p>
+
+        <p>I'm working on school-specific multipliers using the College Scorecard's field-of-study data. It's messier than I expected. Lots of missing values and inconsistent categorization across schools.</p>
+
+        <p>The other thing: LLM responses for career data aren't always consistent. Ask about "data scientist" twice and you might get slightly different salary ranges. I'm considering switching to BLS for the base numbers and only using Claude for edge cases and career path logic.</p>
+
+        <h2 id="the-result">The Result</h2>
+
+        <p>What works today: hybrid search across 6,000+ colleges, income-adjusted cost comparisons across five brackets, 20-year financial projections with career-specific paths, decision tree visualizations, AI verdicts comparing schools head-to-head, and 2+2 community college alternative calculations. There's even voice chat if you don't want to type.</p>
+
+        <p>What's next: scholarship database integration, geographic cost-of-living adjustments, school-specific major earnings (not just national averages), and multi-year historical trends.</p>
+
+        <h2 id="why-i-built-this">Why I Built This</h2>
+
+        <p>The main insight: rankings don't matter. ROI matters. A $200k degree that leads to a $50k job is a worse deal than a $40k degree that leads to the same job. The math isn't complicated. The data just isn't presented this way anywhere else.</p>
+
+        <p>If this tool had existed when my friend was picking schools, she might not be $120k in debt right now. That's why I built it.</p>
+
+        <p>The college data comes from the Department of Education's College Scorecard. If you want to build something similar, TiDB Cloud Starter gives you hybrid search out of the box. One database for relational data and vectors. No sync scripts. No multiple connection pools. And it scales to zero when you're not using it.</p>
+
+        <div class="callout">
+            <p>Try it: <a href="https://app.parallellives.ai/collegepicker" target="_blank">College Picker App</a></p>
+        </div>
+
+        <!-- Author Section -->
+        <div class="author-section">
+            <img src="/imgs/chrisdabatos.webp" alt="Chris Dabatos" class="author-avatar" loading="lazy">
+            <div class="author-info">
+                <div class="author-name">Chris Dabatos</div>
+                <div class="author-title">Developer Advocate building AI-powered apps</div>
+                <div class="author-links">
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@RealChrisSean" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-social">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2026 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </footer>
+    </article>
+
+    <!-- Audio Player -->
+    <div class="audio-player" id="audioPlayer">
+        <button class="listen-btn" id="listenBtn" onclick="toggleAudio()">
+            <svg class="play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <svg class="pause-icon" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+            <svg class="spinner" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"/>
+            </svg>
+            <span id="listenText">Play</span>
+        </button>
+        <div class="audio-progress" id="audioProgress">
+            <div class="audio-progress-bar" onclick="seekAudio(event)">
+                <div class="audio-progress-fill" id="audioProgressFill"></div>
+            </div>
+            <span class="audio-time" id="audioTime">0:00 / 0:00</span>
+        </div>
+        <button class="audio-close" onclick="closeAudioPlayer()" aria-label="Close player">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Prism.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+    <!-- TTS Audio Player -->
+    <script>
+        let audioPlayer = null;
+        let isPlaying = false;
+        let isLoading = false;
+        let paragraphs = [];
+        let paragraphTimings = [];
+
+        // Pre-cached files for this blog
+        const PRECACHED_AUDIO = '/audio/college-picker.mp3';
+        const PRECACHED_TIMESTAMPS = '/audio/college-picker-timestamps.json';
+        let wordTimings = [];
+
+        function getReadableParagraphs() {
+            const article = document.querySelector('article.container');
+            const elements = article.querySelectorAll('h2, h3, p, li');
+            const readable = [];
+
+            elements.forEach(el => {
+                if (el.closest('.post-header, .toc, .author-section, .footer, .callout, pre, code, table, nav, .scroll-indicator, .audio-progress')) {
+                    return;
+                }
+                const text = el.textContent.trim();
+                if (text.length > 10) {
+                    readable.push({ element: el, text });
+                }
+            });
+
+            return readable;
+        }
+
+        function getArticleText() {
+            paragraphs = getReadableParagraphs();
+            return paragraphs.map(p => p.text).join(' ');
+        }
+
+        function calculateParagraphTimings(duration) {
+            const totalChars = paragraphs.reduce((sum, p) => sum + p.text.length, 0);
+            let currentTime = 0;
+
+            paragraphTimings = paragraphs.map(p => {
+                const start = currentTime;
+                const paragraphDuration = (p.text.length / totalChars) * duration;
+                currentTime += paragraphDuration;
+                return { start, end: currentTime, element: p.element };
+            });
+        }
+
+        function highlightCurrentParagraph(currentTime) {
+            document.querySelectorAll('.tts-highlight').forEach(el => {
+                el.classList.remove('tts-highlight');
+            });
+
+            // Use word-level timestamps if available
+            if (wordTimings.length > 0) {
+                let currentWordIndex = -1;
+                for (let i = 0; i < wordTimings.length; i++) {
+                    if (currentTime >= wordTimings[i].start && currentTime < wordTimings[i].end) {
+                        currentWordIndex = i;
+                        break;
+                    }
+                    if (currentTime < wordTimings[i].start) {
+                        currentWordIndex = Math.max(0, i - 1);
+                        break;
+                    }
+                }
+
+                if (currentWordIndex >= 0) {
+                    const startIdx = Math.max(0, currentWordIndex - 2);
+                    const endIdx = Math.min(wordTimings.length, currentWordIndex + 3);
+                    const phrase = wordTimings.slice(startIdx, endIdx).map(w => w.word).join(' ').toLowerCase();
+
+                    for (const p of paragraphs) {
+                        if (p.text.toLowerCase().includes(phrase) ||
+                            phrase.includes(p.text.toLowerCase().substring(0, 30))) {
+                            p.element.classList.add('tts-highlight');
+                            return;
+                        }
+                    }
+
+                    const currentWord = wordTimings[currentWordIndex].word.toLowerCase();
+                    for (const p of paragraphs) {
+                        if (p.text.toLowerCase().includes(currentWord)) {
+                            p.element.classList.add('tts-highlight');
+                            return;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < paragraphTimings.length; i++) {
+                    const timing = paragraphTimings[i];
+                    if (currentTime >= timing.start && currentTime < timing.end) {
+                        timing.element.classList.add('tts-highlight');
+                        break;
+                    }
+                }
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateUI(state) {
+            const player = document.getElementById('audioPlayer');
+            const btn = document.getElementById('listenBtn');
+            const playIcon = btn.querySelector('.play-icon');
+            const pauseIcon = btn.querySelector('.pause-icon');
+            const spinner = btn.querySelector('.spinner');
+            const listenText = document.getElementById('listenText');
+            const progress = document.getElementById('audioProgress');
+
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'none';
+            spinner.style.display = 'none';
+
+            switch(state) {
+                case 'loading':
+                    spinner.style.display = 'block';
+                    listenText.textContent = 'Loading...';
+                    btn.disabled = true;
+                    player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
+                    break;
+                case 'playing':
+                    pauseIcon.style.display = 'block';
+                    listenText.textContent = 'Pause';
+                    btn.classList.add('playing');
+                    btn.disabled = false;
+                    progress.classList.add('visible');
+                    break;
+                case 'paused':
+                    playIcon.style.display = 'block';
+                    listenText.textContent = 'Play';
+                    btn.classList.remove('playing');
+                    btn.disabled = false;
+                    break;
+                default:
+                    player.classList.remove('visible');
+                    document.body.classList.remove('audio-playing');
+                    playIcon.style.display = 'block';
+                    listenText.textContent = 'Play';
+                    btn.classList.remove('playing');
+                    btn.disabled = false;
+                    document.querySelectorAll('.tts-highlight').forEach(el => {
+                        el.classList.remove('tts-highlight');
+                    });
+            }
+        }
+
+        function seekAudio(event) {
+            if (!audioPlayer) return;
+            const bar = event.currentTarget;
+            const rect = bar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        }
+
+        function closeAudioPlayer() {
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                audioPlayer = null;
+            }
+            isPlaying = false;
+            updateUI('idle');
+        }
+
+        async function toggleAudio() {
+            if (isLoading) return;
+
+            if (audioPlayer && isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                updateUI('paused');
+                return;
+            }
+
+            if (audioPlayer && !isPlaying) {
+                audioPlayer.play();
+                isPlaying = true;
+                updateUI('playing');
+                return;
+            }
+
+            // First time - load pre-cached audio
+            isLoading = true;
+            updateUI('loading');
+
+            try {
+                getArticleText();
+
+                // Load timestamps
+                try {
+                    const tsResponse = await fetch(PRECACHED_TIMESTAMPS);
+                    if (tsResponse.ok) {
+                        const tsData = await tsResponse.json();
+                        wordTimings = tsData.words || [];
+                    }
+                } catch (e) {
+                    console.log('No timestamps available, using fallback');
+                }
+
+                audioPlayer = new Audio(PRECACHED_AUDIO);
+
+                audioPlayer.addEventListener('loadedmetadata', () => {
+                    calculateParagraphTimings(audioPlayer.duration);
+                });
+
+                audioPlayer.addEventListener('timeupdate', () => {
+                    const progressFill = document.getElementById('audioProgressFill');
+                    const timeDisplay = document.getElementById('audioTime');
+                    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                    timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+                    highlightCurrentParagraph(audioPlayer.currentTime);
+                });
+
+                audioPlayer.addEventListener('ended', () => {
+                    isPlaying = false;
+                    audioPlayer = null;
+                    updateUI('idle');
+                });
+
+                audioPlayer.addEventListener('canplaythrough', () => {
+                    if (isLoading) {
+                        audioPlayer.play();
+                        isPlaying = true;
+                        isLoading = false;
+                        updateUI('playing');
+                    }
+                }, { once: true });
+
+                audioPlayer.addEventListener('error', () => {
+                    console.error('Audio load error');
+                    isLoading = false;
+                    updateUI('idle');
+                    alert('Failed to load audio. Please try again.');
+                });
+
+                audioPlayer.load();
+
+            } catch (error) {
+                console.error('TTS error:', error);
+                isLoading = false;
+                updateUI('idle');
+                alert('Failed to load audio. Please try again.');
+            }
+        }
+    </script>
+
+    <script>
+        // Theme handling
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <!-- Progress Bar & Scroll Animations -->
+    <script>
+        // Reading Progress Bar
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        window.addEventListener('scroll', updateProgressBar);
+        updateProgressBar();
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            const sections = document.querySelectorAll('h2, .callout, pre, .author-section, p, ul, ol, table');
+            sections.forEach(el => {
+                if (!el.closest('nav') && !el.closest('.hero')) {
+                    el.classList.add('fade-up');
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollAnimations);
+        } else {
+            initScrollAnimations();
+        }
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Copy Code Button & Collapsible Code
+        document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
+            // Copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = 'Copy';
+            copyBtn.addEventListener('click', async () => {
+                const code = pre.querySelector('code')?.textContent || pre.textContent;
+                await navigator.clipboard.writeText(code);
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+            pre.appendChild(copyBtn);
+
+            // Collapsible for tall code blocks
+            const codeEl = pre.querySelector('code');
+            if (codeEl) {
+                const lineCount = (codeEl.textContent.match(/\n/g) || []).length + 1;
+                if (lineCount > 15) {
+                    pre.classList.add('collapsible');
+
+                    // Add fade gradient overlay
+                    const fadeEl = document.createElement('div');
+                    fadeEl.className = 'code-fade';
+                    pre.appendChild(fadeEl);
+
+                    const expandBtn = document.createElement('button');
+                    expandBtn.className = 'expand-btn';
+                    expandBtn.textContent = 'Show more';
+                    expandBtn.addEventListener('click', () => {
+                        if (pre.classList.contains('expanded')) {
+                            pre.classList.remove('expanded');
+                            expandBtn.textContent = 'Show more';
+                        } else {
+                            pre.classList.add('expanded');
+                            expandBtn.textContent = 'Show less';
+                        }
+                    });
+                    pre.appendChild(expandBtn);
+                }
+            }
+        });
+    </script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

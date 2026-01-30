@@ -26,6 +26,12 @@ const BLOGS = [
         htmlPath: 'blog/ai-journal-system/index.html',
         audioPath: 'audio/ai-journal-system.mp3',
         timestampsPath: 'audio/ai-journal-system-timestamps.json'
+    },
+    {
+        slug: 'college-picker',
+        htmlPath: 'blog/college-picker/index.html',
+        audioPath: 'audio/college-picker.mp3',
+        timestampsPath: 'audio/college-picker-timestamps.json'
     }
 ];
 
@@ -95,6 +101,9 @@ function extractTextFromHTML(html) {
     content = removeNestedElement(content, '<table');
     content = removeNestedElement(content, '<button');
     content = removeNestedElement(content, '<nav');
+
+    // Remove any remaining inline code tags (backup for inline <code>)
+    content = content.replace(/<code[^>]*>[\s\S]*?<\/code>/gi, ' ');
 
     // Strip remaining HTML tags
     content = content.replace(/<[^>]*>/g, ' ');
@@ -274,16 +283,30 @@ async function processBlog(blog, apiKey) {
 
 async function main() {
     const apiKey = process.env.ELEVENLABS_API_KEY;
+    const targetSlug = process.argv[2]; // Optional: specific blog slug
 
     if (!apiKey) {
         console.error('Error: ELEVENLABS_API_KEY environment variable is required');
-        console.error('Run: ELEVENLABS_API_KEY=your_key node scripts/precache-tts.js');
+        console.error('Run: ELEVENLABS_API_KEY=your_key node scripts/precache-tts.js [blog-slug]');
+        console.error('Example: ELEVENLABS_API_KEY=your_key node scripts/precache-tts.js college-picker');
         process.exit(1);
     }
 
-    console.log('Pre-caching TTS audio with timestamps for blogs...');
+    const blogsToProcess = targetSlug
+        ? BLOGS.filter(b => b.slug === targetSlug)
+        : BLOGS;
 
-    for (const blog of BLOGS) {
+    if (targetSlug && blogsToProcess.length === 0) {
+        console.error(`Error: No blog found with slug "${targetSlug}"`);
+        console.error('Available slugs:', BLOGS.map(b => b.slug).join(', '));
+        process.exit(1);
+    }
+
+    console.log(targetSlug
+        ? `Pre-caching TTS for: ${targetSlug}`
+        : 'Pre-caching TTS audio with timestamps for all blogs...');
+
+    for (const blog of blogsToProcess) {
         try {
             await processBlog(blog, apiKey);
         } catch (error) {

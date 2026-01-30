@@ -58,6 +58,8 @@
 .fa-brain::before { content: "\f5dc"; }
 .fa-bars::before { content: "\f0c9"; }
 .fa-times::before { content: "\f00d"; }
+.fa-arrow-up::before { content: "\f062"; }
+.fa-graduation-cap::before { content: "\f19d"; }
 
 /* Regular icons (far) */
 .fa-calendar::before { content: "\f133"; }

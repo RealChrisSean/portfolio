@@ -380,6 +380,13 @@ const portfolioContent = {
             date: 'Jan 27, 2026',
             link: '/blog/speak-it/',
             customThumbnail: '/imgs/speak-it-hero.jpeg'
+        },
+        {
+            title: 'Building an AI College Advisor That Shows You the Money (Not Just Rankings)',
+            description: 'College rankings don\'t help. I built an AI-powered tool that compares colleges based on actual financial outcomes. Not vibes. Not rankings. Money.',
+            date: 'Jan 29, 2026',
+            link: '/blog/college-picker/',
+            customThumbnail: '/imgs/college picker.png'
         }
     ],
 
