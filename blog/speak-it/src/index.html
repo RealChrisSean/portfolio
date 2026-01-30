@@ -3,34 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I Built a System That Writes My Autobiography While I Use It | Chris Dabatos</title>
-    <meta name="description" content="Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person - like a biographer following me around.">
+    <title>Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words) | Chris Dabatos</title>
+    <meta name="description" content="Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="I Built a System That Writes My Autobiography While I Use It">
-    <meta property="og:description" content="Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person.">
-    <meta property="og:image" content="https://realchrissean.com/imgs/chrisdabatos.webp">
-    <meta property="og:url" content="https://realchrissean.com/blog/ai-journal-system/">
+    <meta property="og:title" content="Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)">
+    <meta property="og:description" content="Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?">
+    <meta property="og:image" content="https://realchrissean.com/imgs/speak-it-hero.jpeg">
+    <meta property="og:url" content="https://realchrissean.com/blog/speak-it/">
     <meta property="og:type" content="article">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@RealChrisSean">
-    <meta name="twitter:title" content="I Built a System That Writes My Autobiography While I Use It">
-    <meta name="twitter:description" content="Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person.">
-    <meta name="twitter:image" content="https://realchrissean.com/imgs/chrisdabatos.webp">
+    <meta name="twitter:title" content="Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)">
+    <meta name="twitter:description" content="Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/speak-it-hero.jpeg">
 
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://realchrissean.com/blog/ai-journal-system/">
+    <link rel="canonical" href="https://realchrissean.com/blog/speak-it/">
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
-        "headline": "I Built a System That Writes My Autobiography While I Use It",
-        "description": "Most journaling apps are just storage. I built a system that watches my entries, finds patterns, and writes my life story in third person.",
-        "image": "https://realchrissean.com/imgs/chrisdabatos.webp",
+        "headline": "Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)",
+        "description": "Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?",
+        "image": "https://realchrissean.com/imgs/speak-it-hero.jpeg",
         "author": {
             "@type": "Person",
             "name": "Chris Dabatos",
@@ -40,11 +40,11 @@
             "@type": "Person",
             "name": "Chris Dabatos"
         },
-        "datePublished": "2025-12-03",
-        "dateModified": "2025-12-03",
+        "datePublished": "2026-01-27",
+        "dateModified": "2026-01-27",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://realchrissean.com/blog/ai-journal-system/"
+            "@id": "https://realchrissean.com/blog/speak-it/"
         }
     }
     </script>
@@ -412,6 +412,30 @@
             font-style: italic;
         }
 
+        /* Data table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--card-bg);
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        tr:hover {
+            background: var(--card-bg);
+        }
+
         hr {
             border: none;
             height: 1px;
@@ -508,6 +532,20 @@
             transform: translateY(-3px);
         }
 
+        /* Architecture diagram */
+        .architecture-diagram {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
         @media (max-width: 640px) {
             h1 { font-size: 2rem; }
             h2 { font-size: 1.4rem; }
@@ -553,6 +591,7 @@
             transform: translateY(0);
         }
 
+        /* Stagger animation delays for children */
         .fade-up:nth-child(1) { transition-delay: 0s; }
         .fade-up:nth-child(2) { transition-delay: 0.1s; }
         .fade-up:nth-child(3) { transition-delay: 0.2s; }
@@ -562,7 +601,7 @@
         .back-to-top {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
             width: 48px;
             height: 48px;
             background: var(--accent-primary);
@@ -591,63 +630,18 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
-        /* Table of Contents */
-        .toc {
-            position: static !important;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 40px;
+        /* Move back-to-top up when audio player is visible */
+        body.audio-playing .back-to-top {
+            bottom: 90px;
         }
-
-        .toc-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
-        .toc-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            counter-reset: toc-counter;
-            display: grid;
-            grid-template-rows: repeat(5, auto);
-            grid-auto-flow: column;
-            gap: 8px 32px;
-            width: fit-content;
-        }
-
-        .toc-list li {
-            counter-increment: toc-counter;
-        }
-
-        .toc-list li::before {
-            content: counter(toc-counter) ". ";
-            color: var(--accent-primary);
-            font-weight: 600;
-        }
-
-        .toc-list a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        .toc-list a:hover {
-            color: var(--accent-primary);
-        }
-
-        @media (max-width: 600px) {
-            .toc-list {
-                grid-template-columns: 1fr;
+        @media (max-width: 640px) {
+            body.audio-playing .back-to-top {
+                bottom: 120px;
             }
         }
+
+        /* Sidebar TOC */
+        {{sidebar-styles}}
 
         /* Code Block Copy Button */
         pre {
@@ -704,29 +698,6 @@
 
         article a:not(.back-to-top):not(.author-links a):not([style]):hover::after {
             width: 100%;
-        }
-
-        /* Bouncing scroll indicator */
-        .scroll-indicator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin: 32px 0 48px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .scroll-indicator svg {
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(8px); }
-            60% { transform: translateY(4px); }
         }
 
         /* Collapsible code blocks */
@@ -844,6 +815,7 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Inline listen button in header */
         .listen-btn-inline {
             display: inline-flex;
             align-items: center;
@@ -870,6 +842,7 @@
             height: 18px;
         }
 
+        /* Audio progress bar */
         .audio-progress {
             display: none;
             flex: 1;
@@ -943,146 +916,102 @@
         .tts-highlight {
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
             border-radius: 4px;
-            padding: 2px 4px;
-            margin: -2px -4px;
-            transition: background 0.3s ease;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.08);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Desktop Sidebar TOC - Left side */
-.sidebar-toc {
-    position: fixed;
-    left: calc((100vw - 760px) / 2 - 220px);
-    top: 140px;
-    width: 180px;
-    z-index: 50;
-    display: none;
-    /* Override generic nav styles */
-    background: transparent;
-    border: none;
-    padding: 0;
-    backdrop-filter: none;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: flex-start;
-}
+        /* Before/After Demo Box */
+        .demo-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 32px 0;
+            overflow: hidden;
+        }
 
-@media (min-width: 1200px) {
-    .sidebar-toc {
-        display: block;
-    }
-}
+        .demo-box-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-primary);
+        }
 
-.sidebar-toc-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-main);
-    margin-bottom: 12px;
-}
+        .demo-box-header svg {
+            width: 18px;
+            height: 18px;
+        }
 
-.sidebar-toc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+        .demo-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.sidebar-toc-list li {
-    margin: 0;
-}
+        .demo-label.before {
+            color: var(--text-muted);
+        }
 
-.sidebar-toc-list a {
-    display: block;
-    padding: 6px 0 6px 12px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border-left: 2px solid transparent;
-    transition: color 0.15s, border-color 0.15s;
-}
+        .demo-label.after {
+            color: #22c55e;
+        }
 
-.sidebar-toc-list a:hover {
-    color: var(--text-main);
-}
+        .demo-content {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
 
-.sidebar-toc-list a.active {
-    color: var(--accent-primary);
-    border-left-color: var(--accent-primary);
-}
+        [data-theme="dark"] .demo-content {
+            background: #1a1a1a;
+        }
 
-/* Mobile Dropdown TOC */
-.mobile-toc {
-    display: none;
-    margin-bottom: 24px;
-}
+        .demo-content:last-child {
+            margin-bottom: 0;
+        }
 
-@media (max-width: 1199px) {
-    .mobile-toc {
-        display: block;
-    }
-}
+        .demo-content.before-content {
+            color: var(--text-muted);
+            border-left: 3px solid var(--text-muted);
+        }
 
-.mobile-toc-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    width: 100%;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--text-main);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-}
+        .demo-content.after-content {
+            color: var(--text-main);
+            border-left: 3px solid #22c55e;
+        }
 
-.mobile-toc-toggle:hover {
-    background: var(--border-color);
-}
+        .demo-arrow {
+            display: flex;
+            justify-content: center;
+            margin: 16px 0;
+            color: var(--accent-primary);
+        }
 
-.mobile-toc-toggle svg {
-    width: 16px;
-    height: 16px;
-    margin-left: auto;
-    transition: transform 0.2s;
-}
-
-.mobile-toc.open .mobile-toc-toggle svg {
-    transform: rotate(180deg);
-}
-
-.mobile-toc-dropdown {
-    display: none;
-    margin-top: 8px;
-    padding: 8px 0;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-}
-
-.mobile-toc.open .mobile-toc-dropdown {
-    display: block;
-}
-
-.mobile-toc-dropdown a {
-    display: block;
-    padding: 10px 16px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.15s, background 0.15s;
-}
-
-.mobile-toc-dropdown a:hover {
-    color: var(--text-main);
-    background: var(--border-color);
-}
-
-.mobile-toc-dropdown a.active {
-    color: var(--accent-primary);
-}
-
+        .demo-context {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(192, 38, 211, 0.15));
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -1101,33 +1030,29 @@
     <nav class="sidebar-toc">
         <div class="sidebar-toc-title">On this page</div>
         <ul class="sidebar-toc-list">
-            <li><a href="#the-problem">The Problem</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#technical-decisions">Technical Decisions</a></li>
+            <li><a href="#the-goal">The Goal</a></li>
+            <li><a href="#the-stack">The Stack</a></li>
             <li><a href="#the-architecture">The Architecture</a></li>
-            <li><a href="#database-choice">Database Choice</a></li>
-            <li><a href="#voice-customization">Voice Customization</a></li>
-            <li><a href="#bigger-vision">The Bigger Vision</a></li>
-            <li><a href="#what-i-learned">What I Learned</a></li>
+            <li><a href="#the-implementation">The Implementation</a></li>
+            <li><a href="#the-result">The Result</a></li>
             <li><a href="#try-it">Try It</a></li>
         </ul>
     </nav>
 
     <article class="container">
         <header class="post-header">
-            <img src="../../imgs/image12-4.webp" alt="Journal It - AI-powered journaling system that writes your autobiography" style="width: 100%; border-radius: 16px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
-            <span class="post-tag"><i class="fas fa-brain"></i> &nbsp;AI + Personal Data</span>
-            <h1>I Built a System That Writes My Autobiography While I Use It</h1>
-            <p class="subtitle">Most journaling apps are just storage. You write, it saves, you forget. I wanted something that actually does something with what I write.</p>
+            <span class="post-tag"><i class="fas fa-microphone"></i> &nbsp;Voice + Privacy</span>
+            <h1>Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)</h1>
+            <p class="subtitle">Privacy-first style learning with TiDB vector search</p>
             <div class="post-meta">
-                <time datetime="2025-12-03"><i class="far fa-calendar"></i> December 3, 2025</time>
+                <time datetime="2026-01-27"><i class="far fa-calendar"></i> January 27, 2026</time>
                 <span class="reading-time"><i class="far fa-clock"></i> 8 min read</span>
             </div>
             <button class="listen-btn-inline" onclick="toggleAudio()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3"/>
                 </svg>
-                Listen to article
+                <span>Listen to article</span>
             </button>
         </header>
 
@@ -1140,193 +1065,451 @@
                 </svg>
             </button>
             <div class="mobile-toc-dropdown">
-                <a href="#the-problem">The Problem</a>
-                <a href="#how-it-works">How It Works</a>
-                <a href="#technical-decisions">Technical Decisions</a>
+                <a href="#the-goal">The Goal</a>
+                <a href="#the-stack">The Stack</a>
                 <a href="#the-architecture">The Architecture</a>
-                <a href="#database-choice">Database Choice</a>
-                <a href="#voice-customization">Voice Customization</a>
-                <a href="#bigger-vision">The Bigger Vision</a>
-                <a href="#what-i-learned">What I Learned</a>
+                <a href="#the-implementation">The Implementation</a>
+                <a href="#the-result">The Result</a>
                 <a href="#try-it">Try It</a>
             </div>
         </div>
 
-        <p>So I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around. Chapters update automatically. I can read my own life like a book.</p>
+        <h2 id="the-goal">The Goal</h2>
 
-        <h2 id="the-problem">The Problem With Journaling Apps</h2>
+        <p>I talk fast. I'm also on a dozen platforms throughout the day from Gmail, Slack, Twitter, to Notion and the list keeps going. Voice-to-text tools have been around forever, but they all had the same problem: they made everything sound the same.</p>
 
-        <p>I've tried a lot of them. They all have the same issue: they're filing cabinets. You put stuff in, maybe tag it, and then it sits there. The only value you get is if you go back and read it yourself.</p>
+        <p>A Slack message shouldn't read like an email. A tweet shouldn't sound like a JIRA ticket. But every transcription tool I tried would spit out the same robotic output regardless of where I was typing.</p>
 
-        <p>But I don't go back and read it. Nobody does.</p>
+        <p>So I built Speak It. Speak It is a Chrome extension that transcribes your voice anywhere on the web and formats it for the platform you're on. But here's the part I'm most proud of: it learns your writing style over time without ever storing your actual messages.</p>
 
-        <p>What I actually wanted was a system that:</p>
+        <img src="/imgs/speak-it.png" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin: 32px 0; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
 
-        <ul>
-            <li>Synthesizes what I've been thinking about</li>
-            <li>Notices patterns I might miss</li>
-            <li>Writes something I'd actually want to read later</li>
-            <li>Reminds me to revisit it</li>
-        </ul>
+        <p>Most style-learning tools keep a history of everything you've written. That's fine for personal use, but it's a non-starter for enterprise. Legal teams, compliance officers, privacy-conscious users... none of them want a third-party service storing their internal communications.</p>
 
-        <p>So I built that.</p>
+        <p>The question I set out to answer: can you teach an AI how someone writes by storing statistics only? Like only focus on storing their average sentence length, formality level, and even common phrases to get a fingerprint of your style without the content itself.</p>
 
-        <h2 id="how-it-works">How It Works</h2>
+        <p>Turns out you can.</p>
 
-        <p>There are four main pieces.</p>
-
-        <h3>Journal entries</h3>
-
-        <p>I write these manually. Title, content, tags. Nothing fancy. These are the raw material everything else builds on.</p>
-
-        <h3>Reflect chat</h3>
-
-        <p>Every entry has a "Reflect" button. It opens a short conversation with an AI that responds to what I wrote. Not therapy. Not advice. Just acknowledgment and the occasional follow-up question. Responses are 1-2 sentences max. It matches my tone because I configured it to.</p>
-
-        <h3>Life story chapters</h3>
-
-        <p>This is the autobiography part. Every time I add an entry or have a reflection conversation, the system updates a "chapter" of my life story. It's written in third person, like a biography. Short - 2-3 paragraphs, around 150 words. After 7 days of not writing anything, it starts a new chapter.</p>
-
-        <h3>Email digests</h3>
-
-        <p>Weekly, monthly, quarterly, bi-yearly, and yearly. Each one includes a chapter excerpt, patterns it detected, and a link back to read the full story. This is what actually gets me to revisit what I've written.</p>
-
-        <h2 id="technical-decisions">The Technical Decisions</h2>
-
-        <p>I used different AI models for different jobs. This matters more than people think.</p>
-
-        <p><strong>Claude Opus</strong> handles the reflect chat. I needed high-quality conversational responses that feel natural and match my voice. Opus is the best at this.</p>
-
-        <p><strong>Claude Haiku</strong> handles background chapter updates. These run constantly as I add content, so I needed something fast and cheap. Haiku is perfect for continuous synthesis tasks where you don't need the absolute best output, just good-enough-and-fast.</p>
-
-        <p><strong>GPT-4o</strong> generates AI-written journal entries. When I've been exploring decisions in another part of the app, it writes reflections about patterns it noticed. GPT-4o is strong at structured reflective writing.</p>
-
-        <p><strong>GPT-4o-mini</strong> handles metadata - inferring titles and tags. Fast, cheap, good enough.</p>
-
-        <p><strong>text-embedding-3-small</strong> for all embeddings. Semantic search powers the reflect chat (pulling relevant past entries) and chapter generation (finding thematic connections). This model hits the best quality/cost tradeoff for retrieval.</p>
-
-        <div class="callout">
-            <p>The key insight: don't use one model for everything. Match the model to the job.</p>
+        <div class="demo-box">
+            <div class="demo-box-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+                Live Demo
+            </div>
+            <div class="demo-label before">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Raw speech
+            </div>
+            <div class="demo-content before-content">
+                hey john wanted to follow up on the proposal um let me know if you have any questions or if theres anything else you need from me thanks
+            </div>
+            <div class="demo-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+            </div>
+            <div class="demo-label after">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Formatted for email
+            </div>
+            <div class="demo-content after-content">
+                Hey John,<br><br>Wanted to follow up on the proposal. Let me know if you have any questions or if there's anything else you need from me.<br><br>Thanks
+            </div>
         </div>
+
+        <h2 id="the-stack">The Stack</h2>
+
+        <p>Here's what I used and why:</p>
+
+        <p><strong>Chrome Extension</strong> - The app needs to work on any website, not just one platform. A browser extension was the only way to inject a mic button into Gmail, Slack, Notion, Twitter, and everywhere else.</p>
+
+        <p><strong>Web Speech API + Deepgram</strong> - Chrome and Edge support the Web Speech API for free. For browsers that don't (Arc, Safari, Firefox), I fall back to Deepgram's streaming API. This keeps costs low for most users while maintaining broad compatibility.</p>
+
+        <p><strong>TiDB Cloud Starter</strong> - I didn't want to run two databases (one for normal data and one for vectors). TiDB can handle both vectors and business data all in one database. It's also MySQL-compatible, which means I could stick to what I already know. And it scales to zero when idle so I'm not paying for unused capacity.</p>
+
+        <p><strong>Claude Sonnet 4</strong> - I use Claude Sonnet 4 as the formatting engine. It takes raw transcripts and reformats them based on context and style instructions. Sonnet follows constraints well without over-editing (which is extremely important in this context).</p>
+
+        <p><strong>OpenAI Embeddings</strong> - For embeddings, I use text-embedding-3-small with OpenAI. It generates vector representations of writing style samples. These power the similarity matching for style clustering.</p>
 
         <h2 id="the-architecture">The Architecture</h2>
 
-        <p>Everything runs through three API endpoints:</p>
+        <p>Here's how data flows through the system:</p>
 
-        <ul>
-            <li><code>/api/journal</code> - CRUD for entries. Manual or AI-generated.</li>
-            <li><code>/api/reflect</code> - Conversation management. Load, send message, clear.</li>
-            <li><code>/api/journey</code> - Chapter management. List, generate, update.</li>
-        </ul>
+        <div class="architecture-diagram">[User speaks]
+      ↓
+[Deepgram / Web Speech API]
+      ↓
+[Raw transcript]
+      ↓
+[Context detection: Gmail? Slack? Twitter?]
+      ↓
+[Fetch style profile from TiDB]
+      ↓
+[Claude formats transcript using style + context]
+      ↓
+[User accepts or rejects suggestion]
+      ↓
+[Extract stats from accepted text]
+      ↓
+[Update style profile in TiDB]
+      ↓
+[Generate embedding for similarity matching]</div>
 
-        <p>All endpoints are stateless. The AI processing happens as non-blocking async calls so the UI stays responsive. When I create an entry, I see it immediately. The chapter update happens behind the scenes.</p>
+        <p>The key architectural decision was storing stats, not content. Here's what goes into a style profile:</p>
 
-        <p>The database has five tables:</p>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td>avg_sentence_length</td>
+                <td>float</td>
+                <td>14.2</td>
+            </tr>
+            <tr>
+                <td>formality_score</td>
+                <td>float (0-1)</td>
+                <td>0.35</td>
+            </tr>
+            <tr>
+                <td>uses_contractions</td>
+                <td>boolean</td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td>greetings</td>
+                <td>JSON array</td>
+                <td>["Hey", "Hi there"]</td>
+            </tr>
+            <tr>
+                <td>signoffs</td>
+                <td>JSON array</td>
+                <td>["Thanks", "Cheers"]</td>
+            </tr>
+            <tr>
+                <td>top_phrases</td>
+                <td>JSON array</td>
+                <td>["sounds good", "let me know"]</td>
+            </tr>
+        </table>
 
-        <ul>
-            <li><code>journal_entries</code> - the raw entries</li>
-            <li><code>reflection_messages</code> - chat history with embeddings for search</li>
-            <li><code>life_story_chapters</code> - the narrative summaries</li>
-            <li><code>decision_history</code> - decisions I've explored elsewhere in the app</li>
-            <li><code>decision_embeddings</code> - multi-dimensional vectors (financial, emotional, career, health, relationship, overall)</li>
-        </ul>
+        <p>None of this is the actual message. It's a fingerprint of how you write, not what you write.</p>
 
-        <p>The embeddings let me do semantic search across everything. When I reflect on an entry, the system pulls related entries from my history to give the AI context. When it writes chapters, it can find thematic connections across months of content.</p>
+        <div class="callout">
+            <p>Enterprise customers won't touch a tool that stores their internal communications. This constraint shaped every design decision.</p>
+        </div>
 
-        <h2 id="database-choice">The Database Choice</h2>
+        <h2 id="the-implementation">The Implementation</h2>
 
-        <p>I needed a database that could do two things at once:</p>
-        <ol>
-            <li>Store regular data - users, entries, chat history</li>
-            <li>Store and search vector embeddings - semantic search across all my content</li>
-        </ol>
+        <h3>Context Detection</h3>
 
-        <p>Most people solve this with two databases: Postgres for the data, Pinecone or Weaviate for vectors. That means two connections, sync logic, and twice the infrastructure to manage.</p>
+        <p>Different platforms have different norms. LinkedIn tends to be much more formal compared to X. A Slack message shouldn't read like an email. So the first thing I did was figure out where the user would be typing.</p>
 
-        <p>TiDB does both in one place. It's MySQL-compatible (so I use the standard mysql2 driver), but it has a native VECTOR column type and built-in distance functions.</p>
+        <p>The extension matches the current URL against known patterns, then looks for platform-specific DOM selectors to find the active text field:</p>
 
-        <p>Here's what the schema looks like:</p>
-
-        <pre class="language-sql"><code class="language-sql">CREATE TABLE journal_entries (
-  id VARCHAR(36) PRIMARY KEY,
-  session_id VARCHAR(255),
-  title VARCHAR(500),
-  content TEXT,
-  embedding VECTOR(1536),
-  created_at TIMESTAMP
-);</code></pre>
-
-        <p>And here's semantic search:</p>
-
-        <pre class="language-sql"><code class="language-sql">SELECT content, VEC_COSINE_DISTANCE(embedding, ?) as distance
-FROM journal_entries
-WHERE session_id = ?
-ORDER BY distance ASC
-LIMIT 5;</code></pre>
-
-        <p>One query. No separate vector database. No sync issues.</p>
-
-        <p>The <code>VEC_COSINE_DISTANCE</code> function compares two vectors and returns how different they are - 0 is identical, 2 is opposite. I threshold at 0.5 for relevance and order ascending so the most similar entries come first.</p>
-
-        <p>This simplifies everything: one connection, one schema, and foreign keys/transactions just work. Multi-tenancy is a WHERE clause.</p>
-
-        <p>The tradeoff: TiDB's vector search isn't as optimized as purpose-built vector databases at massive scale. If I had 100 million entries, I'd probably need something else. For a personal app with thousands of entries? It's more than enough, and the simplicity is worth it.</p>
-
-        <h2 id="voice-customization">Voice Customization</h2>
-
-        <p>This part was important to me. I didn't want AI responses that sound like a therapist or a corporate chatbot.</p>
-
-        <p>There's a config file (<code>/src/lib/voice-config.ts</code>) where I define my communication preferences:</p>
-
-        <pre class="language-typescript"><code class="language-typescript">export const VOICE_CONFIG = {
-  ENABLED: true,
-  STYLE: `
-    - Confident, approachable, direct
-    - Simple, plain English with short sentences
-    - Use contractions
-    - No flowery intros or conclusions
-    - NEVER use em dashes
-  `,
+        <pre class="language-javascript"><code class="language-javascript">const CONTEXT_PATTERNS = {
+  email: {
+    urls: [/mail\.google\.com/, /outlook\.live\.com/, /outlook\.office\.com/],
+    selectors: [
+      '[aria-label="Message Body"]',
+      '[role="textbox"][aria-multiline="true"]',
+      'div[contenteditable="true"][g_editable="true"]',
+    ],
+  },
+  slack: {
+    urls: [/\.slack\.com/],
+    selectors: [
+      '[data-qa="message_input"]',
+      '.ql-editor',
+      '[contenteditable="true"][data-message-input]',
+    ],
+  },
+  twitter: {
+    urls: [/twitter\.com/, /x\.com/],
+    selectors: [
+      '[data-testid="tweetTextarea_0"]',
+      '[role="textbox"][data-testid]',
+    ],
+  },
+  // ... 20+ contexts total
 };</code></pre>
 
-        <p>This gets injected into the reflect chat prompts. The AI responses actually sound like how I talk.</p>
+        <p>This detection runs before any formatting happens. The detected context determines both how Claude formats the text and what platform-specific instructions it receives.</p>
 
-        <h2 id="bigger-vision">The Bigger Vision</h2>
+        <p>X (formerly Twitter) formatting keeps things brief and removes formal greetings. Email formatting preserves sign-offs and adds paragraph breaks. Slack sits somewhere in between.</p>
 
-        <p>Right now, the Journal is a standalone system. But it's designed to plug into something larger.</p>
+        <div class="demo-box">
+            <div class="demo-box-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                Same input, different platforms
+            </div>
+            <div class="demo-label before">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Raw speech
+            </div>
+            <div class="demo-content before-content">
+                just finished the new feature its ready for review whenever you get a chance
+            </div>
+            <div class="demo-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+            </div>
+            <span class="demo-context">Gmail</span>
+            <div class="demo-content after-content">
+                Hey,<br><br>Just finished the new feature. It's ready for review whenever you get a chance.<br><br>Thanks
+            </div>
+            <span class="demo-context">Slack</span>
+            <div class="demo-content after-content">
+                Just finished the new feature. Ready for review whenever you get a chance
+            </div>
+            <span class="demo-context">X / Twitter</span>
+            <div class="demo-content after-content">
+                Just finished the new feature. Ready for review whenever you get a chance.
+            </div>
+        </div>
 
-        <p>The idea: my reflections should feed back into decision simulations. Here's the loop I'm building toward:</p>
+        <h3>Style Profile Schema</h3>
 
-        <ol>
-            <li>I explore a decision tree - should I take this job, move to this city, whatever</li>
-            <li>I pick a path</li>
-            <li>Later, I log how it actually played out</li>
-            <li>The system updates my profile - patterns, preferences, tendencies</li>
-            <li>My journal reflects on those patterns</li>
-            <li>Next time I face a similar decision, the simulation uses everything it knows about me</li>
-        </ol>
+        <p>The style profile lives in TiDB. Here's the table structure:</p>
 
-        <p>The predictions get more personalized over time. And because it's all transparent and editable, I stay in control.</p>
+        <pre class="language-sql"><code class="language-sql">CREATE TABLE user_style_profiles (
+  user_id VARCHAR(255) PRIMARY KEY,
+  avg_sentence_length FLOAT DEFAULT 12,
+  formality_score FLOAT DEFAULT 0.5,
+  uses_contractions BOOLEAN DEFAULT TRUE,
+  top_phrases JSON,
+  greetings JSON,
+  signoffs JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);</code></pre>
 
-        <p>That's the end state. The Journal is the memory layer that makes it possible.</p>
+        <p>Notice there's no message_content column. We're storing how you write, not what you write.</p>
 
-        <h2 id="what-i-learned">What I Learned</h2>
+        <p>The formality_score ranges from 0 (very casual) to 1 (very formal). This gets calculated from signals like sentence length, punctuation patterns, and word choice. Someone who writes "Hey! Quick question, can u send that over?" scores lower than someone who writes "Good afternoon. I wanted to follow up regarding the materials."</p>
 
-        <p><strong>Model selection is product design.</strong> Picking Claude Opus vs Haiku vs GPT-4o isn't just a technical decision. It directly affects user experience - response quality, latency, cost. You have to think about it as a product tradeoff, not just an engineering one.</p>
+        <p>Fetching a profile is a simple query:</p>
 
-        <p><strong>Background processing is underrated.</strong> The chapter updates don't block the UI. That seems obvious, but a lot of AI products make you wait for everything. Users don't care about your AI running. They care that their action felt instant.</p>
+        <pre class="language-typescript"><code class="language-typescript">async function getUserStyleProfile(userId: string): Promise<StyleProfile | null> {
+  const [rows] = await connection.execute<RowDataPacket[]>(
+    `SELECT avg_sentence_length, formality_score, uses_contractions,
+            top_phrases, greetings, signoffs
+     FROM user_style_profiles WHERE user_id = ?`,
+    [userId]
+  );
 
-        <p><strong>Email digests are engagement infrastructure.</strong> The product only works if I actually come back to it. The digests solve that. They're not spam - they're excerpts of my own life story. I open them.</p>
+  if (rows.length === 0) return null;
 
-        <h2 id="try-it">Try It</h2>
+  const row = rows[0];
+  return {
+    avg_sentence_length: row.avg_sentence_length || 12,
+    formality_score: row.formality_score || 0.5,
+    uses_contractions: row.uses_contractions !== false,
+    top_phrases: row.top_phrases ? JSON.parse(row.top_phrases) : [],
+    greetings: row.greetings ? JSON.parse(row.greetings) : ["Hey"],
+    signoffs: row.signoffs ? JSON.parse(row.signoffs) : ["Thanks"],
+  };
+}</code></pre>
 
-        <p>The system is live. I use it daily. Every week I get an email with a chapter of my life written by an AI that actually knows what I've been thinking about.</p>
+        <p>New users get sensible defaults. The profile evolves as they accept or reject formatting suggestions.</p>
 
-        <p>That's the experience I wanted. Storage apps don't do that.</p>
+        <h3>The Formatting Prompt</h3>
+
+        <p>The style profile turns into prompt instructions. Claude doesn't see historical messages, it sees constraints.</p>
+
+        <pre class="language-typescript"><code class="language-typescript">function buildStylePrompt(profile: StyleProfile | null, context: string): string {
+  if (!profile) {
+    return `Format this transcript for ${context}. Keep it natural and conversational.`;
+  }
+
+  const formality = profile.formality_score > 0.7 ? "formal" :
+                    profile.formality_score < 0.3 ? "casual" : "balanced";
+
+  const contractionNote = profile.uses_contractions
+    ? "Use contractions naturally (don't, won't, can't)."
+    : "Minimize contractions for a more formal tone.";
+
+  const greetingNote = profile.greetings.length > 0
+    ? `Preferred greetings: ${profile.greetings.slice(0, 3).join(", ")}`
+    : "";
+
+  const signoffNote = profile.signoffs.length > 0
+    ? `Preferred sign-offs: ${profile.signoffs.slice(0, 3).join(", ")}`
+    : "";
+
+  return `Format this transcript for ${context}.
+
+User's writing style:
+- Tone: ${formality}
+- Average sentence length: ~${Math.round(profile.avg_sentence_length)} words
+- ${contractionNote}
+${greetingNote ? `- ${greetingNote}` : ""}
+${signoffNote ? `- ${signoffNote}` : ""}
+
+Rules:
+1. ONLY add punctuation and paragraph breaks
+2. Remove filler words: um, uh, like, basically, you know
+3. Keep EVERY other word exactly as they said it
+4. Do NOT rewrite, rephrase, or "clean up" their language`;
+}</code></pre>
+
+        <p>The rules at the bottom are critical. Without them, Claude will "improve" the user's words. But people don't want their voice replaced, they just want it cleaned up. There's a difference.</p>
+
+        <div class="demo-box">
+            <div class="demo-box-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Style-matched output
+            </div>
+            <div class="demo-label before">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Same raw speech
+            </div>
+            <div class="demo-content before-content">
+                can we push the meeting to tomorrow something came up
+            </div>
+            <div class="demo-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <polyline points="19 12 12 19 5 12"/>
+                </svg>
+            </div>
+            <span class="demo-context">Casual user (formality: 0.2)</span>
+            <div class="demo-content after-content">
+                Hey! Can we push the meeting to tomorrow? Something came up
+            </div>
+            <span class="demo-context">Formal user (formality: 0.8)</span>
+            <div class="demo-content after-content">
+                Hello,<br><br>Would it be possible to reschedule our meeting to tomorrow? Something has come up.<br><br>Thank you
+            </div>
+        </div>
+
+        <p>Each context also gets platform-specific instructions:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">function getContextInstructions(context: string): string {
+  switch (context) {
+    case "email":
+      return `Email format:
+- Add punctuation and paragraph breaks
+- Keep their exact words
+- Add sign-off if missing`;
+
+    case "slack":
+      return `Slack format:
+- Keep it brief and casual
+- No formal greetings needed
+- Okay to use shorter sentences`;
+
+    case "twitter":
+      return `Twitter/X format:
+- Add punctuation only
+- Keep their exact words
+- If over 280 characters, don't trim`;
+
+    // ... more contexts
+  }
+}</code></pre>
+
+        <p>The combination of style profile and context instructions gives Claude enough guidance to format appropriately without overstepping.</p>
+
+        <h3>The Learning Loop</h3>
+
+        <p>Here's the part I'm still iterating on.</p>
+
+        <p>When a user accepts or rejects a format suggestion, I want to update their profile. The naive approach was to just overwrite the stats with the new sample.</p>
+
+        <p>But that was wrong.</p>
+
+        <p>If someone has been using the app for months and their profile reflects hundreds of accepted formats, a single new sample shouldn't dramatically shift their stats. New samples need to have less influence as the profile matures.</p>
+
+        <p>The solution is weighted averaging. Each new sample contributes a fraction to the running average, with that fraction decreasing over time:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">function updateStyleProfile(
+  existingProfile: StyleProfile,
+  newStats: TextStats,
+  sampleCount: number
+): StyleProfile {
+  // Weight decreases as sample count increases
+  // First sample: 100% weight. 100th sample: ~1% weight.
+  const weight = 1 / (sampleCount + 1);
+
+  return {
+    avg_sentence_length:
+      existingProfile.avg_sentence_length * (1 - weight) +
+      newStats.avg_sentence_length * weight,
+    formality_score:
+      existingProfile.formality_score * (1 - weight) +
+      calculateFormality(newStats) * weight,
+    // ... other fields
+  };
+}</code></pre>
+
+        <p>For phrases, greetings, and signoffs, I track frequency counts rather than just presence. A greeting you use once shouldn't rank the same as one you use constantly.</p>
+
+        <p>I'm also generating embeddings for each accepted format:</p>
+
+        <pre class="language-typescript"><code class="language-typescript">const embeddingResponse = await openai.embeddings.create({
+  model: "text-embedding-3-small",
+  input: `Sentence length: ${stats.avg_sentence_length}. ` +
+         `Formality: ${stats.formality_score}. ` +
+         `Context: ${context}. ` +
+         `Contractions: ${stats.uses_contractions}`,
+});
+const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
+
+        <p>The idea here is to cluster similar writing styles together. Users who write like you might have formatting preferences you'd also like. But I'll be honest: this piece isn't fully wired up yet. I'm generating the embeddings but not querying them for recommendations.</p>
+
+        <p>That's the next iteration.</p>
+
+        <h2 id="the-result">The Result</h2>
+
+        <p>What works today:</p>
+
+        <ul>
+            <li>Voice-to-text on 20+ platforms (Gmail, Slack, Notion, Twitter, LinkedIn, GitHub, and more)</li>
+            <li>Automatic context detection: no manual switching</li>
+            <li>Style profiles that influence formatting output</li>
+            <li>Privacy-first design: statistics only, no content stored</li>
+        </ul>
+
+        <p>What's next:</p>
+
+        <ul>
+            <li>Vector similarity for style clustering ("users who write like you prefer...")</li>
+            <li>Refined feedback loop for profile updates</li>
+            <li>Multi-language support beyond English</li>
+            <li>Browser support expansion (Firefox add-on)</li>
+        </ul>
+
+        <h2 id="try-it">Try It Yourself</h2>
+
+        <p>If you want to build something similar, TiDB Cloud's Starter gives you enough runway to experiment. The combination of relational tables (for user profiles) and vector search (for style similarity) in one database simplified my architecture significantly.</p>
+
+        <p>The main insight from building this: personalization doesn't require surveillance. You can learn patterns without learning secrets. Statistical fingerprints give you enough signal to customize behavior while keeping actual content out of your database entirely.</p>
+
+        <p>For enterprise use cases where privacy is non-negotiable, this approach opens doors that content-based learning keeps closed.</p>
 
         <p style="margin-top: 32px;">
-            <a href="https://app.parallellives.ai/journal?dev=beta031419!" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 12px 24px; background: var(--accent-primary); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s;">
-                Live Demo <i class="fas fa-external-link-alt" style="font-size: 0.85rem;"></i>
+            <a href="https://github.com/RealChrisSean/Speak-It" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 12px 24px; background: var(--accent-primary); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; margin-right: 12px;">
+                GitHub <i class="fab fa-github" style="font-size: 0.85rem;"></i>
+            </a>
+            <a href="https://app.parallellives.ai/speak-it" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 12px 24px; background: transparent; border: 2px solid var(--accent-primary); color: var(--accent-primary); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s;">
+                Get Speak It <i class="fas fa-external-link-alt" style="font-size: 0.85rem;"></i>
             </a>
         </p>
 
@@ -1353,9 +1536,15 @@ LIMIT 5;</code></pre>
                 <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
                 <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
             </div>
-            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2025 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2026 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
         </div>
     </article>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
 
     <!-- Fixed Audio Player -->
     <div class="audio-player" id="audioPlayer">
@@ -1372,7 +1561,7 @@ LIMIT 5;</code></pre>
             </svg>
             <span id="listenText">Play</span>
         </button>
-        <div class="audio-progress" id="audioProgress">
+        <div class="audio-progress visible" id="audioProgress">
             <div class="audio-progress-bar" onclick="seekAudio(event)">
                 <div class="audio-progress-fill" id="audioProgressFill"></div>
             </div>
@@ -1380,17 +1569,11 @@ LIMIT 5;</code></pre>
         </div>
         <button class="audio-close" onclick="closeAudioPlayer()" aria-label="Close player">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
         </button>
     </div>
-
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 15l-6-6-6 6"/>
-        </svg>
-    </button>
 
     <script>
         function toggleTheme() {
@@ -1414,7 +1597,7 @@ LIMIT 5;</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Custom Analytics -->
@@ -1429,8 +1612,8 @@ LIMIT 5;</code></pre>
         let paragraphTimings = [];
 
         // Pre-cached files for this blog
-        const PRECACHED_AUDIO = '/audio/ai-journal-system.mp3';
-        const PRECACHED_TIMESTAMPS = '/audio/ai-journal-system-timestamps.json';
+        const PRECACHED_AUDIO = '/audio/speak-it.mp3';
+        const PRECACHED_TIMESTAMPS = '/audio/speak-it-timestamps.json';
         let wordTimings = [];
 
         function getReadableParagraphs() {
@@ -1439,7 +1622,8 @@ LIMIT 5;</code></pre>
             const readable = [];
 
             elements.forEach(el => {
-                if (el.closest('.post-header, .toc, .author-section, .footer, .callout, pre, code, table, nav, .scroll-indicator, .audio-progress')) {
+                // Skip elements inside excluded sections
+                if (el.closest('.post-header, .toc, .author-section, .footer, .demo-box, .architecture-diagram, pre, code, table, nav, .scroll-indicator, .audio-progress')) {
                     return;
                 }
                 const text = el.textContent.trim();
@@ -1469,12 +1653,14 @@ LIMIT 5;</code></pre>
         }
 
         function highlightCurrentParagraph(currentTime) {
+            // Remove previous highlights
             document.querySelectorAll('.tts-highlight').forEach(el => {
                 el.classList.remove('tts-highlight');
             });
 
             // Use word-level timestamps if available
             if (wordTimings.length > 0) {
+                // Find current word
                 let currentWordIndex = -1;
                 for (let i = 0; i < wordTimings.length; i++) {
                     if (currentTime >= wordTimings[i].start && currentTime < wordTimings[i].end) {
@@ -1488,10 +1674,12 @@ LIMIT 5;</code></pre>
                 }
 
                 if (currentWordIndex >= 0) {
+                    // Get a phrase of ~5 words around current word for matching
                     const startIdx = Math.max(0, currentWordIndex - 2);
                     const endIdx = Math.min(wordTimings.length, currentWordIndex + 3);
                     const phrase = wordTimings.slice(startIdx, endIdx).map(w => w.word).join(' ').toLowerCase();
 
+                    // Find paragraph containing this phrase
                     for (const p of paragraphs) {
                         if (p.text.toLowerCase().includes(phrase) ||
                             phrase.includes(p.text.toLowerCase().substring(0, 30))) {
@@ -1500,6 +1688,7 @@ LIMIT 5;</code></pre>
                         }
                     }
 
+                    // Fallback: match single word
                     const currentWord = wordTimings[currentWordIndex].word.toLowerCase();
                     for (const p of paragraphs) {
                         if (p.text.toLowerCase().includes(currentWord)) {
@@ -1509,6 +1698,7 @@ LIMIT 5;</code></pre>
                     }
                 }
             } else {
+                // Fallback to estimated timing
                 for (let i = 0; i < paragraphTimings.length; i++) {
                     const timing = paragraphTimings[i];
                     if (currentTime >= timing.start && currentTime < timing.end) {
@@ -1532,7 +1722,6 @@ LIMIT 5;</code></pre>
             const pauseIcon = document.getElementById('pauseIcon');
             const loadingIcon = document.getElementById('loadingIcon');
             const listenText = document.getElementById('listenText');
-            const progress = document.getElementById('audioProgress');
 
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'none';
@@ -1541,33 +1730,34 @@ LIMIT 5;</code></pre>
             switch (state) {
                 case 'loading':
                     player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
                     loadingIcon.style.display = 'block';
                     listenText.textContent = 'Loading...';
                     btn.disabled = true;
                     break;
                 case 'playing':
                     player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
                     pauseIcon.style.display = 'block';
                     listenText.textContent = 'Pause';
                     btn.classList.add('playing');
                     btn.disabled = false;
-                    progress.classList.add('visible');
                     break;
                 case 'paused':
                     player.classList.add('visible');
+                    document.body.classList.add('audio-playing');
                     playIcon.style.display = 'block';
                     listenText.textContent = 'Play';
                     btn.classList.remove('playing');
                     btn.disabled = false;
-                    progress.classList.add('visible');
                     break;
                 default:
                     player.classList.remove('visible');
+                    document.body.classList.remove('audio-playing');
                     playIcon.style.display = 'block';
                     listenText.textContent = 'Play';
                     btn.classList.remove('playing');
                     btn.disabled = false;
-                    progress.classList.remove('visible');
                     document.querySelectorAll('.tts-highlight').forEach(el => {
                         el.classList.remove('tts-highlight');
                     });
@@ -1585,10 +1775,10 @@ LIMIT 5;</code></pre>
         function closeAudioPlayer() {
             if (audioPlayer) {
                 audioPlayer.pause();
+                audioPlayer.currentTime = 0;
                 audioPlayer = null;
             }
             isPlaying = false;
-            isLoading = false;
             updateUI('idle');
         }
 
@@ -1609,12 +1799,15 @@ LIMIT 5;</code></pre>
                 return;
             }
 
+            // First time - try pre-cached audio first, fall back to API
             isLoading = true;
             updateUI('loading');
 
             try {
+                // Get paragraphs for highlighting
                 getArticleText();
 
+                // Try pre-cached audio and timestamps first
                 let audioUrl = PRECACHED_AUDIO;
                 let usedCache = false;
 
@@ -1635,6 +1828,7 @@ LIMIT 5;</code></pre>
                 }
 
                 if (!usedCache) {
+                    // Fall back to API
                     const text = paragraphs.map(p => p.text).join(' ');
                     const response = await fetch('/api/tts', {
                         method: 'POST',
@@ -1668,6 +1862,8 @@ LIMIT 5;</code></pre>
                     const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
                     progressFill.style.width = percent + '%';
                     timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+
+                    // Highlight current paragraph
                     highlightCurrentParagraph(audioPlayer.currentTime);
                 });
 
@@ -1708,6 +1904,7 @@ LIMIT 5;</code></pre>
 
         // Scroll Animations
         function initScrollAnimations() {
+            // Add fade-up class to sections
             const sections = document.querySelectorAll('h2, .highlight-box, pre, .cta-section, .author-section, p, ul, ol');
             sections.forEach(el => {
                 if (!el.closest('nav') && !el.closest('.hero')) {
@@ -1715,6 +1912,7 @@ LIMIT 5;</code></pre>
                 }
             });
 
+            // Intersection Observer for animations
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -1729,6 +1927,7 @@ LIMIT 5;</code></pre>
             document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
         }
 
+        // Run after DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initScrollAnimations);
         } else {
@@ -1791,87 +1990,10 @@ LIMIT 5;</code></pre>
             }
         });
     </script>
+
+    <!-- Sidebar TOC Script -->
     <script>
-// Sidebar TOC functionality
-(function() {
-    const sidebarLinks = document.querySelectorAll('.sidebar-toc-list a');
-    const mobileLinks = document.querySelectorAll('.mobile-toc-dropdown a');
-    const mobileToc = document.querySelector('.mobile-toc');
-    const mobileToggle = document.querySelector('.mobile-toc-toggle');
-    const sections = [];
-
-    // Collect all section targets
-    sidebarLinks.forEach(link => {
-        const id = link.getAttribute('href').slice(1);
-        const section = document.getElementById(id);
-        if (section) {
-            sections.push({ id, element: section, link });
-        }
-    });
-
-    // Mobile dropdown toggle
-    if (mobileToggle && mobileToc) {
-        mobileToggle.addEventListener('click', () => {
-            mobileToc.classList.toggle('open');
-        });
-
-        // Close dropdown when clicking a link
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileToc.classList.remove('open');
-            });
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileToc.contains(e.target)) {
-                mobileToc.classList.remove('open');
-            }
-        });
-    }
-
-    // Highlight current section
-    function updateActiveSection() {
-        let current = null;
-
-        for (const section of sections) {
-            const rect = section.element.getBoundingClientRect();
-            if (rect.top <= 150) {
-                current = section;
-            }
-        }
-
-        // Update desktop sidebar
-        sidebarLinks.forEach(link => link.classList.remove('active'));
-        if (current) {
-            current.link.classList.add('active');
-        }
-
-        // Update mobile dropdown
-        mobileLinks.forEach(link => {
-            link.classList.remove('active');
-            if (current && link.getAttribute('href') === '#' + current.id) {
-                link.classList.add('active');
-            }
-        });
-    }
-
-    // Throttled scroll handler
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            requestAnimationFrame(() => {
-                updateActiveSection();
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-
-    // Initial state
-    updateActiveSection();
-})();
-</script>
-
+        {{sidebar-script}}
+    </script>
 </body>
 </html>

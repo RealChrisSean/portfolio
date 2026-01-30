@@ -640,45 +640,142 @@
             }
         }
 
-        /* Table of Contents */
-        .toc {
-            position: static !important;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 40px;
-        }
+        /* Sidebar TOC */
+        /* Desktop Sidebar TOC - Left side */
+.sidebar-toc {
+    position: fixed;
+    left: calc((100vw - 760px) / 2 - 220px);
+    top: 140px;
+    width: 180px;
+    z-index: 50;
+    display: none;
+    /* Override generic nav styles */
+    background: transparent;
+    border: none;
+    padding: 0;
+    backdrop-filter: none;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+}
 
-        .toc-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
+@media (min-width: 1200px) {
+    .sidebar-toc {
+        display: block;
+    }
+}
 
-        .toc-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+.sidebar-toc-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
 
-        .toc-list li {
-            margin-bottom: 8px;
-        }
+.sidebar-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        .toc-list a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
+.sidebar-toc-list li {
+    margin: 0;
+}
 
-        .toc-list a:hover {
-            color: var(--accent-primary);
-        }
+.sidebar-toc-list a {
+    display: block;
+    padding: 6px 0 6px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-left: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.sidebar-toc-list a:hover {
+    color: var(--text-main);
+}
+
+.sidebar-toc-list a.active {
+    color: var(--accent-primary);
+    border-left-color: var(--accent-primary);
+}
+
+/* Mobile Dropdown TOC */
+.mobile-toc {
+    display: none;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 1199px) {
+    .mobile-toc {
+        display: block;
+    }
+}
+
+.mobile-toc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.mobile-toc-toggle:hover {
+    background: var(--border-color);
+}
+
+.mobile-toc-toggle svg {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+.mobile-toc.open .mobile-toc-toggle svg {
+    transform: rotate(180deg);
+}
+
+.mobile-toc-dropdown {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.mobile-toc.open .mobile-toc-dropdown {
+    display: block;
+}
+
+.mobile-toc-dropdown a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.15s, background 0.15s;
+}
+
+.mobile-toc-dropdown a:hover {
+    color: var(--text-main);
+    background: var(--border-color);
+}
+
+.mobile-toc-dropdown a.active {
+    color: var(--accent-primary);
+}
+
 
         /* Code Block Copy Button */
         pre {
@@ -735,29 +832,6 @@
 
         article a:not(.back-to-top):not(.author-links a):not([style]):hover::after {
             width: 100%;
-        }
-
-        /* Bouncing scroll indicator */
-        .scroll-indicator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin: 32px 0 48px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .scroll-indicator svg {
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(8px); }
-            60% { transform: translateY(4px); }
         }
 
         /* Collapsible code blocks */
@@ -1086,6 +1160,19 @@
         </button>
     </nav>
 
+    <!-- Desktop Sidebar TOC -->
+    <nav class="sidebar-toc">
+        <div class="sidebar-toc-title">On this page</div>
+        <ul class="sidebar-toc-list">
+            <li><a href="#the-goal">The Goal</a></li>
+            <li><a href="#the-stack">The Stack</a></li>
+            <li><a href="#the-architecture">The Architecture</a></li>
+            <li><a href="#the-implementation">The Implementation</a></li>
+            <li><a href="#the-result">The Result</a></li>
+            <li><a href="#try-it">Try It</a></li>
+        </ul>
+    </nav>
+
     <article class="container">
         <header class="post-header">
             <span class="post-tag"><i class="fas fa-microphone"></i> &nbsp;Voice + Privacy</span>
@@ -1103,25 +1190,22 @@
             </button>
         </header>
 
-        <img src="../../imgs/speak-it-hero.jpeg" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
-
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 9l6 6 6-6"/>
-            </svg>
-        </div>
-
-        <div class="toc">
-            <div class="toc-title">Contents</div>
-            <ul class="toc-list">
-                <li><a href="#the-goal">The Goal</a></li>
-                <li><a href="#the-stack">The Stack</a></li>
-                <li><a href="#the-architecture">The Architecture</a></li>
-                <li><a href="#the-implementation">The Implementation</a></li>
-                <li><a href="#the-result">The Result</a></li>
-                <li><a href="#try-it">Try It Yourself</a></li>
-            </ul>
+        <!-- Mobile TOC (dropdown) -->
+        <div class="mobile-toc">
+            <button class="mobile-toc-toggle">
+                On this page
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+            <div class="mobile-toc-dropdown">
+                <a href="#the-goal">The Goal</a>
+                <a href="#the-stack">The Stack</a>
+                <a href="#the-architecture">The Architecture</a>
+                <a href="#the-implementation">The Implementation</a>
+                <a href="#the-result">The Result</a>
+                <a href="#try-it">Try It</a>
+            </div>
         </div>
 
         <h2 id="the-goal">The Goal</h2>
@@ -1131,6 +1215,8 @@
         <p>A Slack message shouldn't read like an email. A tweet shouldn't sound like a JIRA ticket. But every transcription tool I tried would spit out the same robotic output regardless of where I was typing.</p>
 
         <p>So I built Speak It. Speak It is a Chrome extension that transcribes your voice anywhere on the web and formats it for the platform you're on. But here's the part I'm most proud of: it learns your writing style over time without ever storing your actual messages.</p>
+
+        <img src="/imgs/speak-it.png" alt="Speak It - Voice-to-text with privacy-first style learning" style="width: 100%; border-radius: 16px; margin: 32px 0; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
 
         <p>Most style-learning tools keep a history of everything you've written. That's fine for personal use, but it's a non-starter for enterprise. Legal teams, compliance officers, privacy-conscious users... none of them want a third-party service storing their internal communications.</p>
 
@@ -2037,6 +2123,92 @@ const styleEmbedding = embeddingResponse.data[0].embedding;</code></pre>
                 }
             }
         });
+    </script>
+
+    <!-- Sidebar TOC Script -->
+    <script>
+        <script>
+// Sidebar TOC functionality
+(function() {
+    const sidebarLinks = document.querySelectorAll('.sidebar-toc-list a');
+    const mobileLinks = document.querySelectorAll('.mobile-toc-dropdown a');
+    const mobileToc = document.querySelector('.mobile-toc');
+    const mobileToggle = document.querySelector('.mobile-toc-toggle');
+    const sections = [];
+
+    // Collect all section targets
+    sidebarLinks.forEach(link => {
+        const id = link.getAttribute('href').slice(1);
+        const section = document.getElementById(id);
+        if (section) {
+            sections.push({ id, element: section, link });
+        }
+    });
+
+    // Mobile dropdown toggle
+    if (mobileToggle && mobileToc) {
+        mobileToggle.addEventListener('click', () => {
+            mobileToc.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking a link
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToc.classList.remove('open');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileToc.contains(e.target)) {
+                mobileToc.classList.remove('open');
+            }
+        });
+    }
+
+    // Highlight current section
+    function updateActiveSection() {
+        let current = null;
+
+        for (const section of sections) {
+            const rect = section.element.getBoundingClientRect();
+            if (rect.top <= 150) {
+                current = section;
+            }
+        }
+
+        // Update desktop sidebar
+        sidebarLinks.forEach(link => link.classList.remove('active'));
+        if (current) {
+            current.link.classList.add('active');
+        }
+
+        // Update mobile dropdown
+        mobileLinks.forEach(link => {
+            link.classList.remove('active');
+            if (current && link.getAttribute('href') === '#' + current.id) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Throttled scroll handler
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                updateActiveSection();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Initial state
+    updateActiveSection();
+})();
+</script>
+
     </script>
 </body>
 </html>

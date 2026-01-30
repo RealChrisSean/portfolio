@@ -1,0 +1,134 @@
+/* Desktop Sidebar TOC - Left side */
+.sidebar-toc {
+    position: fixed;
+    left: calc((100vw - 760px) / 2 - 220px);
+    top: 140px;
+    width: 180px;
+    z-index: 50;
+    display: none;
+    /* Override generic nav styles */
+    background: transparent;
+    border: none;
+    padding: 0;
+    backdrop-filter: none;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (min-width: 1200px) {
+    .sidebar-toc {
+        display: block;
+    }
+}
+
+.sidebar-toc-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.sidebar-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-toc-list li {
+    margin: 0;
+}
+
+.sidebar-toc-list a {
+    display: block;
+    padding: 6px 0 6px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-left: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.sidebar-toc-list a:hover {
+    color: var(--text-main);
+}
+
+.sidebar-toc-list a.active {
+    color: var(--accent-primary);
+    border-left-color: var(--accent-primary);
+}
+
+/* Mobile Dropdown TOC */
+.mobile-toc {
+    display: none;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 1199px) {
+    .mobile-toc {
+        display: block;
+    }
+}
+
+.mobile-toc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.mobile-toc-toggle:hover {
+    background: var(--border-color);
+}
+
+.mobile-toc-toggle svg {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+.mobile-toc.open .mobile-toc-toggle svg {
+    transform: rotate(180deg);
+}
+
+.mobile-toc-dropdown {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.mobile-toc.open .mobile-toc-dropdown {
+    display: block;
+}
+
+.mobile-toc-dropdown a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.15s, background 0.15s;
+}
+
+.mobile-toc-dropdown a:hover {
+    color: var(--text-main);
+    background: var(--border-color);
+}
+
+.mobile-toc-dropdown a.active {
+    color: var(--accent-primary);
+}
