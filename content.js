@@ -5,7 +5,7 @@ const portfolioContent = {
             description: 'Open-source models are getting scary good. Kimi K2 Thinking from Moonshot AI just beat GPT-5 on Humanity\'s Last Exam, and you can run it on consumer hardware right now.',
             date: 'Nov 28, 2025',
             youtubeId: 'tNNxELV6F0s',
-            customThumbnail: 'imgs/kimi.webp'
+            customThumbnail: '/imgs/kimi.webp'
         },
         {
             title: 'Build a Semantic Q&A App in Minutes',
@@ -311,7 +311,7 @@ const portfolioContent = {
             conference: 'AllThingsAI (Durham, NC)',
             hasRecording: false,
             externalLink: 'https://2026.allthingsai.org/',
-            customThumbnail: 'imgs/allthingsai-2026.jpg'
+            customThumbnail: '/imgs/allthingsai-2026.jpg'
         },
         {
             title: 'Meaningful Answers, Not Keyword Matches',
@@ -336,7 +336,7 @@ const portfolioContent = {
             conference: 'Percona Live',
             youtubeId: 'vlzuyVwZUao',
             hasRecording: true,
-            customThumbnail: 'imgs/percona.webp'
+            customThumbnail: '/imgs/percona.webp'
         },
         {
             title: 'SF Awesome AI Dev Tools',
@@ -345,7 +345,7 @@ const portfolioContent = {
             conference: 'SF Meetup',
             hasRecording: false,
             externalLink: 'https://luma.com/y2mjhnfw',
-            customThumbnail: 'imgs/sf-awesome-ai-tools.webp'
+            customThumbnail: '/imgs/sf-awesome-ai-tools.webp'
         },
         {
             title: 'From Vectors to Agentic Memory: Architecting for Supercharged AI Development',
@@ -354,7 +354,7 @@ const portfolioContent = {
             conference: 'SF Meetup',
             hasRecording: false,
             externalLink: 'https://luma.com/pquy8jlb',
-            customThumbnail: 'imgs/aws-builder-loft.webp'
+            customThumbnail: '/imgs/aws-builder-loft.webp'
         },
         {
             title: 'Open Source ELT For Everyone – Level Up With Custom Connectors',
@@ -372,14 +372,14 @@ const portfolioContent = {
             description: 'Most journaling apps are just storage. I built a system that watches my entries, finds patterns in my thinking, and writes my life story in third person - like a biographer following me around.',
             date: 'Dec 3, 2025',
             link: 'blog/ai-journal-system/',
-            customThumbnail: 'imgs/image12-4.webp'
+            customThumbnail: '/imgs/image12-4.webp'
         },
         {
             title: 'Building a Voice-to-Text App That Learns Your Style (Without Storing Your Words)',
             description: 'Privacy-first style learning with TiDB vector search. Can you teach an AI how someone writes by storing statistics only?',
             date: 'Jan 27, 2026',
             link: 'blog/speak-it/',
-            customThumbnail: 'imgs/speak-it-hero.jpeg'
+            customThumbnail: '/imgs/speak-it-hero.jpeg'
         }
     ],
 
@@ -390,7 +390,7 @@ const portfolioContent = {
             date: 'Dec 2025',
             link: 'parallel-lives/',
             demo: 'https://app.parallellives.ai',
-            customThumbnail: 'imgs/parallellives demo.png',
+            customThumbnail: '/imgs/parallellives demo.png',
             tags: ['AI', 'Branching', 'Multi-Model', 'Vector Search'],
             isPrivate: true
         },
@@ -400,7 +400,7 @@ const portfolioContent = {
             date: 'Dec 2025',
             link: 'journalit_readme/',
             demo: 'https://app.parallellives.ai/journal?dev=beta031419!',
-            customThumbnail: 'imgs/image12-4.webp',
+            customThumbnail: '/imgs/image12-4.webp',
             tags: ['AI', 'Semantic Memory', 'Multi-Model', 'Vector Search'],
             isPrivate: true
         },
@@ -410,7 +410,7 @@ const portfolioContent = {
             date: 'Nov 2025',
             link: 'https://github.com/RealChrisSean/atlasMemory',
             demo: 'https://atlasmemory-production.up.railway.app',
-            customThumbnail: 'imgs/atlasMemory.webp',
+            customThumbnail: '/imgs/atlasMemory.webp',
             tags: ['AI', 'Vector Search', 'MySQL'],
             isPrivate: false
         },
@@ -436,7 +436,7 @@ const portfolioContent = {
             date: 'Jan 2026',
             link: 'https://app.parallellives.ai/speak-it',
             demo: 'https://app.parallellives.ai/speak-it',
-            customThumbnail: 'imgs/speak-it.png',
+            customThumbnail: '/imgs/speak-it.png',
             tags: ['AI', 'Chrome Extension', 'Vector Search', 'TiDB'],
             isPrivate: true
         },
@@ -446,7 +446,7 @@ const portfolioContent = {
             date: 'Jan 2026',
             link: 'https://github.com/RealChrisSean/college-picker',
             demo: 'https://app.parallellives.ai/collegepicker',
-            customThumbnail: 'imgs/college picker.png',
+            customThumbnail: '/imgs/college picker.png',
             tags: ['AI', 'Vector Search', 'TiDB', 'RAG'],
             isPrivate: false
         }
