@@ -3,8 +3,13 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/blog",
-      "destination": "/blogs/",
+      "source": "/blogs",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/",
+      "destination": "/blog/",
       "permanent": true
     }
   ],
