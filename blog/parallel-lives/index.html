@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building an AI That Shows You Your Possible Futures | Chris Dabatos</title>
+    <meta name="description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes across six life dimensions.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Building an AI That Shows You Your Possible Futures">
+    <meta property="og:description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes.">
+    <meta property="og:image" content="https://realchrissean.com/imgs/parallellives demo.png">
+    <meta property="og:url" content="https://realchrissean.com/blog/parallel-lives/">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@RealChrisSean">
+    <meta name="twitter:title" content="Building an AI That Shows You Your Possible Futures">
+    <meta name="twitter:description" content="I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes.">
+    <meta name="twitter:image" content="https://realchrissean.com/imgs/parallellives demo.png">
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://realchrissean.com/blog/parallel-lives/">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Building an AI That Shows You Your Possible Futures",
+        "description": "I built Parallel Lives - an app that generates branching timelines of your possible futures. Not just pros and cons, but realistic near-term outcomes across six life dimensions.",
+        "image": "https://realchrissean.com/imgs/parallellives demo.png",
+        "author": {
+            "@type": "Person",
+            "name": "Chris Dabatos",
+            "url": "https://realchrissean.com"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Chris Dabatos"
+        },
+        "datePublished": "2026-01-30",
+        "dateModified": "2026-01-30",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://realchrissean.com/blog/parallel-lives/"
+        }
+    }
+    </script>
+
+    <link rel="icon" type="image/webp" href="../../imgs/cd_logo.webp">
+    <link rel="apple-touch-icon" href="../../imgs/cd_logo.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/fontawesome-subset.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: rgba(249, 250, 251, 0.9);
+            --text-main: #101010;
+            --text-muted: #555;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #6366f1;
+            --accent-vegas: #c026d3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #f4f4f5;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 17px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation Effect */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.08), transparent 25%);
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle i {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-primary);
+        }
+
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+
+        .post-header {
+            margin-bottom: 48px;
+        }
+
+        .post-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .post-meta i {
+            margin-right: 6px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 56px;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        ul, ol {
+            margin-bottom: 20px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            font-family: var(--font-code);
+            background: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            overflow-x: auto;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 99;
+            color: white;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Callout Box */
+        .callout {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(192, 38, 211, 0.05));
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 32px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 56px 0;
+        }
+
+        /* Author Section */
+        .author-section {
+            margin-top: 64px;
+            padding: 32px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .author-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .author-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .author-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .author-links a:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 1.5rem;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 24px 16px 60px; }
+            body { font-size: 16px; }
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-links {
+                justify-content: center;
+            }
+        }
+
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+            background-size: 200% 100%;
+            animation: shimmer 2s ease-in-out infinite;
+            z-index: 9999;
+            transition: width 0.1s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Inline listen button in header */
+        .listen-btn-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            min-height: 44px;
+        }
+
+        .listen-btn-inline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        .listen-btn-inline svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Underline effect for article links */
+        article a:not(.back-to-top):not(.author-links a):not([style]) {
+            position: relative;
+            text-decoration: none;
+        }
+
+        article a:not(.back-to-top):not(.author-links a):not([style])::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        article a:not(.back-to-top):not(.author-links a):not([style]):hover::after {
+            width: 100%;
+        }
+
+        /* Bouncing scroll indicator */
+        .scroll-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin: 32px 0 48px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scroll-indicator svg {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(8px); }
+            60% { transform: translateY(4px); }
+        }
+
+        /* Collapsible code blocks */
+        pre.collapsible {
+            max-height: 350px;
+            overflow: hidden;
+        }
+
+        pre.collapsible::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(transparent, #1e1e1e);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        pre.expanded {
+            max-height: none;
+        }
+
+        pre.expanded::before {
+            display: none;
+        }
+
+        .expand-btn {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.2s;
+        }
+
+        .expand-btn:hover {
+            background: #0284c7;
+        }
+
+        /* Move back-to-top when audio playing */
+        body.audio-playing .back-to-top {
+            bottom: 100px;
+        }
+
+        /* Audio Player - Fixed at bottom */
+.audio-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-color);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.audio-player.visible {
+    transform: translateY(0);
+}
+
+/* Play/Pause button - compact circle */
+.audio-play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.audio-play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+}
+
+.audio-play-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.audio-play-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.audio-play-btn .spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Progress bar */
+.audio-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.audio-progress-fill {
+    height: 100%;
+    background: var(--accent-primary);
+    width: 0%;
+    transition: width 0.1s;
+    border-radius: 4px;
+}
+
+/* Time display */
+.audio-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: var(--font-code);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Close button */
+.audio-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.audio-close:hover {
+    color: var(--text-main);
+}
+
+.audio-close svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Inline listen button in header */
+.listen-btn-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+    min-height: 44px;
+}
+
+.listen-btn-inline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+}
+
+.listen-btn-inline svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .audio-player {
+        padding: 12px 16px;
+        gap: 12px;
+    }
+
+    .audio-time {
+        font-size: 0.75rem;
+    }
+}
+
+
+        /* TTS Highlight */
+        .tts-highlight {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: -2px -4px;
+            transition: background 0.3s ease;
+        }
+
+        /* Desktop Sidebar TOC - Left side */
+.sidebar-toc {
+    position: fixed;
+    left: calc((100vw - 760px) / 2 - 220px);
+    top: 140px;
+    width: 180px;
+    z-index: 50;
+    display: none;
+    /* Override generic nav styles */
+    background: transparent;
+    border: none;
+    padding: 0;
+    backdrop-filter: none;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (min-width: 1200px) {
+    .sidebar-toc {
+        display: block;
+    }
+}
+
+.sidebar-toc-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.sidebar-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-toc-list li {
+    margin: 0;
+}
+
+.sidebar-toc-list a {
+    display: block;
+    padding: 6px 0 6px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-left: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.sidebar-toc-list a:hover {
+    color: var(--text-main);
+}
+
+.sidebar-toc-list a.active {
+    color: var(--accent-primary);
+    border-left-color: var(--accent-primary);
+}
+
+/* Mobile Dropdown TOC */
+.mobile-toc {
+    display: none;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 1199px) {
+    .mobile-toc {
+        display: block;
+    }
+}
+
+.mobile-toc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.mobile-toc-toggle:hover {
+    background: var(--border-color);
+}
+
+.mobile-toc-toggle svg {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+.mobile-toc.open .mobile-toc-toggle svg {
+    transform: rotate(180deg);
+}
+
+.mobile-toc-dropdown {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.mobile-toc.open .mobile-toc-dropdown {
+    display: block;
+}
+
+.mobile-toc-dropdown a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.15s, background 0.15s;
+}
+
+.mobile-toc-dropdown a:hover {
+    color: var(--text-main);
+    background: var(--border-color);
+}
+
+.mobile-toc-dropdown a.active {
+    color: var(--accent-primary);
+}
+
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="/blog/"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </nav>
+
+    <!-- Desktop Sidebar TOC -->
+    <nav class="sidebar-toc">
+        <div class="sidebar-toc-title">On this page</div>
+        <ul class="sidebar-toc-list">
+            <li><a href="#the-goal">The Goal</a></li>
+            <li><a href="#the-stack">The Stack</a></li>
+            <li><a href="#the-architecture">The Architecture</a></li>
+            <li><a href="#the-implementation">The Implementation</a></li>
+            <li><a href="#generation-prompt">Generation Prompt</a></li>
+            <li><a href="#scenario-guidance">Scenario Guidance</a></li>
+            <li><a href="#streaming">Streaming</a></li>
+            <li><a href="#path-comparison">Path Comparison</a></li>
+            <li><a href="#still-iterating">Still Iterating</a></li>
+            <li><a href="#the-result">The Result</a></li>
+            <li><a href="#why-i-built-this">Why I Built This</a></li>
+        </ul>
+    </nav>
+
+    <article class="container">
+        <header class="post-header">
+            <img src="../../imgs/parallellives demo.png" alt="Parallel Lives - AI that shows you your possible futures" style="width: 100%; border-radius: 16px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);" loading="lazy">
+            <span class="post-tag"><i class="fas fa-code-branch"></i> &nbsp;AI + Decision Making</span>
+            <h1>Building an AI That Shows You Your Possible Futures</h1>
+            <p class="subtitle">Not just pros and cons. Branching timelines of what your life might actually look like.</p>
+            <div class="post-meta">
+                <time datetime="2026-01-30"><i class="far fa-calendar"></i> January 30, 2026</time>
+                <span class="reading-time"><i class="far fa-clock"></i> 12 min read</span>
+            </div>
+            <button class="listen-btn-inline" onclick="toggleAudio()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Listen to article
+            </button>
+        </header>
+
+        <!-- Mobile TOC (dropdown) -->
+        <div class="mobile-toc">
+            <button class="mobile-toc-toggle">
+                On this page
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+            <div class="mobile-toc-dropdown">
+                <a href="#the-goal">The Goal</a>
+                <a href="#the-stack">The Stack</a>
+                <a href="#the-architecture">The Architecture</a>
+                <a href="#the-implementation">The Implementation</a>
+                <a href="#generation-prompt">Generation Prompt</a>
+                <a href="#scenario-guidance">Scenario Guidance</a>
+                <a href="#streaming">Streaming</a>
+                <a href="#path-comparison">Path Comparison</a>
+                <a href="#still-iterating">Still Iterating</a>
+                <a href="#the-result">The Result</a>
+                <a href="#why-i-built-this">Why I Built This</a>
+            </div>
+        </div>
+
+        <h2 id="the-goal">The Goal</h2>
+
+        <p>I spent most of 2025 asking ChatGPT, Claude, and Gemini the same question over and over: should I buy a house or keep renting?</p>
+
+        <p>It wasn't a simple question. Rent was $2,000 a month. The mortgage I was looking at was $3,500. On paper, renting looks cheaper. But what about equity? What about tax benefits? What about the opportunity cost of that $1,500 difference if I invested it instead?</p>
+
+        <p>I'd paste my income, my savings, my family situation into these chat windows and ask "what would you do?" And the AI would give me a reasonable answer. Then I'd tweak one variable and ask again. And again. And again.</p>
+
+        <p>After months of this, I realized I was manually doing what an app should do automatically. I wanted something that could take a decision and show me what life might look like in 6 months, 12 months, 24 months. Not some fantasy 20-year projection, but realistic near-term outcomes I could actually plan around.</p>
+
+        <p>So I built it. Parallel Lives generates branching timelines of your possible futures. You input a decision (buy vs rent, new job vs current job, move to a new city vs stay put) and it shows you how different choices might unfold. Not just financially. Emotionally, professionally, personally.</p>
+
+        <p>I built it for myself. But I'm hoping it helps other people stop copy-pasting their life decisions into chat windows.</p>
+
+        <hr>
+
+        <h2 id="the-stack">The Stack</h2>
+
+        <p>You'll notice I'm using multiple LLMs here. There's no single model that does everything well, so I pick the right tool for each job.</p>
+
+        <p>Here's what powers it:</p>
+
+        <p><strong>TiDB Cloud</strong> for the database. Handles relational queries and vector similarity in the same SQL statement. MySQL-compatible, scales to zero when idle.</p>
+
+        <p><strong>Claude Opus 4.5</strong> is the primary engine for generating futures. Given a decision and context, it creates branching scenarios with realistic outcomes. Opus is much more nuanced and emotionally intelligent than other models, which matters when you're simulating life decisions. This isn't a lookup task. It needs to feel real.</p>
+
+        <p><strong>Claude Sonnet 4</strong> handles lighter tasks like extracting dimensional summaries from nodes before embedding. Faster and cheaper than Opus for structured extraction where nuance matters less.</p>
+
+        <p><strong>GPT-4o mini</strong> does path comparison analysis. When you want to compare two branches side-by-side, this generates the emotional and practical breakdown. It's fast and good at weighing tradeoffs.</p>
+
+        <p><strong>OpenAI Embeddings</strong> (text-embedding-3-small) generates vectors for everything. Users can ask "what about work-life balance?" and the system finds relevant nodes across all their past decisions.</p>
+
+        <hr>
+
+        <h2 id="the-architecture">The Architecture</h2>
+
+        <p>Here's how data flows through the system:</p>
+
+<pre><code class="language-plaintext">[User inputs a life decision]
+      ↓
+[Claude generates 2 initial paths with 2-year outcomes]
+      ↓
+[User clicks a path to explore further]
+      ↓
+[Claude generates next decision point + consequences]
+      ↓
+[User can branch: "what if I chose differently?"]
+      ↓
+[Extract 6-dimensional summaries from each node]
+      ↓
+[Generate embeddings, store in TiDB]
+      ↓
+[Semantic search across all past decisions]</code></pre>
+
+        <p>The key insight: a life decision isn't one-dimensional. Taking a job affects your finances AND your relationships AND your health AND your career trajectory. The system tracks all six dimensions separately.</p>
+
+        <hr>
+
+        <h2 id="the-implementation">The Implementation</h2>
+
+        <h3>The Decision Tree Schema</h3>
+
+        <p>Here's how I store decision trees:</p>
+
+<pre><code class="language-sql">CREATE TABLE trees (
+  id VARCHAR(36) PRIMARY KEY,
+  decision TEXT NOT NULL,
+  tree_data JSON NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_created (created_at)
+);
+
+CREATE TABLE decision_history (
+  id VARCHAR(36) PRIMARY KEY,
+  session_id VARCHAR(36) NOT NULL,
+  parent_id VARCHAR(36),
+  decision TEXT NOT NULL,
+  choice_made TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_session (session_id),
+  INDEX idx_parent (parent_id)
+);</code></pre>
+
+        <p>The <code>tree_data</code> JSON stores the entire branching structure. Each node contains the scenario description, timeframe (6 months, 1 year, 2 years), sentiment (positive, neutral, negative), and child nodes for further branches.</p>
+
+        <p><code>decision_history</code> tracks which paths users actually explored, with <code>parent_id</code> creating a linked list of choices.</p>
+
+        <h3>Multi-Dimensional Embeddings</h3>
+
+        <p>This is where it gets interesting. Most apps create one embedding per document. I create six.</p>
+
+        <p>Every decision node gets analyzed across six life dimensions:</p>
+
+        <ul>
+            <li><strong>Financial</strong>: Money, assets, debt, earning potential</li>
+            <li><strong>Emotional</strong>: Stress, happiness, fulfillment, anxiety</li>
+            <li><strong>Relationship</strong>: Family, friends, romantic partners, professional network</li>
+            <li><strong>Career</strong>: Skills, reputation, opportunities, trajectory</li>
+            <li><strong>Health</strong>: Physical, mental, energy levels, burnout risk</li>
+            <li><strong>Overall</strong>: The holistic picture</li>
+        </ul>
+
+<pre><code class="language-sql">CREATE TABLE decision_embeddings (
+  id VARCHAR(36) PRIMARY KEY,
+  decision_id VARCHAR(36) NOT NULL,
+  node_id VARCHAR(255) NOT NULL,
+  dimension ENUM('financial', 'emotional', 'relationship', 'career', 'health', 'overall'),
+  summary TEXT NOT NULL,
+  embedding VECTOR(1536),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  INDEX idx_decision (decision_id),
+  INDEX idx_dimension (dimension),
+  VECTOR INDEX idx_embedding (embedding) USING HNSW
+);</code></pre>
+
+        <p>The extraction process:</p>
+
+<pre><code class="language-typescript">async function extractDimensionalSummaries(node: TreeNode): Promise&lt;DimensionSummary[]&gt; {
+  const response = await anthropic.messages.create({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 1000,
+    system: `Analyze this life decision outcome across 6 dimensions.
+For each dimension, write 1-2 sentences summarizing the impact.
+Return JSON with keys: financial, emotional, relationship, career, health, overall`,
+    messages: [{ role: "user", content: node.description }]
+  });
+
+  const summaries = JSON.parse(response.content[0].text);
+
+  const embeddings = await Promise.all(
+    Object.entries(summaries).map(async ([dimension, summary]) =&gt; {
+      const embedding = await openai.embeddings.create({
+        model: "text-embedding-3-small",
+        input: summary as string
+      });
+      return { dimension, summary, embedding: embedding.data[0].embedding };
+    })
+  );
+
+  return embeddings;
+}</code></pre>
+
+        <p>Why six dimensions instead of one? Because "what about work-life balance?" should search the emotional and health dimensions, not get diluted by financial content. Targeted search beats generic search.</p>
+
+        <h3>Semantic Search Across Decisions</h3>
+
+        <p>Once you have dimensional embeddings, search becomes powerful:</p>
+
+<pre><code class="language-typescript">export async function POST(request: NextRequest) {
+  const { query, dimensions = ['overall'], limit = 10 } = await request.json();
+
+  const queryEmbedding = await generateEmbedding(query);
+
+  const [rows] = await pool.execute(`
+    SELECT
+      de.decision_id,
+      de.node_id,
+      de.dimension,
+      de.summary,
+      d.decision as original_decision,
+      VEC_COSINE_DISTANCE(de.embedding, ?) as distance
+    FROM decision_embeddings de
+    JOIN decision_history d ON de.decision_id = d.id
+    WHERE de.dimension IN (${dimensions.map(() =&gt; '?').join(',')})
+      AND VEC_COSINE_DISTANCE(de.embedding, ?) &lt; 0.5
+    ORDER BY distance ASC
+    LIMIT ?
+  `, [queryEmbedding, ...dimensions, queryEmbedding, limit]);
+
+  const grouped = groupByDecision(rows);
+  return NextResponse.json({ results: grouped });
+}</code></pre>
+
+        <p>User asks: "What decisions affected my relationships?"</p>
+
+        <p>System searches the relationship dimension across all past decision nodes.</p>
+
+        <p>Returns: "When you considered the startup, the relationship impact was..."</p>
+
+        <hr>
+
+        <h2 id="generation-prompt">The Generation Prompt (What I Tried First)</h2>
+
+        <p>My first prompt was garbage. I told Claude to "generate possible outcomes" and got fantasy scenarios. Everything worked out perfectly. No one got stressed. No relationships suffered. It was useless.</p>
+
+        <p>The fix was being explicit about emotional honesty:</p>
+
+<pre><code class="language-typescript">const SYSTEM_PROMPT = `You are simulating possible futures for a major life decision.
+
+CRITICAL RULES:
+1. Be emotionally honest. Include realistic downsides, not just risks.
+   - BAD: "You might face some challenges"
+   - GOOD: "You'll probably feel isolated for the first 6 months. Most people do."
+
+2. Show the lived experience, not just outcomes.
+   - BAD: "Your salary increases to $150k"
+   - GOOD: "You're making $150k but working 60-hour weeks. You've missed three family events this quarter."
+
+3. Preserve specific facts from the user's input.
+   - If they said "$120k offer" keep saying $120k, not "a good salary"
+
+4. Different timeframes show progression, not repetition.
+   - 6 months: immediate adjustment period
+   - 1 year: patterns emerging
+   - 2 years: new normal established
+
+5. Every positive has a cost. Every negative has a silver lining.
+   - Promotion → less time for side projects
+   - Startup fails → but you learned to ship fast`;</code></pre>
+
+        <p>The difference was night and day. Before: "You succeed and feel fulfilled." After: "You close the funding round but your co-founder relationship is strained. You haven't exercised in two months."</p>
+
+        <hr>
+
+        <h2 id="scenario-guidance">Scenario-Specific Guidance</h2>
+
+        <p>A job offer decision is different from a housing decision is different from a relocation decision. My first version used the same prompt for everything. The outputs were generic.</p>
+
+        <p>Now I detect the scenario type and inject domain-specific guidance:</p>
+
+<pre><code class="language-typescript">function getScenarioGuidance(decision: string): string {
+  const lower = decision.toLowerCase();
+
+  if (lower.includes('job offer') || lower.includes('salary')) {
+    return `JOB OFFER GUIDANCE:
+- Total comp matters more than base salary (equity, bonus, benefits)
+- Consider: commute impact on daily energy, team culture fit, growth ceiling
+- Hidden costs: relocation, lifestyle inflation, golden handcuffs`;
+  }
+
+  if (lower.includes('house') || lower.includes('mortgage') || lower.includes('rent')) {
+    return `HOUSING GUIDANCE:
+- True cost = mortgage + property tax + insurance + maintenance (budget 1-2% of home value/year)
+- Renting isn't "throwing money away" - run the actual numbers
+- Location lock-in: how does this affect job flexibility?`;
+  }
+
+  if (lower.includes('move') || lower.includes('relocate') || lower.includes('city')) {
+    return `RELOCATION GUIDANCE:
+- Cost of living differences can erase salary gains
+- Social network rebuild takes 1-2 years minimum
+- Consider: weather impact on mental health, proximity to family`;
+  }
+
+  // ... more scenarios
+
+  return ''; // Generic decision, no special guidance
+}</code></pre>
+
+        <p>This made the outputs dramatically more useful. A housing decision now shows true monthly costs including maintenance reserves. A relocation shows the social cost of leaving your network. The stuff you forget to think about.</p>
+
+        <hr>
+
+        <h2 id="streaming">Streaming for Real-Time Generation</h2>
+
+        <p>Tree generation takes 10-15 seconds. That's too long to stare at a spinner.</p>
+
+        <p>I stream the response so users see the tree building in real-time:</p>
+
+<pre><code class="language-typescript">export async function POST(request: NextRequest) {
+  const { decision, mode } = await request.json();
+
+  const stream = await anthropic.messages.stream({
+    model: "claude-opus-4-5-20250514",
+    max_tokens: 4000,
+    system: SYSTEM_PROMPT + getScenarioGuidance(decision),
+    messages: [{ role: "user", content: buildPrompt(decision, mode) }]
+  });
+
+  return new Response(
+    new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          if (chunk.type === 'content_block_delta') {
+            controller.enqueue(
+              new TextEncoder().encode(chunk.delta.text)
+            );
+          }
+        }
+        controller.close();
+      }
+    }),
+    { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+  );
+}</code></pre>
+
+        <p>The frontend parses the stream incrementally and renders nodes as they arrive. Users see the tree growing, which feels faster than it actually is.</p>
+
+        <hr>
+
+        <h2 id="path-comparison">Path Comparison</h2>
+
+        <p>Sometimes you want to compare two branches directly. "What's really the difference between buying and renting?"</p>
+
+<pre><code class="language-typescript">const response = await openai.chat.completions.create({
+  model: "gpt-4o-mini",
+  response_format: { type: "json_object" },
+  messages: [{
+    role: "system",
+    content: `Compare these two life paths. Return JSON with:
+      - recommendation: "A" | "B" | "depends"
+      - path_a_strengths: string[]
+      - path_a_weaknesses: string[]
+      - path_b_strengths: string[]
+      - path_b_weaknesses: string[]
+      - future_voice: "A message from your future self about this choice"
+      - key_questions: "Questions to ask yourself before deciding"`
+  }, {
+    role: "user",
+    content: `Path A: ${pathA.description}\n\nPath B: ${pathB.description}`
+  }]
+});</code></pre>
+
+        <p>The "future voice" is surprisingly useful. It's a first-person message from a hypothetical future version of yourself who made that choice. Corny? Maybe. But users love it.</p>
+
+        <hr>
+
+        <h2 id="still-iterating">What I'm Still Iterating On</h2>
+
+        <p>The hardest part is calibration. How pessimistic should the predictions be? Too optimistic and it's useless. Too pessimistic and it's paralyzing.</p>
+
+        <p>Right now I lean pessimistic because I think most people's mental models are too optimistic. But I've had users tell me the app made them anxious about decisions they were previously excited about. That's... maybe not what I want?</p>
+
+        <p>I'm also struggling with fact preservation. If a user says "I got a $150k offer with 0.5% equity," those numbers need to stay consistent throughout the tree. Claude sometimes rounds or paraphrases. I've added explicit instructions but it's not 100% reliable.</p>
+
+        <p>The other thing: timelines. "2 years from now" means different things for different decisions. A startup might pivot three times in 2 years. A mortgage is a 30-year commitment. I'm working on scenario-specific timeline generation instead of the fixed 6mo/1yr/2yr structure.</p>
+
+        <hr>
+
+        <h2 id="the-result">The Result</h2>
+
+        <p>What works today: branching decision trees with 2-year projections, six-dimensional analysis (financial, emotional, relationship, career, health, overall), semantic search across past decisions, scenario-specific guidance for jobs, housing, and relocation, real-time streaming generation, path comparison with "future voice," and shareable tree URLs.</p>
+
+        <p>What's next: calibrated confidence levels ("70% likely" vs "possible"), user feedback loop to improve predictions, integration with actual data sources (salary databases, housing markets), and collaborative trees so you can make decisions with your partner.</p>
+
+        <hr>
+
+        <h2 id="why-i-built-this">Why I Built This</h2>
+
+        <p>The core insight: decisions aren't spreadsheets. They're stories. A good decision tool should show you stories, not cells.</p>
+
+        <p>The hard part isn't the technology. It's the prompting. Getting an LLM to be emotionally honest instead of optimistically generic took more iteration than any of the infrastructure work.</p>
+
+        <p>I built this because I was tired of copy-pasting my life decisions into chat windows. I spent a year asking AI about rent vs buy, and the whole time I kept thinking "why isn't this just an app?" So I made it one.</p>
+
+        <p>If you've ever pasted your salary, your savings, your situation into ChatGPT and asked "what should I do?" this is for you.</p>
+
+        <p>Try it: <a href="https://parallellives.ai" target="_blank">parallellives.ai</a></p>
+
+        <p>GitHub: <a href="https://github.com/chrisdabatos/parallel-lives" target="_blank">Parallel Lives</a></p>
+
+        <!-- Author Section -->
+        <div class="author-section">
+            <img src="../../imgs/chrisdabatos.webp" alt="Chris Dabatos" class="author-avatar" loading="lazy">
+            <div class="author-info">
+                <div class="author-name">Chris Dabatos</div>
+                <div class="author-title">Software Engineer in Las Vegas. I build AI tools for real problems.</div>
+                <div class="author-links">
+                    <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-social">
+                <a href="https://x.com/RealChrisSean" target="_blank" aria-label="Follow on X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/realchrissean" target="_blank" aria-label="View GitHub profile"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/realchrissean/" target="_blank" aria-label="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@RealChrisSean/videos" target="_blank" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">&copy; 2026 Chris Dabatos. Made with code & caffeine in Las Vegas.</p>
+        </div>
+    </article>
+
+    <!-- Fixed Audio Player -->
+    <div class="audio-player" id="audioPlayer">
+        <button class="audio-play-btn" id="listenBtn" onclick="toggleAudio()">
+            <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+            <svg id="loadingIcon" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
+            </svg>
+        </button>
+        <div class="audio-progress-bar" onclick="seekAudio(event)">
+            <div class="audio-progress-fill" id="audioProgressFill"></div>
+        </div>
+        <span class="audio-time" id="audioTime">0:00 / 0:00</span>
+        <button class="audio-close" onclick="closeAudioPlayer()" aria-label="Close player">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Custom Analytics -->
+    <script src="/analytics.js"></script>
+
+    <!-- TTS Audio Player -->
+    <script>
+// Audio Player
+(function() {
+    let audioPlayer = null;
+    let isPlaying = false;
+    let isLoading = false;
+    let paragraphs = [];
+    let paragraphTimings = [];
+    let wordTimings = [];
+
+    // Auto-detect blog slug from URL
+    function getBlogSlug() {
+        const path = window.location.pathname;
+        const match = path.match(/\/blog\/([^\/]+)/);
+        return match ? match[1] : null;
+    }
+
+    const blogSlug = getBlogSlug();
+    const PRECACHED_AUDIO = blogSlug ? `/audio/${blogSlug}.mp3` : null;
+    const PRECACHED_TIMESTAMPS = blogSlug ? `/audio/${blogSlug}-timestamps.json` : null;
+
+    function getReadableParagraphs() {
+        const article = document.querySelector('article.container');
+        const elements = article.querySelectorAll('h2, h3, p, li');
+        const readable = [];
+
+        elements.forEach(el => {
+            if (el.closest('.post-header, .toc, .author-section, .footer, .demo-box, .architecture-diagram, pre, code, table, nav, .scroll-indicator, .audio-progress, .mobile-toc')) {
+                return;
+            }
+            const text = el.textContent.trim();
+            if (text.length > 10) {
+                readable.push({ element: el, text });
+            }
+        });
+
+        return readable;
+    }
+
+    function getArticleText() {
+        paragraphs = getReadableParagraphs();
+        return paragraphs.map(p => p.text).join(' ');
+    }
+
+    function calculateParagraphTimings(duration) {
+        const totalChars = paragraphs.reduce((sum, p) => sum + p.text.length, 0);
+        let currentTime = 0;
+
+        paragraphTimings = paragraphs.map(p => {
+            const start = currentTime;
+            const paragraphDuration = (p.text.length / totalChars) * duration;
+            currentTime += paragraphDuration;
+            return { start, end: currentTime, element: p.element };
+        });
+    }
+
+    function highlightCurrentParagraph(currentTime) {
+        document.querySelectorAll('.tts-highlight').forEach(el => {
+            el.classList.remove('tts-highlight');
+        });
+
+        if (wordTimings.length > 0) {
+            let currentWordIndex = -1;
+            for (let i = 0; i < wordTimings.length; i++) {
+                if (currentTime >= wordTimings[i].start && currentTime < wordTimings[i].end) {
+                    currentWordIndex = i;
+                    break;
+                }
+                if (currentTime < wordTimings[i].start) {
+                    currentWordIndex = Math.max(0, i - 1);
+                    break;
+                }
+            }
+
+            if (currentWordIndex >= 0) {
+                const startIdx = Math.max(0, currentWordIndex - 2);
+                const endIdx = Math.min(wordTimings.length, currentWordIndex + 3);
+                const phrase = wordTimings.slice(startIdx, endIdx).map(w => w.word).join(' ').toLowerCase();
+
+                for (const p of paragraphs) {
+                    if (p.text.toLowerCase().includes(phrase) ||
+                        phrase.includes(p.text.toLowerCase().substring(0, 30))) {
+                        p.element.classList.add('tts-highlight');
+                        return;
+                    }
+                }
+
+                const currentWord = wordTimings[currentWordIndex].word.toLowerCase();
+                for (const p of paragraphs) {
+                    if (p.text.toLowerCase().includes(currentWord)) {
+                        p.element.classList.add('tts-highlight');
+                        return;
+                    }
+                }
+            }
+        } else {
+            for (let i = 0; i < paragraphTimings.length; i++) {
+                const timing = paragraphTimings[i];
+                if (currentTime >= timing.start && currentTime < timing.end) {
+                    timing.element.classList.add('tts-highlight');
+                    break;
+                }
+            }
+        }
+    }
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateUI(state) {
+        const player = document.getElementById('audioPlayer');
+        const btn = document.getElementById('listenBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const loadingIcon = document.getElementById('loadingIcon');
+
+        if (!player || !btn) return;
+
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'none';
+        loadingIcon.style.display = 'none';
+
+        switch (state) {
+            case 'loading':
+                player.classList.add('visible');
+                document.body.classList.add('audio-playing');
+                loadingIcon.style.display = 'block';
+                btn.disabled = true;
+                break;
+            case 'playing':
+                player.classList.add('visible');
+                document.body.classList.add('audio-playing');
+                pauseIcon.style.display = 'block';
+                btn.disabled = false;
+                break;
+            case 'paused':
+                player.classList.add('visible');
+                document.body.classList.add('audio-playing');
+                playIcon.style.display = 'block';
+                btn.disabled = false;
+                break;
+            default:
+                player.classList.remove('visible');
+                document.body.classList.remove('audio-playing');
+                playIcon.style.display = 'block';
+                btn.disabled = false;
+                document.querySelectorAll('.tts-highlight').forEach(el => {
+                    el.classList.remove('tts-highlight');
+                });
+        }
+    }
+
+    window.seekAudio = function(event) {
+        if (!audioPlayer) return;
+        const bar = event.currentTarget;
+        const rect = bar.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        audioPlayer.currentTime = percent * audioPlayer.duration;
+    };
+
+    window.closeAudioPlayer = function() {
+        if (audioPlayer) {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            audioPlayer = null;
+        }
+        isPlaying = false;
+        updateUI('idle');
+    };
+
+    window.toggleAudio = async function() {
+        if (isLoading) return;
+
+        if (audioPlayer && isPlaying) {
+            audioPlayer.pause();
+            isPlaying = false;
+            updateUI('paused');
+            return;
+        }
+
+        if (audioPlayer && !isPlaying) {
+            audioPlayer.play();
+            isPlaying = true;
+            updateUI('playing');
+            return;
+        }
+
+        if (!PRECACHED_AUDIO) {
+            alert('Audio not available for this page.');
+            return;
+        }
+
+        isLoading = true;
+        updateUI('loading');
+
+        try {
+            getArticleText();
+
+            let audioUrl = PRECACHED_AUDIO;
+            let usedCache = false;
+
+            try {
+                const [audioCheck, timestampsResponse] = await Promise.all([
+                    fetch(PRECACHED_AUDIO, { method: 'HEAD' }),
+                    fetch(PRECACHED_TIMESTAMPS)
+                ]);
+
+                if (audioCheck.ok && timestampsResponse.ok) {
+                    usedCache = true;
+                    const timestampData = await timestampsResponse.json();
+                    wordTimings = timestampData.words || [];
+                }
+            } catch (e) {
+                console.log('Pre-cached files not available');
+            }
+
+            if (!usedCache) {
+                const text = paragraphs.map(p => p.text).join(' ');
+                const response = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text,
+                        voice: 'kdvGwzzf2ihYtjbv5OWc',
+                        stability: 0.5,
+                        similarity: 0.75
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'TTS request failed');
+                }
+
+                const blob = await response.blob();
+                audioUrl = URL.createObjectURL(blob);
+            }
+
+            audioPlayer = new Audio(audioUrl);
+
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                calculateParagraphTimings(audioPlayer.duration);
+            });
+
+            audioPlayer.addEventListener('timeupdate', () => {
+                const progressFill = document.getElementById('audioProgressFill');
+                const timeDisplay = document.getElementById('audioTime');
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = percent + '%';
+                timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+
+                highlightCurrentParagraph(audioPlayer.currentTime);
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                isPlaying = false;
+                audioPlayer = null;
+                updateUI('idle');
+            });
+
+            audioPlayer.play();
+            isPlaying = true;
+            isLoading = false;
+            updateUI('playing');
+
+        } catch (error) {
+            console.error('TTS error:', error);
+            isLoading = false;
+            updateUI('idle');
+            alert('Failed to load audio. Please try again.');
+        }
+    };
+})();
+</script>
+
+
+    <!-- Progress Bar & Scroll Animations -->
+    <script>
+        // Reading Progress Bar
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        window.addEventListener('scroll', updateProgressBar);
+        updateProgressBar();
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            const sections = document.querySelectorAll('h2, .highlight-box, pre, .cta-section, .author-section, p, ul, ol');
+            sections.forEach(el => {
+                if (!el.closest('nav') && !el.closest('.hero')) {
+                    el.classList.add('fade-up');
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollAnimations);
+        } else {
+            initScrollAnimations();
+        }
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Copy Code Button & Collapsible Code
+        document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
+            // Copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = 'Copy';
+            copyBtn.addEventListener('click', async () => {
+                const code = pre.querySelector('code')?.textContent || pre.textContent;
+                await navigator.clipboard.writeText(code);
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+            pre.appendChild(copyBtn);
+
+            // Collapsible for tall code blocks
+            const codeEl = pre.querySelector('code');
+            if (codeEl) {
+                const lineCount = (codeEl.textContent.match(/\n/g) || []).length + 1;
+                if (lineCount > 15) {
+                    pre.classList.add('collapsible');
+                    const expandBtn = document.createElement('button');
+                    expandBtn.className = 'expand-btn';
+                    expandBtn.textContent = 'Show more';
+                    expandBtn.addEventListener('click', () => {
+                        if (pre.classList.contains('expanded')) {
+                            pre.classList.remove('expanded');
+                            expandBtn.textContent = 'Show more';
+                        } else {
+                            pre.classList.add('expanded');
+                            expandBtn.textContent = 'Show less';
+                        }
+                    });
+                    pre.appendChild(expandBtn);
+                }
+            }
+        });
+    </script>
+    <script>
+// Sidebar TOC functionality
+(function() {
+    const sidebarLinks = document.querySelectorAll('.sidebar-toc-list a');
+    const mobileLinks = document.querySelectorAll('.mobile-toc-dropdown a');
+    const mobileToc = document.querySelector('.mobile-toc');
+    const mobileToggle = document.querySelector('.mobile-toc-toggle');
+    const sections = [];
+
+    // Collect all section targets
+    sidebarLinks.forEach(link => {
+        const id = link.getAttribute('href').slice(1);
+        const section = document.getElementById(id);
+        if (section) {
+            sections.push({ id, element: section, link });
+        }
+    });
+
+    // Mobile dropdown toggle
+    if (mobileToggle && mobileToc) {
+        mobileToggle.addEventListener('click', () => {
+            mobileToc.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking a link
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToc.classList.remove('open');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileToc.contains(e.target)) {
+                mobileToc.classList.remove('open');
+            }
+        });
+    }
+
+    // Highlight current section
+    function updateActiveSection() {
+        let current = null;
+
+        for (const section of sections) {
+            const rect = section.element.getBoundingClientRect();
+            if (rect.top <= 150) {
+                current = section;
+            }
+        }
+
+        // Update desktop sidebar
+        sidebarLinks.forEach(link => link.classList.remove('active'));
+        if (current) {
+            current.link.classList.add('active');
+        }
+
+        // Update mobile dropdown
+        mobileLinks.forEach(link => {
+            link.classList.remove('active');
+            if (current && link.getAttribute('href') === '#' + current.id) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Throttled scroll handler
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                updateActiveSection();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Initial state
+    updateActiveSection();
+})();
+</script>
+
+</body>
+</html>
